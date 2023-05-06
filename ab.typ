@@ -76,7 +76,7 @@
 	show raw.where(block: false): set text(
 		fill: theme.primary
 	)
-	show raw.where(block: true): c => code(c)
+	// show raw.where(block: true): c => code(c)
 
 	// Handle options (after setting up page with header / footer)
 	for opt in (

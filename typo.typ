@@ -4,7 +4,6 @@
 
 #import "./options.typ"
 #import "./theme.typ"
-#import "./algo/algo.typ"
 
 // Text sizes
 #let scaled(content, size: 0.8) = {
