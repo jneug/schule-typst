@@ -76,6 +76,22 @@
 	border: none,
 	body
 ) = {
+	let content = ()
+	let i = 1
+
+	for item in body.children {
+		if item.func() == raw {
+			for line in item.text.split("\n") {
+				if linenos {
+					content.push(str(i))
+				}
+				content.push(raw(line, lang:item.lang))
+				i += 1
+			}
+		}
+	}
+
+
 	// locate(loc => {
 	// 	style(styles => {
 	// 		let _m = measure(body, styles)
@@ -88,11 +104,21 @@
 				radius: 4pt,
 				breakable: true,
 				width: 100%,
-				algo.code(
-					fill:none,
-					stroke:none,
-					line-numbers:linenos,
-					body
+				table(
+					columns: if linenos {2} else {1},
+					inset: 0pt,
+					stroke: none,
+					fill: none,
+					row-gutter: 10pt,
+					column-gutter: 10pt,
+					align:
+						if linenos {
+							(x, _) => (right, left).at(x)
+						} else {
+							left
+						}
+					,
+					..content
 				)
 			)//[#align(left)[#body]]
 
