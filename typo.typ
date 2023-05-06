@@ -82,7 +82,7 @@
 	// 		let _l = loc
 
 			block(
-				fill: bg,
+				fill:fill,
 				stroke: border,
 				inset: 1em,
 				radius: 4pt,
