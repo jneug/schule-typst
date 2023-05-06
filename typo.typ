@@ -76,63 +76,37 @@
 	border: none,
 	body
 ) = {
-	let content = ()
-	let i = 1
+	let lines = 0
+	let lang = none
 
 	for item in body.children {
 		if item.func() == raw {
-			for line in item.text.split("\n") {
-				if linenos {
-					content.push(str(i))
-				}
-				content.push(raw(line, lang:item.lang))
-				i += 1
-			}
+			lines = item.text.split("\n").len()
+			lang = item.lang
 		}
 	}
 
+	// grid(
+	// 	columns: (10mm, 100%-10mm),
+	// 	raw(range(lines).map(str).join("\n")),
+	// 	body
+	// )
+	style(s => {
+		let lines_content = raw(range(lines).map(str).join("\n"))
+		let m = measure(lines_content, s)
 
-	// locate(loc => {
-	// 	style(styles => {
-	// 		let _m = measure(body, styles)
-	// 		let _l = loc
-
-			block(
-				fill:fill,
-				stroke: border,
-				inset: 1em,
-				radius: 4pt,
-				breakable: true,
-				width: 100%,
-				table(
-					columns: if linenos {(10mm, 100%-10mm)} else {100%},
-					inset: 0pt,
-					stroke: none,
-					fill: none,
-					row-gutter: 10pt,
-					column-gutter: 10pt,
-					align:
-						if linenos {
-							(x, _) => (right, left).at(x)
-						} else {
-							left
-						}
-					,
-					..content
-				)
-			)//[#align(left)[#body]]
-
-	// 		let x = 0
-	// 		for x in range(7) {
-	// 			place(
-	// 				left,
-	// 				dx: -.5em,
-	// 				dy: x*1.3em - _m.height - 3.3em,
-	// 				[#{x+1}],
-	// 			)
-	// 		}
-	// 	})
-	// })
+		block(
+			fill:fill,
+			stroke: border,
+			inset: 1em,
+			radius: 4pt,
+			breakable: true,
+			width: 100%,
+		)[
+			#place(top+left, dx:-5pt, block(width:m.width, text(fill:theme.muted, raw(range(lines).map(str).join("\n")))))
+			#block(width:100%, inset:(left:m.width+5pt), body)
+		]
+	})
 }
 
 // Code mit highlight, aber inline
