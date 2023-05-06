@@ -105,7 +105,7 @@
 				breakable: true,
 				width: 100%,
 				table(
-					columns: if linenos {2} else {1},
+					columns: if linenos {(10mm, 100%-10mm)} else {100%},
 					inset: 0pt,
 					stroke: none,
 					fill: none,
