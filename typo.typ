@@ -4,6 +4,7 @@
 
 #import "./options.typ"
 #import "./theme.typ"
+#import "./algo/algo.typ"
 
 // Text sizes
 #let scaled(content, size: 0.8) = {
@@ -87,8 +88,9 @@
 				inset: 1em,
 				radius: 4pt,
 				breakable: true,
-				width: 100%
-			)[#align(left)[#body]]
+				width: 100%,
+				algo.code[#body]
+			)//[#align(left)[#body]]
 
 	// 		let x = 0
 	// 		for x in range(7) {
