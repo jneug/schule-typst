@@ -1,0 +1,9 @@
+[submodule "canvas"]
+	path = canvas
+	url = https://github.com/johannes-wolf/typst-canvas
+[submodule "algo"]
+	path = algo
+	url = https://github.com/platformer/typst-algorithms.git
+[submodule "tablex"]
+	path = tablex
+	url = https://github.com/PgBiel/typst-tablex.git

@@ -155,7 +155,7 @@
 	})
 }
 
-#let d_erwpunkte( aufg:none, teil:none, format:punkte => [#align(right)[_(punkte.join(" + "))_]] ) = {
+#let d_erwpunkte( aufg:none, teil:none, format:punkte => [#align(right)[_(#punkte.join(" + "))_]] ) = {
 	locate(loc => {
 		let n = aufg
 		if aufg == none {
