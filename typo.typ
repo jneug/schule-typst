@@ -4,7 +4,7 @@
 
 #import "./options.typ"
 #import "./theme.typ"
-#import "./algo/algo.typ"
+#import "./algo/algo.typ": algo, code
 
 // Text sizes
 #let scaled(content, size: 0.8) = {
@@ -70,27 +70,26 @@
 }
 
 // Quellcode
-#let code(
-	lines: true,
-	lang: "plain",
-	bg: theme.code.bg,
-	border: none,
-	body
-) = {
+// #let code(
+// 	lines: true,
+// 	lang: "plain",
+// 	bg: theme.code.bg,
+// 	border: none,
+// 	body
+// ) = {
 	// locate(loc => {
 	// 	style(styles => {
 	// 		let _m = measure(body, styles)
 	// 		let _l = loc
 
-			block(
-				fill: bg,
-				stroke: border,
-				inset: 1em,
-				radius: 4pt,
-				breakable: true,
-				width: 100%,
-				algo.code[#body]
-			)//[#align(left)[#body]]
+			// block(
+			// 	fill: bg,
+			// 	stroke: border,
+			// 	inset: 1em,
+			// 	radius: 4pt,
+			// 	breakable: true,
+			// 	width: 100%
+			// )[#align(left)[#body]]
 
 	// 		let x = 0
 	// 		for x in range(7) {
@@ -103,7 +102,7 @@
 	// 		}
 	// 	})
 	// })
-}
+//}
 
 // Code mit highlight, aber inline
 #let codeinline(body, lang: "java") = {
