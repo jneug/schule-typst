@@ -7,15 +7,21 @@
 #let _ab_highlight_doku = false
 
 #let mdoku( signature, body ) = {
+	if signature.func() == raw {
+		signature = signature.text
+	}
+
 	block(
 		width:100%,
 		fill:luma(85%),
 		breakable:false,
-		inset:8pt,
-		spacing: 0.1em,
-		below: 0.1em,
-	)[#if not _ab_highlight_doku [*#signature*]
-	else [#raw(signature, block:false, lang:"java")]]
+		inset:6pt,
+		below: 0.75em
+	)[
+		#set text(size:0.85em)
+		#if not _ab_highlight_doku [*#signature*]
+		else [#raw(signature, block:false, lang:"java")]
+	]
 	body
 }
 
