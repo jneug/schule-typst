@@ -69,14 +69,29 @@
 }
 
 // Quellcode
-#let __tabs(line, spaces:4) = {
+#let __tabs(line, spaces:4, gobble:0) = {
+	if gobble in (none, false) { gobble = 0 }
+
 	if spaces != none and spaces > 0 {
 		let m = line.match(regex("^\t+"))
 		if m != none {
-			line = line.replace(regex("^\t+"), " " * m.end * spaces)
+			line = line.replace(regex("^\t+"), " " * (m.end - gobble) * spaces)
 		}
 	}
 	return line
+}
+
+#let __count_tabs(line, default:0) = {
+	if line.len() == 0 {
+		return default
+	}
+
+	let m = line.match(regex("^\t+"))
+	if m != none {
+		return m.end
+	} else {
+		return 0
+	}
 }
 
 #let code(
@@ -84,6 +99,7 @@
 	fill: theme.code.bg,
 	border: none,
 	tab-indent: 4,
+	gobble: auto,
 	body
 ) = {
 	let lines = 0
@@ -96,8 +112,15 @@
 			lines = code_lines.len()
 			lang = item.lang
 
+
+			if gobble == auto {
+				gobble = code_lines.fold(100, (v, line) => {
+					return calc.min(v, __count_tabs(line, default:v))
+				})
+			}
+
 			for i in range(lines) {
-				code_lines.at(i) = __tabs(code_lines.at(i), spaces:tab-indent)
+				code_lines.at(i) = __tabs(code_lines.at(i), spaces:tab-indent, gobble:gobble)
 			}
 		}
 	}
