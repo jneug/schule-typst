@@ -69,19 +69,36 @@
 }
 
 // Quellcode
+#let __tabs(line, spaces:4) = {
+	if spaces != none and spaces > 0 {
+		let m = line.match(regex("^\t+"))
+		if m != none {
+			line = line.replace(regex("^\t+"), " " * m.end * spaces)
+		}
+	}
+	return line
+}
+
 #let code(
 	linenos: true,
 	fill: theme.code.bg,
 	border: none,
+	tab-indent: 4,
 	body
 ) = {
 	let lines = 0
 	let lang = none
+	let code_lines = ()
 
 	for item in body.children {
 		if item.func() == raw {
-			lines = item.text.split("\n").len()
+			code_lines = item.text.split("\n")
+			lines = code_lines.len()
 			lang = item.lang
+
+			for i in range(lines) {
+				code_lines.at(i) = __tabs(code_lines.at(i), spaces:tab-indent)
+			}
 		}
 	}
 
@@ -103,7 +120,7 @@
 			width: 100%,
 		)[
 			#place(top+left, dx:-5pt, block(width:m.width, text(fill:theme.muted, raw(range(lines).map(str).join("\n")))))
-			#block(width:100%, inset:(left:m.width+5pt), body)
+			#block(width:100%, inset:(left:m.width+5pt), raw(lang:lang, block:true, code_lines.join("\n")))
 		]
 	})
 }
