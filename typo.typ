@@ -95,11 +95,15 @@
 }
 
 #let code(
-	linenos: true,
 	fill: theme.code.bg,
 	border: none,
+
 	tab-indent: 4,
 	gobble: auto,
+
+	linenos: true,
+	gutter: 10pt,
+
 	body
 ) = {
 	let lines = 0
@@ -125,11 +129,6 @@
 		}
 	}
 
-	// grid(
-	// 	columns: (10mm, 100%-10mm),
-	// 	raw(range(lines).map(str).join("\n")),
-	// 	body
-	// )
 	style(s => {
 		let lines_content = raw(range(lines).map(str).join("\n"))
 		let m = measure(lines_content, s)
@@ -137,13 +136,23 @@
 		block(
 			fill:fill,
 			stroke: border,
-			inset: 1em,
+			inset: (x: 5pt, y: 10pt),
 			radius: 4pt,
 			breakable: true,
 			width: 100%,
 		)[
-			#place(top+left, dx:-5pt, block(width:m.width, text(fill:theme.muted, raw(range(lines).map(str).join("\n")))))
-			#block(width:100%, inset:(left:m.width+5pt), raw(lang:lang, block:true, code_lines.join("\n")))
+			// #place(top+left, dx:-5pt, block(width:m.width, breakable: true, align(right, text(fill:theme.muted, raw(range(lines).map(str).join("\n"))))))
+			// #block(width:100%, inset:(left:m.width+5pt), breakable: true, raw(lang:lang, block:true, code_lines.join("\n")))
+			#grid(
+				columns: (m.width, 100% - m.width - gutter),
+				column-gutter: gutter,
+				align(right, text(fill:theme.muted,
+					raw(range(lines).map(str).join("\n"))
+				)),
+				raw(lang:lang, block:true,
+					code_lines.join("\n")
+				)
+			)
 		]
 	})
 }
