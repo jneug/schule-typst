@@ -224,7 +224,7 @@
 					let cells = (
 						[*#{aufg.nummer}*],
 						[_#{aufg.titel}_],
-						[*#d_ew_punkte(aufg.nummer)*],
+						[*#d_ew_punkte(aufg.nummer, teil:none)*],
 						[ ]
 					)
 
