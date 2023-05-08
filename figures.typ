@@ -52,6 +52,14 @@
 // ================================
 // =           Tabellen           =
 // ================================
+
+// default fill formater for tables
+#let tablefill(fill:white, headerfill:theme.tables.header, footerfill:theme.tables.header, headers:1, footers:0) = (column, row) => {
+	if row <= headers { return headerfill }
+	else { return fill }
+}
+
+
 #let tabular(
 	inset: 5pt,
 	fill: none,
