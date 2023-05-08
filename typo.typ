@@ -143,6 +143,8 @@
 		)[
 			// #place(top+left, dx:-5pt, block(width:m.width, breakable: true, align(right, text(fill:theme.muted, raw(range(lines).map(str).join("\n"))))))
 			// #block(width:100%, inset:(left:m.width+5pt), breakable: true, raw(lang:lang, block:true, code_lines.join("\n")))
+			#set align(left)
+			#set par(justify:false)
 			#grid(
 				columns: (m.width, 100% - m.width - gutter),
 				column-gutter: gutter,
