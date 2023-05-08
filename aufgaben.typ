@@ -210,7 +210,7 @@
 #let d_loesung() = {
 	__akt_aufg(aufg => block(
 		inset:0.5em,
-		fill: theme.bg.muted,
+		fill: theme.bg.muted.lighten(50%),
 		radius:4pt
 	)[
 		=== Lösungen #d_aufg()
@@ -347,7 +347,7 @@
 			block(
 				width: 100%,
 				inset:0.5em,
-				fill:theme.bg.muted,
+				fill:theme.bg.muted.lighten(50%),
 				radius:4pt
 			)[=== Lösung
 				#body]
