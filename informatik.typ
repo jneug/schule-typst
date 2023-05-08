@@ -15,8 +15,8 @@
 		width:100%,
 		fill:luma(85%),
 		breakable:false,
-		inset:6pt,
-		below: 0.75em
+		inset:4pt,
+		below: 4pt
 	)[
 		#set text(size:0.85em)
 		#if not _ab_highlight_doku [*#signature*]
