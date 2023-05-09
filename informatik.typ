@@ -1,31 +1,11 @@
 #import "./typo.typ": rahmen
 
-#import "./if/docs.typ"
 
 
 // ================================
 // =       Dokumentationen        =
 // ================================
-#let _ab_highlight_doku = false
-
-#let mdoku( signature, body ) = {
-	if signature.func() == raw {
-		signature = signature.text
-	}
-
-	block(
-		width:100%,
-		fill:luma(85%),
-		breakable:false,
-		inset:4pt,
-		below: 4pt
-	)[
-		#set text(size:0.85em)
-		#if not _ab_highlight_doku [*#signature*]
-		else [#raw(signature, block:false, lang:"java")]
-	]
-	body
-}
+#import "./if/docs.typ"
 
 
 // ================================
