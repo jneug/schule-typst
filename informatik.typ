@@ -1,5 +1,7 @@
 #import "./typo.typ": rahmen
 
+#import "./if/docs.typ"
+
 
 // ================================
 // =       Dokumentationen        =
