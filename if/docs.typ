@@ -57,9 +57,15 @@
 
 	__d_methodheader(name, generic-type:generic-type, partial:partial)
 	for m in methods {
-		method[#m.signature][
-			#__content(m.descr)
-		]
+		if type(m) == "array" {
+			method[#m.at(0)][
+				#__content(m.at(1))
+			]
+		} else {
+			method[#m.signature][
+				#__content(m.descr)
+			]
+		}
 	}
 }
 
