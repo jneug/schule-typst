@@ -1,5 +1,35 @@
 #let _ab_highlight_doku = false
 
+#let doc-data = yaml("./docs.yaml")
+
+#let __content( string ) = {
+	if type(string) == "string" {
+		return eval("[" + string + "]")
+	} else {
+		return string
+	}
+}
+
+#let __d_classheader( name, generic-type:none ) = {
+	if generic-type != none [
+		=== Die generische Klasse #name
+	] else [
+		=== Die Klasse #name
+	]
+}
+
+#let __d_methodheader( name, generic-type:none, partial:false ) = {
+	let prefix = "Dokumentation der Klasse"
+	if partial {
+		prefix = "Ausschnitt aus der " + prefix
+	}
+	if generic-type != none [
+		==== #prefix #name<#generic-type>
+	] else [
+		==== #prefix #name
+	]
+}
+
 #let method( signature, body ) = {
 	if signature.func() == raw {
 		signature = signature.text
@@ -19,44 +49,38 @@
 	body
 }
 
-#let doc-data = yaml("./docs.yaml")
-
-#let __content( string ) = {
-	eval("[" + string + "]")
-}
-
-#let __d_classheader( scheme ) = {
-	if "generic" in scheme and scheme.generic == true [
-		=== Die generische Klasse #scheme.name
-	] else [
-		=== Die Klasse #scheme.name
-	]
-}
-
-#let __d_methodheader( scheme ) = {
-	if "generic" in scheme and scheme.generic == true [
-		==== Dokumentation der Klasse #scheme.name<#scheme.generic-type>
-	] else [
-		==== Dokumentation der Klasse #scheme.name
-	]
-}
-
-#let display( name, descr:true ) = {
-	if name not in doc-data {
-		panic("No docs for name " + name)
+#let class( name, generic-type:none, descr:none, partial:false, methods ) = {
+	if descr != none {
+		__d_classheader(name, generic-type:generic-type)
+		__content(descr)
 	}
 
-	let scheme = doc-data.at(name)
-
-	if descr and "descr" in scheme {
-		__d_classheader( scheme )
-		__content(scheme.descr)
-	}
-
-	__d_methodheader( scheme )
-	for m in scheme.methods {
+	__d_methodheader(name, generic-type:generic-type, partial:partial)
+	for m in methods {
 		method[#m.signature][
 			#__content(m.descr)
 		]
 	}
+}
+
+#let display( key, descr:true ) = {
+	if key not in doc-data {
+		panic("No docs for name " + name)
+	}
+
+	let scheme = doc-data.at(key)
+	class(
+		scheme.name,
+		generic-type:if scheme.generic {
+				scheme.generic-type
+			} else {
+				none
+			},
+		descr: if descr and "descr" in scheme {
+				scheme.descr
+			} else {
+				none
+			},
+		scheme.methods
+	)
 }
