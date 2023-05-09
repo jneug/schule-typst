@@ -108,31 +108,28 @@
 ) = {
 	let lines = 0
 	let lang = none
-	let code_lines = ()
+	let code-lines = ()
 
 	for item in body.children {
 		if item.func() == raw {
-			code_lines = item.text.split("\n")
-			lines = code_lines.len()
+			code-lines = item.text.split("\n")
+			lines = code-lines.len()
 			lang = item.lang
 
 
 			if gobble == auto {
-				gobble = code_lines.fold(100, (v, line) => {
+				gobble = code-lines.fold(100, (v, line) => {
 					return calc.min(v, __count_tabs(line, default:v))
 				})
 			}
 
 			for i in range(lines) {
-				code_lines.at(i) = __tabs(code_lines.at(i), spaces:tab-indent, gobble:gobble)
+				code-lines.at(i) = __tabs(code-lines.at(i), spaces:tab-indent, gobble:gobble)
 			}
 		}
 	}
 
-	style(s => {
-		let lines_content = raw(range(lines).map(str).join("\n"))
-		let m = measure(lines_content, s)
-
+	style(styles => {
 		block(
 			fill:fill,
 			stroke: border,
@@ -141,20 +138,27 @@
 			breakable: true,
 			width: 100%,
 		)[
-			// #place(top+left, dx:-5pt, block(width:m.width, breakable: true, align(right, text(fill:theme.muted, raw(range(lines).map(str).join("\n"))))))
-			// #block(width:100%, inset:(left:m.width+5pt), breakable: true, raw(lang:lang, block:true, code_lines.join("\n")))
 			#set align(left)
 			#set par(justify:false)
-			#grid(
-				columns: (m.width, 100% - m.width - gutter),
-				column-gutter: gutter,
-				align(right, text(fill:theme.muted,
-					raw(range(lines).map(str).join("\n"))
-				)),
-				raw(lang:lang, block:true,
-					code_lines.join("\n")
+			#if linenos {
+				let lines-content = raw(range(lines).map(i => str(i + 1)).join("\n"))
+				let lines-width = measure(lines-content, styles).width
+
+				grid(
+					columns: (lines-width, 100% - lines-width - gutter),
+					column-gutter: gutter,
+					align(right, text(fill:theme.muted,
+						lines-content
+					)),
+					raw(lang:lang, block:true,
+						code-lines.join("\n")
+					)
 				)
-			)
+			} else {
+				raw(lang:lang, block:true,
+					code-lines.join("\n")
+				)
+			}
 		]
 	})
 }
