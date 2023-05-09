@@ -1,0 +1,497 @@
+# Abiturklassen
+####
+# Lineare
+####
+queue:
+  name: Queue
+  generic: true
+  generic-type: ContentType
+  descr: >-
+    Objekte der generischen Klasse `Queue` (Schlange) verwalten beliebige Objekte vom Typ `ContentType` nach dem First-In-First-Out-Prinzip, d. h., das zuerst abgelegte Objekt wird als erstes wieder entnommen. Alle Methoden haben eine konstante Laufzeit, unabhängig von der Anzahl der verwalteten Objekte.
+  methods:
+    - signature: Queue()
+      descr: >-
+        Eine leere Schlange wird erzeugt. Objekte, die in dieser Schlange
+        verwaltet werden, müssen vom Typ `ContentType` sein.
+    - signature: boolean isEmpty()
+      descr: >-
+        Die Anfrage liefert den Wert `true`, wenn die Schlange keine Objekte
+        enthält, sonst liefert sie den Wert `false`.
+    - signature: void enqueue(ContentType pContent)
+      descr: >-
+        Das Objekt `pContent` wird an die Schlange angehängt. Falls `pContent`
+        gleich `null` ist, bleibt die Schlange unverändert.
+    - signature: void dequeue()
+      descr: >-
+        Das erste Objekt wird aus der Schlange entfernt. Falls die Schlange leer
+        ist, wird sie nicht verändert.
+    - signature: ContentType front()
+      descr: >-
+        Die Anfrage liefert das erste Objekt der Schlange. Die Schlange bleibt
+        unverändert. Falls die Schlange leer ist, wird `null` zurückgegeben.
+stack:
+  name: Stack
+  generic: true
+  generic-type: ContentType
+  descr: >-
+    Objekte der generischen Klasse `Stack` (Keller, Stapel) verwalten beliebige Objekte vom Typ `ContentType` nach dem Last-In-First-Out-Prinzip, d. h., das zuletzt abgelegte Objekt wird als erstes wieder entnommen. Alle Methoden haben eine konstante Laufzeit, unabhängig von der Anzahl der verwalteten Objekte.
+  methods:
+    - signature: Stack()
+      descr: >-
+        Ein leerer Stapel wird erzeugt. Objekte, die in diesem Stapel verwaltet
+        werden, müssen vom Typ ContentType sein.
+    - signature: boolean isEmpty()
+      descr: >-
+        Die Anfrage liefert den Wert true, wenn der Stapel keine Objekte
+        enthält, sonst liefert sie den Wert `false`.
+    - signature: void push(ContentType pContent)
+      descr: >-
+        Das Objekt `pContent` wird oben auf den Stapel gelegt. Falls `pContent`
+        gleich `null` ist, bleibt der Stapel unverändert.
+    - signature: void pop()
+      descr: >-
+        Das zuletzt eingefügte Objekt wird von dem Stapel entfernt. Falls der
+        Stapel leer ist, bleibt er unverändert.
+    - signature: ContentType top()
+      descr: >-
+        Die Anfrage liefert das oberste Stapelobjekt. Der Stapel bleibt
+        unverändert. Falls der Stapel leer ist, wird `null` zurückgegeben.
+list:
+  name: List
+  generic: true
+  generic-type: ContentType
+  descr: >-
+    Objekte der generischen Klasse `List` verwalten beliebig viele, linear
+    angeordnete Objekte vom Typ `ContentType`. Auf höchstens eins der
+    verwalteten Objekte, aktuelles Objekt genannt, kann jeweils zugegriffen
+    werden. Wenn eine Liste leer ist, vollständig durchlaufen wurde oder das
+    aktuelle Objekt am Ende der Liste gelöscht wurde, gibt es kein aktuelles
+    Objekt. Das erste oder das letzte Objekt einer Liste können durch einen
+    Auftrag zum aktuellen Objekt gemacht werden. Außerdem kann das dem aktuellen
+    Objekt folgende Listenobjekt zum neuen aktuellen Objekt werden.
+
+    Das aktuelle Objekt kann gelesen, verändert oder gelöscht werden. Außerdem
+    kann vor dem aktuellen Objekt ein Listenobjekt eingefügt werden.
+  methods:
+    - signature: List()
+      descr: Eine leere Liste wird erzeugt.
+    - signature: boolean isEmpty()
+      descr: >-
+        Die Anfrage liefert den Wert `true`, wenn die Liste keine Objekte
+        enthält, sonst liefert sie den Wert `false`.
+    - signature: boolean hasAccess()
+      descr: >-
+        Die Anfrage liefert den Wert `true`, wenn es ein aktuelles Objekt gibt,
+        sonst liefert sie den Wert `false`.
+    - signature: void next()
+      descr: >-
+        Falls die Liste nicht leer ist, es ein aktuelles Objekt gibt und dieses
+        nicht das letzte Objekt der Liste ist, wird das dem aktuellen Objekt in
+        der Liste folgende Objekt zum aktuellen Objekt, andernfalls gibt es nach
+        Ausführung des Auftrags kein aktuelles Objekt, d.h. `hasAccess()`
+        liefert den Wert `false`.
+    - signature: void toFirst()
+      descr: >-
+        Falls die Liste nicht leer ist, wird das erste Objekt der Liste
+        aktuelles Objekt. Ist die Liste leer, geschieht nichts.
+    - signature: void toLast()
+      descr: >-
+        Falls die Liste nicht leer ist, wird das letzte Objekt der Liste
+        aktuelles Objekt. Ist die Liste leer, geschieht nichts.
+    - signature: ContentType getContent()
+      descr: >-
+        Falls es ein aktuelles Objekt gibt (`hasAccess()==true`), wird das
+        aktuelle Objekt zurückgegeben. Andernfalls (`hasAccess()==false`) gibt
+        die Anfrage den Wert `null` zurück.
+    - signature: void setContent(ContentType pContent)
+      descr: >-
+        Falls es ein aktuelles Objekt gibt (`hasAccess()==true`), und `pContent`
+        ungleich `null` ist, wird das aktuelle Objekt durch `pContent` ersetzt.
+        Sonst bleibt die Liste unverändert.
+    - signature: void append(ContentType pContent)
+      descr: >-
+        Ein neues Objekt `pContent` wird am Ende der Liste eingefügt. Das
+        aktuelle Objekt bleibt unverändert. Wenn die Liste leer ist, wird das
+        Objekt `pContent` in die Liste eingefügt und es gibt weiterhin kein
+        aktuelles Objekt (`hasAccess()==false`).
+
+        Falls `pContent` gleich `null` ist, bleibt die Liste unverändert.
+    - signature: void insert(ContentType pContent)
+      descr: >-
+        Falls es ein aktuelles Objekt gibt (`hasAccess()==true`), wird ein neues
+        Objekt `pContent` vor dem aktuellen Objekt in die Liste eingefügt. Das
+        aktuelle Objekt bleibt unverändert.
+
+        Falls die Liste leer ist und es somit kein aktuelles Objekt gibt
+        (`hasAccess()==false`), wird `pContent` in die Liste eingefügt und es
+        gibt weiterhin kein aktuelles Objekt.
+
+        Falls es kein aktuelles Objekt gibt (`hasAccess()==false`) und die Liste
+        nicht leer ist oder `pContent==null` ist, bleibt die Liste unverändert.
+    - signature: void concat(List<ContentType> pList)
+      descr: >-
+        Die Liste `pList` wird an die Liste angehängt. Anschließend wird `pList`
+        eine leere Liste. Das aktuelle Objekt bleibt unverändert. Falls es sich
+        bei der Liste und `pList` um dasselbe Objekt handelt, `pList==null` oder
+        eine leere Liste ist, bleibt die Liste unverändert.
+    - signature: void remove()
+      descr: >-
+        Falls es ein aktuelles Objekt gibt (`hasAccess()==true`), wird das
+        aktuelle Objekt gelöscht und das Objekt hinter dem gelöschten Objekt
+        wird zum aktuellen Objekt. Wird das Objekt, das am Ende der Liste steht,
+        gelöscht, gibt es kein aktuelles Objekt mehr (`hasAccess() == false`).
+        Wenn die Liste leer ist oder es kein aktuelles Objekt gibt (`hasAccess()
+        == false`), bleibt die Liste unverändert.
+####
+# Bäume
+####
+binarytree:
+  name: BinaryTree
+  generic: true
+  generic-type: ContentType
+  descr: >-
+    Mithilfe der generischen Klasse `BinaryTree` können beliebig viele Objekte vom Typ `ContentType` in einem Binärbaum verwaltet werden. Ein Objekt der Klasse stellt entweder einen leeren Baum dar oder verwaltet ein Inhaltsobjekt sowie einen linken und einen rechten Teilbaum, die ebenfalls Objekte der generischen Klasse `BinaryTree` sind.
+  methods:
+    - signature: BinaryTree()
+      descr: Nach dem Aufruf des Konstruktors existiert ein leerer Binärbaum.
+    - signature: BinaryTree<ContentType>(ContentType pContent)
+      descr: >-
+        Wenn der Parameter `pContent` ungleich `null` ist, existiert nach dem
+        Aufruf des Konstruktors der Binärbaum und hat pContent als Inhaltsobjekt
+        und zwei leere Teilbäume. Falls der Parameter `null` ist, wird ein
+        leerer Binärbaum erzeugt.
+    - signature: >-
+        BinaryTree<ContentType>(ContentType pContent, BinaryTree<ContentType>
+        pLeftTree, BinaryTree<ContentType> pRightTree)
+      descr: >-
+        Wenn der Parameter `pContent` ungleich `null` ist, wird ein Binärbaum
+        mit `pContent` als Inhaltsobjekt und den beiden Teilbäume `pLeftTree`
+        und `pRightTree` erzeugt. Sind `pLeftTree` oder `pRightTree` gleich
+        `null`, wird der entsprechende Teilbaum als leerer Binärbaum eingefügt.
+        Wenn der Parameter `pContent` gleich `null` ist, wird ein leerer
+        Binärbaum erzeugt.
+    - signature: boolean isEmpty()
+      descr: >-
+        Die Anfrage liefert den Wert `true`, wenn der Binärbaum leer ist, sonst
+        liefert sie den Wert `false`.
+    - signature: void setContent(ContentType pContent)
+      descr: >-
+        Wenn der Binärbaum leer ist, wird der Parameter `pContent` als
+        Inhaltsobjekt sowie ein leerer linker und rechter Teilbaum eingefügt.
+        Ist der Binärbaum nicht leer, wird das Inhaltsobjekt durch `pContent`
+        ersetzt. Die Teilbäume werden nicht geändert. Wenn `pContent` `null`
+        ist, bleibt der Binärbaum unverändert.
+    - signature: ContentType getContent()
+      descr: >-
+        Diese Anfrage liefert das Inhaltsobjekt des Binärbaums. Wenn der
+        Binärbaum leer ist, wird `null` zurückgegeben.
+    - signature: void setLeftTree(BinaryTree<ContentType> pTree)
+      descr: >-
+        Wenn der Binärbaum leer ist, wird `pTree` nicht angehängt. Andernfalls
+        erhält der Binärbaum den übergebenen Baum als linken Teilbaum. Falls der
+        Parameter `null` ist, ändert sich nichts.
+    - signature: void setRightTree(BinaryTree<ContentType> pTree)
+      descr: >-
+        Wenn der Binärbaum leer ist, wird `pTree` nicht angehängt. Andernfalls
+        erhält der Binärbaum den übergebenen Baum als rechten Teilbaum. Falls
+        der Parameter `null` ist, ändert sich nichts.
+    - signature: BinaryTree<ContentType> getLeftTree()
+      descr: >-
+        Diese Anfrage liefert den linken Teilbaum des Binärbaumes. Der Binärbaum
+        ändert sich nicht. Wenn der Binärbaum leer ist, wird `null`
+        zurückgegeben.
+    - signature: BinaryTree<ContentType> getRightTree()
+      descr: >-
+        Diese Anfrage liefert den rechten Teilbaum des Binärbaumes. Der
+        Binärbaum ändert sich nicht. Wenn der Binärbaum leer ist, wird `null`
+        zurückgegeben.
+binarysearchtree:
+  name: BinarySearchTree
+  generic: true
+  generic-type: ContentType extends ComparableContent<ContentType>
+  descr: >-
+    Mithilfe der generischen Klasse `BinarySearchTree` können beliebig viele Objekte des Typs ContentType in einem Binärbaum (binärer Suchbaum) entsprechend einer Ordnungsrelation verwaltet werden.
+
+    Ein Objekt der Klasse `BinarySearchTree` stellt entweder einen leeren Baum dar oder verwaltet ein Inhaltsobjekt vom Typ `ContentType` sowie einen linken und einen rechten Teilbaum, die ebenfalls Objekte der Klasse `BinarySearchTree` sind.
+
+    Die Klasse der Objekte, die in dem Suchbaum verwaltet werden sollen, muss das generische Interface `ComparableContent` implementieren. Dabei muss durch Überschreiben der drei Vergleichsmethoden `isLess`, `isEqual`, `isGreater` (siehe Dokumentation dieses Interfaces) eine eindeutige Ordnungsrelation festgelegt sein.
+  methods:
+    - signature: BinarySearchTree()
+      descr: Der Konstruktor erzeugt einen leeren Suchbaum.
+    - signature: boolean isEmpty()
+      descr: Diese Anfrage liefert den Wahrheitswert `true`, wenn der Suchbaum leer ist, sonst liefert sie den Wert `false`.
+    - signature: void insert(ContentType pContent)
+      descr: Falls bereits ein Objekt in dem Suchbaum vorhanden ist, das gleichgroß ist wie pContent, passiert nichts. Andernfalls wird das Objekt pContent entsprechend der Ordnungsrelation in den Baum eingeordnet. Falls der Parameter null ist, ändert sich nichts.
+    - signature: ContentType search(ContentType pContent)
+      descr: Falls ein Objekt im binären Suchbaum enthalten ist, das gleichgroß ist wie pContent, liefert die Anfrage dieses, ansonsten wird null zurückgegeben. Falls der Parameter null ist, wird null zurückgegeben.
+    - signature: void remove(ContentType pContent)
+      descr: Falls ein Objekt im binären Suchbaum enthalten ist, das gleichgroß ist wie pContent, wird dieses entfernt. Falls der Parameter null ist, ändert sich nichts.
+    - signature: ContentType getContent()
+      descr: Diese Anfrage liefert das Inhaltsobjekt des Suchbaumes. Wenn der Suchbaum leer ist, wird null zurückgegeben.
+    - signature: BinarySearchTree<ContentType> getLeftTree()
+      descr: Diese Anfrage liefert den linken Teilbaum des binären Suchbaumes. Der binäre Suchbaum ändert sich nicht. Wenn er leer ist, wird null zurückgegeben.
+    - signature: BinarySearchTree<ContentType> getRightTree()
+      descr: Diese Anfrage liefert den rechten Teilbaum des Suchbaumes. Der Suchbaum ändert sich nicht. Wenn er leer ist, wird null zurückgegeben.
+comparablecontent:
+  name: ComparableContent
+  generic: true
+  generic-type: ContentType
+  descr: >-
+    Das generische Interface `ComparableContent` muss von Klassen implementiert werden, deren Objekte in einen Suchbaum (`BinarySearchTree`) eingefügt werden sollen. Die Ordnungsrelation wird in diesen Klassen durch Überschreiben der drei implizit abstrakten Methoden `isGreater`, `isEqual` und `isLess` festgelegt.
+  methods:
+    - signature: boolean isGreater(ContentType pComparableContent)
+      descr: Wenn festgestellt wird, dass das Objekt, von dem die Methode aufgerufen wird, bzgl. der gewünschten Ordnungsrelation größer als das Objekt `pComparableContent` ist, wird `true` geliefert. Sonst wird `false` geliefert.
+    - signature: boolean isEqual(ContentType pComparableContent)
+      descr: Wenn festgestellt wird, dass das Objekt, von dem die Methode aufgerufen wird, bzgl. der gewünschten Ordnungsrelation gleich dem Objekt `pComparableContent` ist, wird `true` geliefert. Sonst wird `false` geliefert.
+    - signature: boolean isLess(ContentType pComparableContent)
+      descr: Wenn festgestellt wird, dass das Objekt, von dem die Methode aufgerufen wird, bzgl. der gewünschten Ordnungsrelation kleiner als das Objekt `pComparableContent` ist, wird `true` geliefert. Sonst wird `false` geliefert.
+####
+# Graphenklassen
+####
+graph:
+  name: Graph
+  generic: false
+  descr: >-
+    Die Klasse `Graph` stellt einen ungerichteten, kantengewichteten Graphen dar. Es können Knoten- und Kantenobjekte hinzugefügt und entfernt, flache Kopien der Knoten- und Kantenlisten des Graphen angefragt und Markierungen von Knoten und Kanten gesetzt und überprüft werden. Des Weiteren kann eine Liste der Nachbarn eines bestimmten Knoten, eine Liste der inzidenten Kanten eines bestimmten Knoten und die Kante von einem bestimmten Knoten zu einem anderen Knoten angefragt werden. Abgesehen davon kann abgefragt werden, welches Knotenobjekt zu einer bestimmten ID gehört und ob der Graph leer ist.
+  methods:
+    - signature: Graph()
+      descr: Ein Objekt vom Typ `Graph` wird erstellt. Der von diesem Objekt repräsentierte Graph ist leer.
+    - signature: void addVertex(Vertex pVertex)
+      descr: Der Auftrag fügt den Knoten `pVertex` vom Typ `Vertex` in den Graphen ein, sofern es noch keinen Knoten mit demselben ID-Eintrag wie `pVertex` im Graphen gibt und `pVertex` eine ID ungleich null hat. Ansonsten passiert nichts.
+    - signature: void addEdge(Edge pEdge)
+      descr: Der Auftrag fügt die Kante `pEdge` in den Graphen ein, sofern beide durch die Kante verbundenen Knoten im Graphen enthalten sind, nicht identisch sind und noch keine Kante zwischen den beiden Knoten existiert. Ansonsten passiert nichts.
+    - signature: void removeVertex(Vertex pVertex)
+      descr: Der Auftrag entfernt den Knoten `pVertex` aus dem Graphen und löscht alle Kanten, die mit ihm inzident sind. Ist der Knoten `pVertex` nicht im Graphen enthalten, passiert nichts.
+    - signature: void removeEdge(Edge pEdge)
+      descr: Der Auftrag entfernt die Kante `pEdge` aus dem Graphen. Ist die Kante `pEdge` nicht im Graphen enthalten, passiert nichts.
+    - signature: Vertex getVertex(String pID)
+      descr: Die Anfrage liefert das Knotenobjekt mit pID als ID. Ist ein solches Knotenobjekt nicht im Graphen enthalten, wird null zurückgeliefert.
+    - signature: List<Vertex> getVertices()
+      descr: Die Anfrage liefert eine neue Liste aller Knotenobjekte vom Typ `List<Vertex>`. Enthält der Graph keine Knotenobjekte, so wird eine leere Liste zurückgeliefert.
+    - signature: List<Vertex> getNeighbours(Vertex pVertex)
+      descr: Die Anfrage liefert alle Nachbarn des Knotens `pVertex` als neue Liste vom Typ `List<Vertex>`. Hat der Knoten `pVertex` keine Nachbarn in diesem Graphen oder ist gar nicht in diesem Graphen enthalten, so wird eine leere Liste zurückgeliefert.
+    - signature: List<Edge> getEdges()
+      descr: Die Anfrage liefert eine neue Liste aller Kantenobjekte vom Typ `List<Edge>`. Enthält der Graph keine Kantenobjekte, so wird eine leere Liste zurückgeliefert.
+    - signature: List<Edge> getEdges(Vertex pVertex)
+      descr: Die Anfrage liefert eine neue Liste aller inzidenten Kanten zum Knoten `pVertex`. Hat der Knoten `pVertex` keine inzidenten Kanten in diesem Graphen oder ist gar nicht in diesem Graphen enthalten, so wird eine leere Liste zurückgeliefert.
+    - signature: Edge getEdge(Vertex pVertex, Vertex pAnotherVertex)
+      descr: Die Anfrage liefert die Kante, welche die Knoten `pVertex` und `pAnotherVertex` verbindet, als Objekt vom Typ `Edge`. Ist der Knoten `pVertex` oder der Knoten `pAnotherVertex` nicht im Graphen enthalten oder gibt es keine Kante, die beide Knoten verbindet, so wird null zurückgeliefert.
+    - signature: void setAllVertexMarks(boolean pMark)
+      descr: Der Auftrag setzt die Markierungen aller Knoten des Graphen auf den Wert `pMark`.
+    - signature: boolean allVerticesMarked()
+      descr: Die Anfrage liefert `true`, wenn die Markierungen aller Knoten des Graphen den Wert `true` haben, ansonsten `false`.
+    - signature: void setAllEdgeMarks(boolean pMark)
+      descr: Der Auftrag setzt die Markierungen aller Kanten des Graphen auf den Wert `pMark`.
+    - signature: boolean allEdgesMarked()
+      descr: Die Anfrage liefert `true`, wenn die Markierungen aller Kanten des Graphen den Wert `true` haben, ansonsten `false`.
+    - signature: boolean isEmpty()
+      descr: Die Anfrage liefert `true`, wenn der Graph keine Knoten enthält, ansonsten `false`.
+vertex:
+  name: Vertex
+  generic: false
+  descr: >-
+    Die Klasse `Vertex` stellt einen einzelnen Knoten eines Graphen dar. Jedes Objekt dieser Klasse verfügt über eine im Graphen eindeutige ID als String und kann diese ID zurückliefern. Darüber hinaus kann eine Markierung gesetzt und abgefragt werden.
+  methods:
+    - signature: Vertex(String pID)
+      descr: Ein neues Objekt vom Typ Vertex mit der ID `pID` wird erstellt. Seine Markierung hat den Wert `false`.
+    - signature: String getID()
+      descr: Die Anfrage liefert die ID des Knotens als String.
+    - signature: void setMark(boolean pMark)
+      descr: Der Auftrag setzt die Markierung des Knotens auf den Wert pMark.
+    - signature: boolean isMarked()
+      descr: Die Anfrage liefert `true`, wenn die Markierung des Knotens den Wert `true` hat, ansonsten `false`.
+edge:
+  name: Edge
+  generic: false
+  descr: >-
+    Die Klasse `Edge` stellt eine einzelne, ungerichtete Kante eines Graphen dar. Beim Erstellen werden die beiden durch sie zu verbindenden Knotenobjekte und eine Gewichtung als `double` übergeben. Beide Knotenobjekte können abgefragt werden. Des Weiteren können die Gewichtung und eine Markierung gesetzt und abgefragt werden.
+  methods:
+    - signature: Edge(Vertex pVertex, Vertex pAnotherVertex, double pWeight)
+      descr: Ein neues Objekt vom Typ `Edge` wird erstellt. Die von diesem Objekt repräsentierte Kante verbindet die Knoten `pVertex` und `pAnotherVertex` mit der Gewichtung pWeight. Ihre Markierung hat den Wert `false`.
+    - signature: void setWeight(double pWeight)
+      descr: Der Auftrag setzt das Gewicht der Kante auf den Wert `pWeight`.
+    - signature: double getWeight()
+      descr: Die Anfrage liefert das Gewicht der Kante als `double`.
+    - signature: Vertex[] getVertices()
+      descr: Die Anfrage gibt die beiden Knoten, die durch die Kante verbunden werden, als neues Feld vom Typ `Vertex` zurück. Das Feld hat genau zwei Einträge mit den Indexwerten `0` und `1`.
+    - signature: void setMark(boolean pMark)
+      descr: Der Auftrag setzt die Markierung der Kante auf den Wert `pMark`.
+    - signature: void setWeight(double pWeight)
+      descr: Der Auftrag setzt das Gewicht der Kante auf den Wert `pWeight`.
+    - signature: boolean isMarked()
+      descr: Die Anfrage liefert `true`, wenn die Markierung der Kante den Wert `true` hat, ansonsten `false`.
+####
+# Datenbanken
+####
+databaseconnector:
+  name: DatabaseConnector
+  generic: false
+  descr: >-
+    Ein Objekt der Klasse `DatabaseConnector` ermöglicht die Abfrage und Manipulation einer relationalen Datenbank. Beim Erzeugen des Objekts wird eine Datenbankverbindung aufgebaut, so dass anschließend SQL-Anweisungen an diese Datenbank gerichtet werden können.
+  methods:
+    - signature: DatabaseConnector(String pIP, int pPort, String pDatabase, String pUsername, String pPassword)
+      descr: Ein Objekt vom Typ DatabaseConnector wird erstellt, und eine Verbindung zur Datenbank wird aufgebaut. Mit den Parametern `pIP` und `pPort` werden die IP-Adresse und die Port-Nummer übergeben, unter denen die Datenbank mit Namen pDatabase zu erreichen ist. Mit den Parametern `pUsername` und `pPassword` werden Benutzername und Passwort für die Datenbank übergeben.
+    - signature: void executeStatement(String pSQLStatement)
+      descr: Der Auftrag schickt den im Parameter `pSQLStatement` enthaltenen SQL-Befehl an die Datenbank ab.\ Handelt es sich bei `pSQLStatement` um einen SQL-Befehl, der eine Ergebnismenge liefert, so kann dieses Ergebnis anschließend mit der Methode `getCurrentQueryResult` abgerufen werden.
+    - signature: QueryResult getCurrentQueryResult()
+      descr: Die Anfrage liefert das Ergebnis des letzten mit der Methode executeStatement an die Datenbank geschickten SQL-Befehls als Objekt vom Typ `QueryResult` zurück.\ Wurde bisher kein SQL-Befehl abgeschickt oder ergab der letzte Aufruf von `executeStatement` keine Ergebnismenge (z. B. bei einem `INSERT`-Befehl oder einem Syntaxfehler), so wird null geliefert.
+    - signature: String getErrorMessage()
+      descr: Die Anfrage liefert `null` oder eine Fehlermeldung, die sich jeweils auf die letzte zuvor ausgeführte Datenbankoperation bezieht.
+    - signature: void close()
+      descr: Die Datenbankverbindung wird geschlossen.
+queryresult:
+  name: QueryResult
+  generic: false
+  descr: >-
+    Ein Objekt der Klasse `QueryResult` stellt die Ergebnistabelle einer Datenbankanfrage mit
+
+    Hilfe der Klasse `DatabaseConnector` dar. Objekte dieser Klasse werden nur von der Klasse `DatabaseConnector` erstellt. Die Klasse verfügt über keinen öffentlichen Konstruktor.
+  methods:
+    - signature: String[][] getData()
+      descr: Die Anfrage liefert die Einträge der Ergebnistabelle als zweidimensionales Feld vom Typ `String`. Der erste Index des Feldes stellt die Zeile und der zweite die Spalte dar (d. h. `String[zeile][spalte]`).
+    - signature: String[] getColumnNames()
+      descr: Die Anfrage liefert die Bezeichner der Spalten der Ergebnistabelle als Feld vom Typ `String` zurück.
+    - signature: String[] getColumnTypes()
+      descr: Die Anfrage liefert die Typenbezeichnung der Spalten der Ergebnistabelle als Feld vom Typ `String` zurück. Die Bezeichnungen entsprechen den Angaben in der Datenbank.
+    - signature: int getRowCount()
+      descr: Die Anfrage liefert die Anzahl der Zeilen der Ergebnistabelle als `int`.
+    - signature: int getColumnCount()
+      descr: Die Anfrage liefert die Anzahl der Spalten der Ergebnistabelle als `int`.
+####
+# Netzwerke
+####
+connection:
+  name: Connection
+  generic: false
+  descr: >-
+    Objekte der Klasse `Connection` ermöglichen eine Netzwerkverbindung zu einem Server mittels TCP/IP-Protokoll. Nach Verbindungsaufbau können Zeichenketten (`String`s) zum Server gesendet und von diesem empfangen werden. Zur Vereinfachung geschieht dies zeilenweise, d. h., beim Senden einer Zeichenkette wird ein Zeilentrenner ergänzt und beim Empfang wird dieser entfernt. Es findet nur eine rudimentäre Fehlerbehandlung statt, so dass z. B. der Zugriff auf unterbrochene oder bereits getrennte Verbindungen nicht zu einem Programmabbruch führt. Eine einmal getrennte Verbindung kann nicht reaktiviert werden.
+  methods:
+    - signature: Connection(String pServerIP, int pServerPort)
+      descr: Ein Objekt vom Typ `Connection` wird erstellt. Dadurch wird eine Verbindung zum durch `pServerIP` und `pServerPort` spezifizierten Server aufgebaut, so dass Daten (Zeichenketten) gesendet und empfangen werden können. Kann die Verbindung nicht hergestellt werden, kann die Instanz von Connection nicht mehr verwendet werden.
+    - signature: void send(String pMessage)
+      descr: Die Nachricht `pMessage` wird – um einen Zeilentrenner ergänzt – an den Server gesendet. Schlägt der Versand fehl, geschieht nichts.
+    - signature: String receive()
+      descr: Es wird beliebig lange auf eine eingehende Nachricht vom Server gewartet und diese Nachricht anschließend zurückgegeben. Der vom Server angehängte Zeilentrenner wird zuvor entfernt. Während des Wartens ist der ausführende Prozess blockiert. Wurde die Verbindung unterbrochen oder durch den Server unvermittelt geschlossen, wird `null` zurückgegeben.
+    - signature: void close()
+      descr: Die Verbindung zum Server wird getrennt und kann nicht mehr verwendet werden. War die Verbindung bereits getrennt, geschieht nichts.
+client:
+  name: Client
+  generic: false
+  descr: >-
+    Objekte von Unterklassen der abstrakten Klasse `Client` ermöglichen Netzwerkverbindungen zu einem Server mittels TCP/IP-Protokoll. Nach Verbindungsaufbau können Zeichenketten (`String`s) zum Server gesendet und von diesem empfangen werden, wobei der Nachrichtenempfang nebenläufig geschieht. Zur Vereinfachung finden Nachrichtenversand und -empfang zeilenweise statt, d. h., beim Senden einer Zeichenkette wird ein Zeilentrenner ergänzt und beim Empfang wird dieser entfernt. Jede empfangene Nachricht wird einer Ereignisbehandlungsmethode übergeben, die in Unterklassen implementiert werden muss. Es findet nur eine rudimentäre Fehlerbehandlung statt, so dass z. B. Verbindungsabbrüche nicht zu einem Programmabbruch führen. Eine einmal unterbrochene oder getrennte Verbindung kann nicht reaktiviert werden.
+  methods:
+    - signature: Client(String pServerIP, int pServerPort)
+      descr: Es wird eine Verbindung zum durch `pServerIP` und `pServerPort` spezifizierten Server aufgebaut, so dass Daten (Zeichenketten) gesendet und empfangen werden können. Kann die Verbindung nicht hergestellt werden, kann der Client nicht zum Datenaustausch verwendet werden.
+    - signature: boolean isConnected()
+      descr: Die Anfrage liefert den Wert `true`, wenn der Client mit dem Server aktuell verbunden ist. Ansonsten liefert sie den Wert `false`.
+    - signature: void send(String pMessage)
+      descr: Die Nachricht `pMessage` wird – um einen Zeilentrenner ergänzt – an den Server gesendet. Schlägt der Versand fehl, geschieht nichts.
+    - signature: void close()
+      descr: Die Verbindung zum Server wird getrennt und der Client kann nicht mehr verwendet werden. Ist Client bereits vor Aufruf der Methode in diesem Zustand, geschieht nichts.
+    - signature: void processMessage(String pMessage)
+      descr: Diese Methode wird aufgerufen, wenn der Client die Nachricht `pMessage` vom Server empfangen hat. Der vom Server ergänzte Zeilentrenner wurde zuvor entfernt. Die Methode ist abstrakt und muss in einer Unterklasse der Klasse `Client` überschrieben werden, so dass auf den Empfang der Nachricht reagiert wird. Der Aufruf der Methode erfolgt nicht synchronisiert.
+server:
+  name: Server
+  generic: false
+  descr: >-
+    Objekte von Unterklassen der abstrakten Klasse `Server` ermöglichen das Anbieten von Serverdiensten, so dass Clients Verbindungen zum Server mittels TCP/IP-Protokoll aufbauen können. Zur Vereinfachung finden Nachrichtenversand und -empfang zeilenweise statt, d. h., beim Senden einer Zeichenkette wird ein Zeilentrenner ergänzt und beim Empfang wird dieser entfernt. Verbindungsannahme, Nachrichtenempfang und Verbindungsende geschehen nebenläufig. Auf diese Ereignisse muss durch Überschreiben der entsprechenden Ereignisbehandlungsmethoden reagiert werden. Es findet nur eine rudimentäre Fehlerbehandlung statt, so dass z. B. Verbindungsabbrüche nicht zu einem Programmabbruch führen. Einmal unterbrochene oder getrennte Verbindungen können nicht reaktiviert werden.
+  methods:
+    - signature: Server(int pPort)
+      descr: Ein Objekt vom Typ `Server` wird erstellt, das über die angegebene Portnummer einen Dienst anbietet an. Clients können sich mit dem Server verbinden, so dass Daten (Zeichenketten) zu diesen gesendet und von diesen empfangen werden können. Kann der Server unter der angegebenen Portnummer keinen Dienst anbieten (z. B. weil die Portnummer bereits belegt ist), ist keine Verbindungsaufnahme zum Server und kein Datenaustausch möglich.
+    - signature: boolean isOpen()
+      descr: Die Anfrage liefert den Wert `true`, wenn der Server auf Port `pPort` einen Dienst anbietet. Ansonsten liefert die Methode den Wert `false`.
+    - signature: boolean isConnectedTo(String pClientIP, int pClientPort)
+      descr: Die Anfrage liefert den Wert `true`, wenn der Server mit dem durch `pClientIP` und `pClientPort` spezifizierten Client aktuell verbunden ist. Ansonsten liefert die Methode den Wert `false`.
+    - signature: void send(String pClientIP, int pClientPort, String pMessage)
+      descr: Die Nachricht pMessage wird – um einen Zeilentrenner erweitert – an den durch `pClientIP` und `pClientPort` spezifizierten Client gesendet. Schlägt der Versand fehl, geschieht nichts.
+    - signature: void sendToAll(String pMessage)
+      descr: Die Nachricht `pMessage` wird – um einen Zeilentrenner erweitert – an alle mit dem Server verbundenen Clients gesendet. Schlägt der Versand an einen Client fehl, wird dieser Client übersprungen.
+    - signature: void closeConnection(String pClientIP, int pClientPort)
+      descr: Die Verbindung des Servers zu dem durch `pClientIP` und `pClientPort` spezifizierten Client wird getrennt. Zuvor wird die Methode `processClosingConnection` mit IP-Adresse und Port des jeweiligen Clients aufgerufen. Ist der Server nicht mit dem in der Parameterliste spezifizierten Client verbunden, geschieht nichts.
+    - signature: void close()
+      descr: Alle bestehenden Verbindungen zu Clients werden getrennt und der Server kann nicht mehr verwendet werden. Ist der Server bereits vor Aufruf der Methode in diesem Zustand, geschieht nichts.
+    - signature: void processNewConnection(String pClientIP, int pClientPort)
+      descr: Diese Ereignisbehandlungsmethode wird aufgerufen, wenn sich ein Client mit IP-Adresse `pClientIP` und Portnummer `pClientPort` mit dem Server verbunden hat. Die Methode ist abstrakt und muss in einer Unterklasse der Klasse `Server` überschrieben werden, so dass auf den Neuaufbau der Verbindung reagiert wird. Der Aufruf der Methode erfolgt nicht synchronisiert.
+    - signature: void processMessage(String pClientIP, int pClientPort, String pMessage)
+      descr: Diese Ereignisbehandlungsmethode wird aufgerufen, wenn der Server die Nachricht `pMessage` von dem durch `pClientIP` und `pClientPort` spezifizierten Client empfangen hat. Der vom Client hinzugefügte Zeilentrenner wurde zuvor entfernt. Die Methode ist abstrakt und muss in einer Unterklasse der Klasse `Server` überschrieben werden, so dass auf den Empfang der Nachricht reagiert wird. Der Aufruf der Methode erfolgt nicht synchronisiert.
+    - signature: void processClosingConnection(String pClientIP, int pClientPort)
+      descr: Sofern der Server die Verbindung zu dem durch `pClientIP` und `pClientPort` spezifizierten Client trennt, wird diese Ereignisbehandlungsmethode aufgerufen, unmittelbar bevor die Verbindungstrennung tatsächlich erfolgt. Wird die Verbindung unvermittelt unterbrochen oder hat der in der Parameterliste spezifizierte Client die Verbindung zum Server unvermittelt getrennt, erfolgt der Methodenaufruf nach der Unterbrechung / Trennung der Verbindung. Die Methode ist abstrakt und muss in einer Unterklasse der Klasse `Server` überschrieben werden, so dass auf das Ende der Verbindung zum angegebenen Client reagiert wird. Der Aufruf der Methode erfolgt nicht synchronisiert.
+####
+# Klassen der Java-API
+####
+hashtable:
+  name: Hashtable
+  generic: true
+  generic-type: 'KeyType, ContentType'
+  methods:
+    - signature: Hashtable(int pSize)
+      descr: >-
+        Eine leere Hashtabelle der Größe `pSize` wird erzeugt. Objekte, die in
+        dieser Hashtabelle verwaltet werden, müssen vom Typ `ContentType` sein
+        und mit Schlüsseln vom Typ `KeyType` abgespeichert werden.
+    - signature: boolean hasKey(KeyType pKey)
+      descr: >-
+        Die Anfrage liefert den Wert `true`, wenn die Hashtabelle ein
+        Inhaltsobjekt zum Schlüssel `pKey` enthält, sonst liefert sie den Wert
+        `false`.
+    - signature: 'void put(KeyType pKey, ContentType pContent)'
+      descr: >-
+        Das Objekt `pContent` wird an die Hashtabelle mit dem Schlüssel `pKey`
+        eingefügt. Falls `pContent` gleich `null` ist oder in der Hashtabelle
+        kein Platz mehr ist, bleibt die Hashtabelle unverändert.
+    - signature: ContentType get(KeyType pKey)
+      descr: >-
+        Die Anfrage liefert das Objekt der Hashtabelle für den Schlüssel `pKey`.
+        Die Hashtabelle bleibt unverändert. Falls es für den Schlüssel `pKey`
+        kein Objekt in der Hashtabelle gibt, wird `null` zurückgegeben.
+    - signature: void delete(KeyType pKey)
+      descr: >-
+        Das Objekt für den Schlüssel `pKey` wird aus der Hashtabelle entfernt.
+        Falls es für den Schlüssel `pKey` kein Objekt in der Hashtabelle gibt,
+        wird sie nicht verändert.
+random:
+  name: Random
+  generic: false
+  methods:
+    - signature: Random()
+      descr: Erstellt einen neuen Zufallsgenerator.
+    - signature: int nextInt()
+      descr: Erzeugt eine neue Zufallszahl vom Typ int.
+    - signature: int nextInt(int pGrenze)
+      descr: Erzeugt eine neue Zufallszahl vom Typ int zwischen 0 und `pGrenze-1`.
+    - signature: boolean nextBoolean()
+      descr: >-
+        Erzeugt einen zufälligen Wahrheitswert, der zu 50% `true` und zu 50%
+        `false` ist.
+    - signature: double nextDouble()
+      descr: Erzeugt eine neue Zufallszahl vom Typ double zwischen 0 und 1.
+scanner:
+  name: Scanner
+  generic: false
+  methods:
+    - signature: Scanner(InputStream in)
+      descr: >-
+        Erstellt einen neuen Scanner, der Eingaben vom übergebenen `InputStream`
+        liest. In der Regel erzeugt man einen Scanner für die Standard-Konsole
+        mit `new Scanner(System.in)`.
+    - signature: boolean hasNext()
+      descr: 'Prüft, ob im Scanner eine neue Eingabe vorliegt.'
+    - signature: int nextInt()
+      descr: >-
+        Wartet, bis eine neue Eingabe gemacht wurde und versucht sie als Zahl zu
+        lesen. Ist die Eingabe keine Zahl, wird eine `InputMismatchException`
+        geworfen.
+    - signature: String nextLine()
+      descr: >-
+        Wartet, bis eine neue Eingabe gemacht wurde, und gibt sie als String
+        zurück.
+    - signature: boolean nextBoolean()
+      descr: >-
+        Wartet, bis eine neue Eingabe gemacht wurde und versucht sie als
+        Wahrheitswert zu lesen. Ist die Eingabe kein Wahrheitswert, wird eine
+        `InputMismatchException` geworfen.
+    - signature: double nextDouble()
+      descr: >-
+        Wartet, bis eine neue Eingabe gemacht wurde und versucht sie als
+        Gleitkommazahl zu lesen. Ist die Eingabe keine Gleitkommazahl, wird eine
+        `InputMismatchException` geworfen.
