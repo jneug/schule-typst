@@ -71,7 +71,8 @@
 	// Configure code blocks
 	show raw: set text(
 		font: theme.fonts.code,
-		size: __getOrDefault(args, "fontsize", 13pt)*0.88
+		// size: __getOrDefault(args, "fontsize", 13pt)*0.88
+		// size: 0.88em
 	)
 	show raw.where(block: false): set text(
 		fill: theme.primary
