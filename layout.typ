@@ -55,3 +55,40 @@ von #body]
 		#rechts()
 	]
 ])
+
+#let __place_wrapfig(
+	align,
+	width,
+	gutter:0.75em,
+	element,
+	body
+) = block(width:100%, {
+	let insets = ()
+	if align == left {
+		insets = (left:width + gutter)
+	} else {
+		insets = (right:width + gutter)
+	}
+	place(align, block(width:width, element))
+	if align == center {
+		columns(2, gutter:width + gutter, body)
+	} else {
+		block(width:100%, inset:insets, body)
+	}
+})
+#let wrapfig(
+	align,
+	width:auto,
+	gutter:0.75em,
+	element,
+	body
+) = block(width:100%, {
+	if width == auto {
+		style(styles => {
+			let w = measure(element, styles).width
+			__place_wrapfig(align, w, gutter:gutter, element, body)
+		})
+	} else {
+		__place_wrapfig(align, width, gutter:gutter, element, body)
+	}
+})
