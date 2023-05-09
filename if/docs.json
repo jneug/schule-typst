@@ -1,0 +1,20 @@
+{
+	"list": {
+		"name": "List",
+		"generic": true,
+		"generic-type": "ContentType",
+		"descr": "Objekte der generischen Klasse `List` verwalten beliebig viele, linear angeordnete Objekte vom Typ `ContentType`. Auf höchstens eins der verwalteten Objekte, aktuelles Objekt genannt, kann jeweils zugegriffen werden. Wenn eine Liste leer ist, vollständig durchlaufen wurde oder das aktuelle Objekt am Ende der Liste gelöscht wurde, gibt es kein aktuelles Objekt. Das erste oder das letzte Objekt einer Liste können durch einen Auftrag zum aktuellen Objekt gemacht werden. Außerdem kann das dem aktuellen Objekt folgende Listenobjekt zum neuen aktuellen Objekt werden.\nDas aktuelle Objekt kann gelesen, verändert oder gelöscht werden. Außerdem kann vor dem aktuellen Objekt ein Listenobjekt eingefügt werden.",
+		"methods": [{
+			"signature": "List()",
+			"descr": "Eine leere Liste wird erzeugt."
+		},
+		{
+			"signature": "boolean isEmpty()",
+			"descr": "Die Anfrage liefert den Wert `true`, wenn die Liste keine Objekte enthält, sonst liefert sie den Wert `false`."
+		},
+		{
+			"signature": "boolean hasAccess()",
+			"descr": "Die Anfrage liefert den Wert `true`, wenn es ein aktuelles Objekt gibt, sonst liefert sie den Wert `false`."
+		}]
+	}
+}
