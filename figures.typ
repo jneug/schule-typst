@@ -54,8 +54,9 @@
 // ================================
 
 // default fill formater for tables
-#let tablefill(fill:white, headerfill:theme.tables.header, footerfill:theme.tables.header, headers:1, footers:0) = (column, row) => {
+#let tablefill(fill:white, headerfill:theme.tables.header, footerfill:theme.tables.header, oddfill:theme.bg.muted, headers:1, footers:0) = (column, row) => {
 	if row <= headers { return headerfill }
+	else if calc.odd(r) { return oddfill }
 	else { return fill }
 }
 
