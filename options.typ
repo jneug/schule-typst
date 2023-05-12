@@ -72,7 +72,7 @@
 
 #let addconfig(
 	name,
-	type:     "string",
+	type:     ("string", "content"),
 	required: false,
 	default:  none,
 	valid:    none,
