@@ -25,15 +25,21 @@
 	#emoji.face.beam #emoji.face.happy #emoji.face.diagonal #emoji.face.sad
 ]
 
-#let af(nr) = [Aufg. #nr]
-#let bu(seite) = [Buch S. #seite]
+#let join( items ) = if type(items) == "array" {
+	items.map(str).join(", ", last:" und ")
+} else {
+	items
+}
+
+#let af(nr) = [Aufg. #join(nr)]
+#let bu(seite) = [Buch S. #join(seite)]
 #let buaf(seite, nr) = [#bu(seite), #af(nr)]
-#let ah(seite) = [AH S. #seite]
+#let ah(seite) = [AH S. #join(seite)]
 #let ahaf(seite, nr) = [#ah(seite), #af(nr)]
 #let ab(titel, supl:[AB]) = [#supl "#titel"]
 
 #let ichkann( body, aufgaben ) = (
-	[#sym.dots #body], [#emojibar], [#aufgaben.children.filter(c => c.func() != [ ].func()).join([\ ])]
+	[#sym.dots #body], [#smilies], [#aufgaben.children.filter(c => c.func() != [ ].func()).join([\ ])]
 )
 
 #let checkuptable( ..cells ) = table(
