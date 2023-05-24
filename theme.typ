@@ -6,13 +6,13 @@
 // General colors
 #let primary   = rgb(56, 86, 153)  // rgb(40, 70, 167)
 #let secondary = rgb(114, 5, 23)   // rgb(204, 74, 71)
-#let muted     = luma(204)
+#let muted     = luma(174)
 
 // General backgrounds
 #let bg = (
 	primary:    primary.lighten(90%),
 	secondary:  secondary.lighten(90%),
-	muted:      muted.lighten(80%),
+	muted:      muted.lighten(90%),
 )
 
 // Text colors
