@@ -253,6 +253,7 @@
 	icons: none,
 	use:   true,
 	header: true,
+	page:  false,
 	body
 ) = {
 	if use {
@@ -273,6 +274,7 @@
 		if icons != none {
 			ic = marginnote(dy:.2em)[#text(size:0.88em)[#{(icons,).flatten().join()}]]
 		}
+		if page { pagebreak() }
 		if header [== #ic#d_aufg()#if titel != none [#h(2em)#text(fill:theme.text.default)[#titel]]#h(1fr)#punkte(func:p=>if p > 0 {text(fill:theme.secondary,size:0.88em)[#d_punkte(p)]}) <aufgabe>]
 		// if type(icons) != none {
 		// 	icons = (icons,).flatten()
