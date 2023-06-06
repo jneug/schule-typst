@@ -31,6 +31,9 @@
 }
 
 #let method( signature, body ) = {
+	if type(signature) == "string" {
+		signature = [#signature]
+	}
 	if signature.func() == raw {
 		signature = signature.text
 	}
