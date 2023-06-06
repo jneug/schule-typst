@@ -29,7 +29,7 @@
 	else [#sym.dots #t\ ]
 })
 
-#let d_ew_punkte(aufg, teil: 0, format: p=>[#p]) = {
+#let d_ew_punkte(aufg, teil: 0, format: p=>if p > 0 [#p] else []) = {
 	locate(loc => {
 		let p = __s_erwartungen.final(loc)
 			.filter(erw => {
