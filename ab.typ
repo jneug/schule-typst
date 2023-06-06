@@ -49,7 +49,7 @@
 		)
 	)
 	set text(
-		font: theme.fonts.default,
+		font: __getOrDefault(args, "font", theme.fonts.default),
 		size: __getOrDefault(args, "fontsize", 13pt),
 		..options.extract(args, prefix:"font",
 			weight: 300,
