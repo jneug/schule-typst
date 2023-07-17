@@ -1,5 +1,5 @@
 #let ___s_options = state("@options", (
-	__version: "0.0.1"
+	__version: "0.0.5"
 ))
 
 #let __getlocal( name, loc ) = {
@@ -98,7 +98,8 @@
 
 #let getconfig( name, final:false ) = {
 	locate(loc => {
-		let conf = __s_config.final(loc)
+		//let conf = __s_config.final(loc)
+		let conf = __s_config.at(loc)
 		if name in conf {
 			conf.at(name)
 		} else {
@@ -111,7 +112,8 @@
 	// Positional arguments
 	// Not supported for now
 	locate(loc => {
-		let conf = __s_config.final(loc)
+		//let conf = __s_config.final(loc)
+		let conf = __s_config.at(loc)
 		let provided = args.named()
 
 		for opt in conf.pairs() {
