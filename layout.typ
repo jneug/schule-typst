@@ -28,7 +28,7 @@ von #body]
 })
 
 #let kopfLinks() = [#options.display("fach", final:true) #options.display("kurs", final:true) #options.display("kuerzel", format: v=>{if v != none [(#v)]}, final:true)]
-#let kopfMitte() = [Datum: #options.display("datum", format: v=>{if v != none [#v] else [#luecke()]}, final:true)]
+#let kopfMitte() = [Datum: #options.display("datum", format: v=>{if v != none [#v.display("[day].[month].[year]")] else [#luecke()]}, final:true)]
 #let kopfRechts() = [#options.display("typ", final:true) #options.display("nummer", format: v=>{if v != none [Nr. #v]}, final:true)]
 #let kopfzeile( links: kopfLinks, mitte: kopfMitte, rechts:kopfRechts ) = locate(loc => [
 	#set text(fill: theme.text.header)
