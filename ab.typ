@@ -83,10 +83,24 @@
 	for opt in (
 		"autor", "kuerzel", "titel",
 		"reihe", "nummer", "fach",
-		"kurs", "datum", "version"
+		"kurs", "version"
 	) {
 		options.addconfig(opt)
 	}
+	options.addconfig("datum",
+		type: ("string", "datetime"),
+		default: datetime.today(),
+		code: v=>{
+			if type(v) == "string" {
+				let d = v.split(".")
+				datetime(
+					day:int(d.at(0)),
+					month:int(d.at(1)),
+					year:int(d.at(2))
+				)
+			}
+		}
+	)
 	options.addconfig("typ", default:"Arbeitsblatt")
 	options.addconfig("fontsize", default:13pt, type:"length")
 
@@ -118,7 +132,7 @@
 #let dasfach = options.display("fach")
 #let derkurs = options.display("kurs")
 #let dertyp = options.display("typ")
-#let dasdatum = options.display("datum")
+#let dasdatum = options.display("datum", format:dt=>if dt != none {dt.display("[day].[month].[year]")})
 #let dieversion = options.display("version")
 
 
