@@ -1,4 +1,8 @@
-#import "@local/typopts:0.0.4": options, states
+// Import external dependencies
+#import "@preview/t4t:0.1.0": *
+
+// Import submodule dependencies
+#import "./lib/typopts/typopts.typ": options, states
 
 #import "./theme.typ"
 #import "./util.typ"
@@ -9,26 +13,21 @@
 #import "./aufgaben.typ": *
 
 
-#let __getOrDefault( var, key, default ) = {
-	if key in var.named() { var.named().at(key) }
-	else if key in var.pos() { var.pos().at(key) }
-	else { default }
-}
-
-
 #let arbeitsblatt(
 	..args,
 
-	_init: none,
+  // Additional subtype initialization,
+  // that needs to get executed in the document
+	module-init: none,
 
 	body
 ) = {
-	let fontsize = __getOrDefault(args, "fontsize", 12pt)
+	let fontsize = args.named().at("fontsize", 12pt)
 
-	// set document(
-	// 	title: if "titel" in args.named() {args.named().titel},
-	// 	author: if "autor" in args.named() {args.named().autor}
-	// )
+	set document(
+    title: def.if-none("Arbeitsblatt", args.named.at("titel", default:none), do:get.text),
+    author: def.if-none((), args.named.at("autor", default:none), do:get.text)
+	)
 
 	// Configure page
 	set page(
