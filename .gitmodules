@@ -7,3 +7,6 @@
 [submodule "tablex"]
 	path = tablex
 	url = https://github.com/PgBiel/typst-tablex.git
+[submodule "lib/typopts"]
+	path = lib/typopts
+	url = https://github.com/jneug/typst-typopts.git
