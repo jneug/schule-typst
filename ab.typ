@@ -1,14 +1,11 @@
-#import "./options.typ"
-#import "./states.typ"
-#import "./hooks.typ"
+#import "@local/typopts:0.0.4": options, states
 
 #import "./theme.typ"
+#import "./util.typ"
+
 #import "./layout.typ": *
 #import "./typo.typ": *
 #import "./figures.typ": *
-
-#import emoji
-
 #import "./aufgaben.typ": *
 
 
@@ -44,14 +41,14 @@
 	)
 	// Configure text
   	set par(
-		..options.extract(args, prefix:"par",
+		..options.extract(args, _prefix:"par",
 			justify: true
 		)
 	)
 	set text(
 		font: __getOrDefault(args, "font", theme.fonts.default),
 		size: __getOrDefault(args, "fontsize", 13pt),
-		..options.extract(args, prefix:"font",
+		..options.extract(args, _prefix:"font",
 			weight: 300,
 			fallback: true,
 			lang: "de",
@@ -80,15 +77,16 @@
 	// show raw.where(block: true): c => code(c)
 
 	// Handle options (after setting up page with header / footer)
-	for opt in (
-		"autor", "kuerzel", "titel",
-		"reihe", "nummer", "fach",
-		"kurs", "version"
-	) {
-		options.addconfig(opt)
-	}
-	options.addconfig("datum",
-		type: ("string", "datetime"),
+	options.saveparser("schule",
+		..(
+			"autor", "kuerzel", "titel",
+			"reihe", "nummer", "fach",
+			"kurs", "version"
+		).map(options.arg)
+	)
+	options.extendparser("schule", options.arg(
+		"datum",
+		types: ("string", "datetime"),
 		default: datetime.today(),
 		code: v=>{
 			if type(v) == "string" {
@@ -100,17 +98,18 @@
 				)
 			}
 		}
-	)
-	options.addconfig("typ", default:"Arbeitsblatt")
-	options.addconfig("fontsize", default:13pt, type:"length")
+	))
+	options.extendparser("schule", options.arg("typ", default:"Arbeitsblatt"))
+	options.extendparser("schule", options.arg("fontsize", default:13pt, types:"length"))
+	options.extendparser("schule", options.arg("loesungen", default:"sofort"))
 
-	options.addconfig("loesungen", default:"sofort")
-
-	options.parseconfig(..args)
+	options.parseopts(args, "schule")
 
 	// Subtype init
 	if _init != none {
-		_init()
+		for ini in (_init,).flatten() {
+			ini()
+		}
 	}
 
 	[
@@ -136,23 +135,38 @@
 #let dieversion = options.display("version")
 
 
+#let titleblock(
+	rule: false,
+  ..args,
+  body
+) = {
+  v(-1em)
+  block(below:0.65em, width:100%, ..args, {
+    body
+    if rule {
+      move(dy: -.8em, line(length: 100%))
+    }
+  })
+}
 #let abtitel(
 	titel: none,
-	reihe: none
-) = block(spacing:0pt, width:100%)[#{
+	reihe: none,
+  rule: false
+) = titleblock({
 	if titel == none { titel = dertitel }
 	if reihe == none { reihe = diereihe }
 
 	set align(center)
-	if reihe != none [
-		=== #text(fill: theme.text.subject)[#smallcaps(reihe)]
-	]
-	move(dy:-.4em)[
-		#text(fill: theme.primary)[= #smallcaps(titel)]
-		//#move(dy: -.8em, line(length: 100%))
-	]
-	v(-1.5em)
-}]
+	if reihe != none {
+		heading(level:3, text(theme.text.subject, smallcaps(reihe)))
+	}
+  move(dy:-0.4em,
+    heading(level:1, text(theme.primary, smallcaps(titel)))
+  )
+  if rule {
+    move(dy: -.8em, line(length: 100%))
+  }
+})
 
 // #let anhang( body, ..args ) = page(
 // 	header: kopfzeile(

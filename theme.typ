@@ -32,7 +32,7 @@
 )
 
 // Table colors and styles
-#let tables = (
+#let table = (
 	header:   bg.primary,
 	even:     bg.muted,
 	odd:      white,

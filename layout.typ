@@ -1,31 +1,55 @@
-#import "./options.typ"
+#import "@local/typopts:0.0.4": options
+
 #import "./theme.typ"
 #import "./typo.typ": small, luecke
 
-
+// ============================
+// Body start / end markers
+// ============================
 #let docstart() = [#hide[] <body-start>]
 #let docend()   = [#hide[] <body-end>]
 
-
-#let __seitenzahl( current, body, total, loc ) = {
-	// let total = int(counter(page).final(loc).at(0))
-	if body > 1 {
-		text(fill:theme.text.default)[#counter(page).display()]
-	}
-	if body > 2 {
-		text(fill:theme.text.default)[
-von #body]
+// ============================
+// Page numbers
+// ============================
+/*
+ * current = aktuelle Seite
+ * body = Anzahl Seiten im Textkörper
+ * total = Anzahl Seiten gesamt (inkl. Lösungen etc.)
+ */
+#let pagenumber-format(
+	current, body, total
+) = {
+	if current > total [
+		#sym.dash
+	] else if current > body {
+		numbering("I", (current - body))
+		if total - body > 2 [
+			von #numbering("I", (total - body))
+		]
+	} else {
+		if body > 1 [ #current ]
+		if body > 2 [ von #body ]
 	}
 }
-#let d_seitenzahl( func: __seitenzahl ) = locate(loc => {
-	let bodyend = query(<body-end>, loc).first()
-	func(
-		counter(page).at(loc).at(0),    //current page
-		counter(page).at(bodyend.location()).at(0),      // last content page
-		counter(page).final(loc).at(0), // total
-		loc
+
+// Display pagenumber
+#let d_pagenumber( format: pagenumber-format ) = locate(loc => {
+	let bodyend = query(<body-end>, loc)
+	if bodyend != () {
+		bodyend = counter(page).at(
+			bodyend.first().location()
+		).at(0)
+	} else {
+		bodyend = counter(page).final(loc).at(0)
+	}
+	format(
+		counter(page).at(loc).at(0),
+		bodyend,
+		counter(page).final(loc).at(0)
 	)
 })
+#let d_seitenzahl = d_pagenumber
 
 #let kopfLinks() = [#options.display("fach", final:true) #options.display("kurs", final:true) #options.display("kuerzel", format: v=>{if v != none [(#v)]}, final:true)]
 #let kopfMitte() = [Datum: #options.display("datum", format: v=>{if v != none [#v.display("[day].[month].[year]")] else [#luecke()]}, final:true)]

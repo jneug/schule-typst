@@ -1,20 +1,33 @@
-#import "./options.typ"
+/********************************\
+*      Exercises and points      *
+\********************************/
+
+#import "@local/typopts:0.0.4": options
+
 #import "./theme.typ"
-#import "./layout.typ": kopfzeile, fusszeile, d_seitenzahl, __seitenzahl
+#import "./layout.typ": kopfzeile, fusszeile, d_seitenzahl, pagenumber-format
 #import "./typo.typ": luecke, marginnote
 
 
-#let __c_aufgaben = counter("aufgaben")
-#let __c_punkte   = counter("punkte")
+// =================================
+//  Counter
+// =================================
+#let __c-aufgaben = counter("aufgaben")
+#let __c-punkte   = counter("punkte")
 
 
-#let __s_aufgaben       = state("aufgaben", ())
-#let __s_in_teilaufgabe = state("in_teilaufgabe", false)
-#let __s_erwartungen    = state("erwartungen", ())
+// =================================
+//  States
+// =================================
+#let __s-aufgaben = state("aufgaben", ())
+#let __s-in_aufgabe = state("in-aufgabe", false)
+#let __s-in_teilaufgabe = state("in-teilaufgabe", false)
+#let __s-erwartungen = state("erwartungen", ())
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// %       Hilfsfunktionen        %
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+// =================================
+//  Hilfsfunktionen
+// =================================
 #let __foreach(
 	s,
 	func,
@@ -22,8 +35,8 @@
 	final: true,
 	loc: none,
 ) = {
-	assert(type(s) == "state")
-	assert(type(func) == "function")
+	assert.eq(type(s), "state")
+	assert.eq(type(func), "function")
 
 	let it = l => {
 		let data = none
@@ -48,13 +61,13 @@
 		it(loc)
 	}
 }
-#let __foreach_aufg = __foreach.with(__s_aufgaben)
+#let __foreach_aufg = __foreach.with(__s-aufgaben)
 
 
 #let __get_aufg( nr, func, loc: none ) = {
 	let _func(l) = {
 		// Hack to solve bug with direct array access
-		for aufg in __s_aufgaben.final(l) {
+		for aufg in __s-aufgaben.final(l) {
 			if aufg.nummer == nr {
 				func(aufg)
 				break
@@ -70,7 +83,7 @@
 	}
 }
 #let __update_aufg( nr:none, updater ) = {
-	__s_aufgaben.update(a => {
+	__s-aufgaben.update(a => {
 		if nr == none {
 			a.at(a.len() - 1) = updater(a.last())
 		} else {
@@ -82,7 +95,7 @@
 
 #let __akt_aufgnr( func, loc:none ) = {
 	let _func(l) = {
-		func(__c_aufgaben.at(l).at(0))
+		func(__c-aufgaben.at(l).at(0))
 	}
 	if loc == none {
 		locate(_func)
@@ -92,8 +105,8 @@
 }
 #let __akt_aufg( func, loc: none ) = {
 	let _func(l) = {
-		func(__s_aufgaben.at(l).last())
-		// let n = __c_aufgaben.at(l).at(0)
+		func(__s-aufgaben.at(l).last())
+		// let n = __c-aufgaben.at(l).at(0)
 		// __get_aufg(n, func, loc:l)
 	}
 	if loc == none {
@@ -104,7 +117,7 @@
 }
 #let __akt_taufgnr( func, loc: none ) = {
 	let _func(l) = {
-		let cnt = __c_aufgaben.at(l)
+		let cnt = __c-aufgaben.at(l)
 		if cnt.len() == 1 {
 			func(0)
 		} else {
@@ -127,7 +140,7 @@
 	nr:     none
 ) = [#label
 	#if nr == none {
-		__c_aufgaben.display(
+		__c-aufgaben.display(
 			(..c) => numbering(format, c.pos().first())
 		)
 	} else {
@@ -149,7 +162,7 @@
 		if nr == none {
 			n = __akt_aufgnr(v=>v, loc:loc)
 		}
-		func(__s_erwartungen.final(loc)
+		func(__s-erwartungen.final(loc)
 			.filter(erw => erw.aufgabe == n)
 			.fold(0, (p, erw) => p + erw.punkte))
 	})
@@ -165,7 +178,7 @@
 		if( teil == none ) {
 			t = __akt_taufgnr(v=>v, loc:loc)
 		}
-		let p = __s_erwartungen.final(loc)
+		let p = __s-erwartungen.final(loc)
 			.filter(erw => {
 				erw.aufgabe == n and (
 					t == none or t == erw.teil
@@ -229,7 +242,7 @@
 			d_seitenzahl(func:(cur, body, total, loc) => {
 				if cur > body {
 					numbering("I", cur - body)
-				} else [#__seitenzahl(cur, body, total, loc)]
+				} else [#pagenumber-format(cur, body, total, loc)]
 			})
 		}
 	)
@@ -257,9 +270,9 @@
 	body
 ) = {
 	if use {
-		__c_aufgaben.step()
+		__c-aufgaben.step()
 		__akt_aufgnr(n => {
-			__s_aufgaben.update(a => {
+			__s-aufgaben.update(a => {
 				a.push((
 					nummer:      n,
 					titel:       titel,
@@ -294,11 +307,11 @@
 	body
 ) = {
 	if use {
-		__c_aufgaben.step(level:2)
-		__s_in_teilaufgabe.update(true)
+		__c-aufgaben.step(level:2)
+		__s-in_teilaufgabe.update(true)
 
 		__akt_aufgnr(n => {
-			__s_aufgaben.update(a => {
+			__s-aufgaben.update(a => {
 				if a.len() >= n {
 					a.at(n - 1).teile += 1
 				}
@@ -315,7 +328,7 @@
 			)
 		)
 
-		__s_in_teilaufgabe.update(false)
+		__s-in_teilaufgabe.update(false)
 	}
 }
 
@@ -325,14 +338,14 @@
 	body,
 ) = {
 	locate(loc => {
-		//let nr = __c_aufgaben.at(loc).at(0)
+		//let nr = __c-aufgaben.at(loc).at(0)
 		// if _ab_s_in_teilaufgabe.at(loc) {
 		// 	let  t = _ab_c_aufgaben.at(loc).at(1)
 		// }
 		let t = teil
 		if t == none {
-			if __s_in_teilaufgabe.at(loc) {
-				t = __c_aufgaben.at(loc).at(1)
+			if __s-in_teilaufgabe.at(loc) {
+				t = __c-aufgaben.at(loc).at(1)
 			} else {
 				t = 0
 			}
@@ -371,14 +384,14 @@
 		}
 		let t = teil
 		if t == none {
-			if __s_in_teilaufgabe.at(loc) {
+			if __s-in_teilaufgabe.at(loc) {
 				t = __akt_taufgnr(v=>v, loc:loc)
 			} else {
 				t = 0
 			}
 		}
-		__c_punkte.update(c => c + punkte)
-		__s_erwartungen.update(e => {
+		__c-punkte.update(c => c + punkte)
+		__s-erwartungen.update(e => {
 			e.push((
 				aufgabe: n,
 				teil: t,

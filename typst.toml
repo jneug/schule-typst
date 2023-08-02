@@ -1,0 +1,8 @@
+[package]
+name = "schule"
+version = "0.0.5"
+entrypoint = "schule.typ"
+authors = ["J. Neugebauer"]
+license = "MIT"
+description = "Arbeitsblätter und Klausuren."
+repository = "https://github.com/jneug/schule-typst"

@@ -1,5 +1,5 @@
 #import "./theme.typ"
-#import "./tablex/tablex.typ": tablex, colspanx, rowspanx, cellx
+#import "@preview/tablex:0.0.4": tablex, colspanx, rowspanx, cellx
 
 // Utilities
 #let __setstate( abbr, supplement ) = {
@@ -55,7 +55,7 @@
 // ================================
 
 // default fill formater for tables
-#let tablefill(fill:white, headerfill:theme.tables.header, footerfill:theme.tables.header, oddfill:theme.bg.muted, headers:1, footers:0, colheaders:0, colfooters:0) = (column, row) => {
+#let tablefill(fill:white, headerfill:theme.table.header, footerfill:theme.table.header, oddfill:theme.bg.muted, headers:1, footers:0, colheaders:0, colfooters:0) = (column, row) => {
 	if row < headers or col < colheaders { return headerfill }
 	else if calc.odd(row) { return oddfill }
 	else { return fill }
@@ -73,7 +73,7 @@
 	let insets = (top: 0pt, bottom: 0pt)
 	if header != none { insets.top = line-height + inset }
 	if footer != none { insets.bottom = line-height + inset }
-	let _fill(c, r) = if r == -1 {theme.tables.header}
+	let _fill(c, r) = if r == -1 {theme.table.header}
 	if fill != none {
 		_fill = (c, r) => fill(c, r+1)
 	}

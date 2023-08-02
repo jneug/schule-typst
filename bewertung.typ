@@ -3,7 +3,7 @@
 #import "./aufgaben.typ": *
 
 
-#let __foreach_erw = __foreach.with(__s_erwartungen, final:true)
+#let __foreach_erw = __foreach.with(__s-erwartungen, final:true)
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %     Erwartungshorizonte      %
@@ -31,7 +31,7 @@
 
 #let d_ew_punkte(aufg, teil: 0, format: p=>if p > 0 [#p] else []) = {
 	locate(loc => {
-		let p = __s_erwartungen.final(loc)
+		let p = __s-erwartungen.final(loc)
 			.filter(erw => {
 				erw.aufgabe == aufg and (
 					teil == none or teil == erw.teil
@@ -43,7 +43,7 @@
 }
 
 #let d_ew_gesamt( format: p=>[#p] ) = locate(loc => {
-	format(__s_erwartungen.final(loc)
+	format(__s-erwartungen.final(loc)
 		.fold(0, (p, erw) => p + erw.punkte))
 })
 
@@ -109,7 +109,7 @@
 			message:"Die Verteilung und Namen müssen gleichviele Elemente enthalten."
 		)
 
-		let punkte = __s_erwartungen.final(loc)
+		let punkte = __s-erwartungen.final(loc)
 			.fold(0, (p, erw) => p + erw.punkte)
 
 		let cells = ([Note],)
@@ -130,9 +130,9 @@
 			columns: verteilung.len() + 1,
 			//inset: 5pt,
 			fill: (col, row) => {
-				if row == 0 { theme.tables.header }
-				else if row == 1 { theme.tables.odd }
-				else { theme.tables.even }
+				if row == 0 { theme.table.header }
+				else if row == 1 { theme.table.odd }
+				else { theme.table.even }
 			},
 			align: center + horizon,
 			..cells
@@ -149,11 +149,11 @@
 	#pagebreak()
 	= Erwartungshorizont <erwartungshorizont>
 	\
-	Name: #luecke(symbol: ".")
+	Name: #luecke(stroke: (dash:"dotted"))
 
 	#locate(loc => {
 		let _ew_cells() = {
-			__s_aufgaben.final(loc)
+			__s-aufgaben.final(loc)
 				.map(aufg => {
 					let cells = ([*#{aufg.nummer}*],
 					[#d_ew_text(aufg.nummer)],
@@ -176,9 +176,9 @@
 			columns: (auto, 1fr, auto, auto),
 			inset: 5pt,
 			fill: (col, row) => {
-				if row == 0 { theme.tables.header }
-				else if calc.odd(row) { theme.tables.odd }
-				else { theme.tables.even }
+				if row == 0 { theme.table.header }
+				else if calc.odd(row) { theme.table.odd }
+				else { theme.table.even }
 			},
 			align:  (col, row) => {
 				if col in (0, 2, 3) { center + horizon }
@@ -219,7 +219,7 @@
 
 	#locate(loc => {
 		let _ew_cells() = {
-			__s_aufgaben.final(loc)
+			__s-aufgaben.final(loc)
 				.map(aufg => {
 					let cells = (
 						[*#{aufg.nummer}*],
@@ -239,13 +239,13 @@
 				})
 				.flatten()
 		}
-		let _ew_colors = __s_aufgaben.final(loc)
+		let _ew_colors = __s-aufgaben.final(loc)
 			.map(aufg => {
 				let colors = (
-					theme.tables.even,
+					theme.table.even,
 				)
 				for i in range(aufg.teile) {
-					colors.push(theme.tables.odd)
+					colors.push(theme.table.odd)
 				}
 				colors
 			})
@@ -255,9 +255,9 @@
 			columns: (auto, 1fr, auto, auto),
 			inset: 5pt,
 			fill: (col, row) => {
-				if row == 0 { theme.tables.header }
+				if row == 0 { theme.table.header }
 				else if row <= _ew_colors.len() { _ew_colors.at(row - 1)}
-				else { theme.tables.header }
+				else { theme.table.header }
 
 			},
 			align:  (col, row) => {

@@ -1,5 +1,8 @@
 #import "./ab.typ": *
 #import  "./bewertung.typ": *
+
+#import "@local/t4t:0.1.0": alias
+
 // #import "./layout.typ": kopfzeile
 
 
@@ -19,19 +22,23 @@
 		..args,
 
 		_init: () => {
-			options.addconfig(
+			options.extendparser("schule", options.arg(
 				"variante",
 				default: 0,
-				type: ("integer", "string"),
+				types: ("integer", "string"),
 				code: v => {
 					let varis = "ABCDEFGHIJKLMN"
-					if type(v) == "string" and v in varis {
-						varis.position(v) + 1
+					if type(v) == "string" {
+						if v in varis {
+							varis.position(v) + 1
+						} else {
+							0
+						}
 					} else {
 						v
 					}
 				}
-			)
+			))
 		},
 
 		body
@@ -40,23 +47,25 @@
 
 #let katitel(
 	titel: none,
-	reihe: none
-) = {
+	reihe: none,
+  rule: false
+) =titleblock({
 	if titel == none { titel = dertitel }
 	set align(center)
-	text(fill: theme.primary)[= #smallcaps(titel)]
-}
+	text(theme.primary, heading(level: 1, titel))
+})
 
-#let dievariante(fmt: "A") = options.display(
+#let dievariante(numbering: "A") = options.display(
 	"variante",
 	final:true,
 	format:v => {
 		if v != none and v > 0 {
-			numbering(fmt, v)
+			alias.numbering(numbering, v)
 		} else {
-			[]
+			""
 		}
-	})
+	}
+)
 
 #let vari( ..args ) = {
 	options.get("variante", vari => {

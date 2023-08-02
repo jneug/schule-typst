@@ -1,0 +1,51 @@
+github_url = "https://github.com/jneug/schule-typst/"
+
+[version]
+current = "0.0.5"
+
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  '''
+
+[git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[[file]]
+src = "typst.toml"
+search = 'version = "{current_version}"'
+
+# [[file]]
+# src = "README.md"
+# search = "({current_version})"
+# [[file]]
+# src = "README.md"
+# search = "typopts:{current_version}"
+# [[file]]
+# src = "README.md"
+# search = "typopts-{current_version}"
+# [[file]]
+# src = "README.md"
+# search = "v{current_version}"
+
+# [[file]]
+# src = "manual.typ"
+# search = 'version:\s*"{current_version}",'
+# [[file]]
+# src = "manual.typ"
+# search = 'typopts:{current_version}'
+# [[file]]
+# src = "manual.typ"
+# search = 'typopts-{current_version}'
+
+[[before_commit]]
+name = "create local version"
+#cmd = "mkdir ../schule-{new_version}; cp ./* ../schule-{new_version}"
+cmd = "ln -s schule ../schule-{new_version}"
+[[before_commit]]
+name = "compile manual"
+cmd = "typst compile manual.typ"

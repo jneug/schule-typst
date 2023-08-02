@@ -1,33 +1,63 @@
 /********************************\
 *    Typographic enhancements    *
 \********************************/
+// #import "@local/showybox:0.2.0": showybox
+#import "@local/typopts:0.0.4": options
+#import "@local/codelst:0.0.3"
+#import "@local/showybox:0.2.1": showybox
+#import "@local/t4t:0.1.0": get
 
-#import "./options.typ"
 #import "./theme.typ"
 
-// Text sizes
-#let scaled(content, size: 0.8) = {
-	text(size:size*1em)[#content]
-}
+// ============================
+// Text scaling
+// ============================
+#let scaled(content, size: 0.8) = text(size*1em, content)
 #let small(content) = scaled(content, size:0.88)
 #let large(content) = scaled(content, size:1.2)
 
+// ============================
 // New text decorations
-#let uunderline( body ) = underline(offset: 0.25em)[#underline[#body]]
+// ============================
+// Double underline
+#let uunderline(
+	stroke: auto,
+	offset: auto,
+	extent: 0pt,
+	evade: true,
+	body
+) = underline(
+	offset: if offset == auto { .25em } else { offset * 1.25 },
+	extent: extent,
+	stroke: stroke,
+	evade: evade,
+	underline(
+		offset: offset,
+		extent: extent,
+		stroke: stroke,
+		evade: evade,
+		body
+	)
+)
 
-#let squiggly( body, stroke:1pt + black ) = {
+// Squiggly / Zickzack underline
+#let squiggly(
+	stroke:1pt + black,
+	body
+) = {
 	style(styles => {
 		let m = measure(body, styles)
 		let step = 2pt
 		let i = 1
 
-		box(width:m.width, baseline:-1*m.height)[
+		box(width:m.width, clip:true, baseline:-1*m.height)[
 			#move(
-				dy:m.height + 2pt,
+				dy:m.height + 0.25em,
 				while i*step < m.width {
 					place(top + left,
 						line(
 							stroke:stroke,
+
 							start:((i - 1)*step, -.5*step),
 							end:(i*step, .5*step)
 						)
@@ -47,138 +77,71 @@
 	})
 }
 
-// Textlücke
-#let luecke(width: 4cm, symbol: none, dy: 2pt) = {
-	if symbol != none {
-		box(width: width, move(dy:dy, repeat[#symbol]))
-	} else {
-		box(width: width, move(dy:dy, line(length:width)))
+// ============================
+// Text highlights
+// ============================
+
+#let operator( body ) = smallcaps(body)
+
+#let name( name, last:none ) = {
+	if last == none {
+		let parts = get.text(name).split()
+		last = parts.pop()
+		name = parts.join(" ")
 	}
+	[#name #smallcaps(last)]
+}
+
+// German number format for integers / floats
+#let num( value ) = {
+	get.text(value).replace(".", ",")
+}
+
+// SI units
+#let si(value, unit) = [#num(value)#h(0.2em)#unit]
+
+// ============================
+// Misc
+// ============================
+// Textlücke
+#let luecke(width: 4cm, stroke: 1pt + black, offset: 2pt) = {
+	box(width: width, move(dy:offset, line(stroke: stroke, length: 100%)))
 }
 
 // Randnotizen
-#let marginnote(pos: left, margin: .5em, dy: 0pt, body) = {
+#let marginnote(position: left, gutter: .5em, offset: 0pt, body) = {
 	style(styles => {
 		let _m = measure(body, styles)
-		if pos == left {
-			place(pos, dx: -1*margin - _m.width, dy:dy, body)
+		if position == right {
+			place(position, dx: gutter + _m.width, dy:offset, body)
 		} else {
-			place(pos, dx: margin + _m.width, dy:dy, body)
+			place(position, dx: -1*gutter - _m.width, dy:offset, body)
 		}
 	})
 }
 
-// Quellcode
-#let __tabs(line, spaces:4, gobble:0) = {
-	if gobble in (none, false) { gobble = 0 }
 
-	if spaces != none and spaces > 0 {
-		let m = line.match(regex("^\t+"))
-		if m != none {
-			line = line.replace(regex("^\t+"), " " * (m.end - gobble) * spaces)
-		}
-	}
-	return line
-}
+// ============================
+// Code
+// ============================
 
-#let __count_tabs(line, default:0) = {
-	if line.len() == 0 {
-		return default
-	}
+// Quelltexte
+#let sourcecode(numbers-style: codelst.numbers-style, ..args, body) = codelst.code-frame(codelst.sourcecode(numbers-style: numbers-style, ..args, body))
 
-	let m = line.match(regex("^\t+"))
-	if m != none {
-		return m.end
-	} else {
-		return 0
-	}
-}
-
-#let code(
-	fill: theme.code.bg,
-	border: none,
-
-	tab-indent: 4,
-	gobble: auto,
-
-	linenos: true,
-	gutter: 10pt,
-
-	body
-) = {
-	let lines = 0
-	let lang = none
-	let code-lines = ()
-
-	for item in body.children {
-		if item.func() == raw {
-			code-lines = item.text.split("\n")
-			lines = code-lines.len()
-			lang = item.lang
-
-
-			if gobble == auto {
-				gobble = code-lines.fold(100, (v, line) => {
-					return calc.min(v, __count_tabs(line, default:v))
-				})
-			}
-
-			for i in range(lines) {
-				code-lines.at(i) = __tabs(code-lines.at(i), spaces:tab-indent, gobble:gobble)
-			}
-		}
-	}
-
-	style(styles => {
-		block(
-			fill:fill,
-			stroke: border,
-			inset: (x: 5pt, y: 10pt),
-			radius: 4pt,
-			breakable: true,
-			width: 100%,
-		)[
-			#set align(left)
-			#set par(justify:false)
-			#if linenos {
-				let lines-content = raw(range(lines).map(i => str(i + 1)).join("\n"))
-				let lines-width = measure(lines-content, styles).width
-
-				grid(
-					columns: (lines-width, 100% - lines-width - gutter),
-					column-gutter: gutter,
-					align(right, text(fill:theme.muted,
-						lines-content
-					)),
-					raw(lang:lang, block:true,
-						code-lines.join("\n")
-					)
-				)
-			} else {
-				raw(lang:lang, block:true,
-					code-lines.join("\n")
-				)
-			}
-		]
-	})
-}
+#let lineref = codelst.lineref
 
 // Code mit highlight, aber inline
-#let codeinline(body, lang: "java") = {
+#let code(body, lang: "java") = {
 	if type(body) == "content" {
 		raw(body.at("text"), block: false, lang: lang)
 	} else {
-		raw(body, block: false, lang: lang)
+		raw(mty.codei(body, lang: lang))
 	}
 }
-#let codei(body, lang: "java") = codeinline(body, lang: lang)
 
-// Operatoren
-#let operator(body) = smallcaps(body)
-
-
-
-// Kästen und Rahmen
+// ============================
+// Frames and Boxes
+// ============================
 #let container(
 	width:  100%,
 	stroke: 2pt + black,
@@ -188,34 +151,31 @@
 	radius: 0pt,
 	..args,
 	body
-) = {
-	let _inner = rect(width:width, stroke:stroke, fill:fill, inset:inset, radius:radius, ..args.named(), body)
-
-	if shadow == true or shadow > 0pt {
-		if type(shadow) == "boolean" {
-			shadow = 4pt
-		}
-		move(dx:shadow, dy:shadow, rect(
-			width:  width,
-			radius: radius,
-			fill:   gray,
-			outset: 0pt,
-			inset:  0pt,
-			move(dx:-1 * shadow, dy:-1 * shadow, _inner)
-		))
-	} else {
-		_inner
-	}
-}
+) = showybox(
+	frame: (
+		border-color: get.stroke-paint(stroke),
+		upper-color: get.stroke-paint(stroke),
+		lower-color: fill,
+		radius: radius,
+		width: get.stroke-thickness(stroke),
+	),
+	shadow: (
+		offset: shadow,
+		color: get.stroke-paint(stroke).darken(40%)
+	),
+	..args,
+	body
+)
 
 #let rahmen = container.with(stroke:2pt + theme.secondary)
 #let kasten = container.with(fill:theme.bg.muted, stroke:2pt + theme.secondary)
-#let schattenbox = container.with(shadow:true)
-#let infobox = container.with(radius:4pt, fill:theme.bg.primary, stroke:2pt + theme.primary, shadow:true)
-#let warnungbox = container.with(radius:4pt, fill:cmyk(0%,6%,18%,2%), stroke:2pt + cmyk(0%,30%,100%,0%), shadow:true)
+#let schattenbox = container.with(shadow:3pt)
+#let infobox = container.with(radius:4pt, fill:theme.bg.primary, stroke:2pt + theme.primary, shadow:3pt)
+#let warnungbox = container.with(radius:4pt, fill:cmyk(0%,6%,18%,2%), stroke:2pt + cmyk(0%,30%,100%,0%), shadow:3pt)
 
-
-// Hinweiskästen
+// ============================
+// Hints
+// ============================
 #let hinweis(typ: "Hinweis", icon: emoji.info, body) = {
 	marginnote[#text(fill:theme.secondary)[#icon]]
 	text(fill:theme.secondary)[*#typ:* ]
@@ -224,12 +184,14 @@
 #let info(body) = hinweis(typ:"Info", body)
 #let tipp(body) = hinweis(typ:"Tipp", icon:emoji.lightbulb, body)
 
-
-// Aufzählungen
+// ============================
+// Lists and enums
+// ============================
 #let enuma( body ) = {
 	set enum(numbering: "a)")
 	body
 }
+
 #let enumn( body ) = {
 	set enum(numbering: "1)", tight:false, spacing:1.5em)
 	body
@@ -239,35 +201,26 @@
 	body
 }
 
-// Vertikale Aufzählung
-#let __c_tasks = counter("task")
-
-#let task(format: "1)", init: false, body) = {
-	if init {
-		__c_tasks.update(1)
-	}
-	locate(loc => {
-		enum(numbering: format, start: __c_tasks.at(loc).at(0), body)
-		__c_tasks.step()
-	})
-}
-
-#let tasks(cols: 3, gutter: (.5em, 1.5em), ..body) = {
-	__c_tasks.update(1)
+// Vertical task lists
+#let __c-task = counter("@schule-tasks")
+#let tasks(
+	cols: 3,
+	gutter: 4%,
+	numbering: "1)",
+	body
+) = {
+	__c-task.update(0)
 	grid(
-		columns: for i in range(cols) { (1fr,) },
-		rows: auto,
-		column-gutter: gutter.at(0),
-		row-gutter: gutter.at(1),
-		..body.pos()
+		columns:(1fr,)*cols,
+		gutter: gutter,
+		..body.children
+			.filter((c) => c.func() in (enum.item, list.item))
+			.map((it) => {
+				__c-task.step()
+				__c-task.display(numbering)
+				h(.5em)
+				it.body
+			}
+		)
 	)
-}
-
-// SI Einheiten
-#let si(value, units) = {
-	if type(units) == "array" [
-		#value#h(0.2em)#{units.join()}
-	] else [
-		#value#h(0.2em)#units
-	]
 }
