@@ -6,3 +6,5 @@ authors = ["J. Neugebauer"]
 license = "MIT"
 description = "Arbeitsblätter und Klausuren."
 repository = "https://github.com/jneug/schule-typst"
+exclude = ["docs/*"]
+compiler = "0.8.0"

@@ -31,10 +31,7 @@
 }
 
 #let method( signature, body ) = {
-	if type(signature) == "string" {
-		signature = [#signature]
-	}
-	if signature.func() == raw {
+	if type(signature) == "content" and signature.func() == raw {
 		signature = signature.text
 	}
 
@@ -46,13 +43,12 @@
 		below: 4pt
 	)[
 		#set text(size:0.85em)
-		#if not _ab_highlight_doku [*#signature*]
-		else [#raw(signature, block:false, lang:"java")]
+		#if not _ab_highlight_doku [*#signature*] else [#raw(signature, block:false, lang:"java")]
 	]
 	body
 }
 
-#let class( name, generic-type:none, descr:none, partial:false, methods ) = {
+#let class( name, generic-type:none, descr:none, partial:false,methods ) = {
 	if descr != none {
 		__d_classheader(name, generic-type:generic-type)
 		__content(descr)
@@ -61,11 +57,11 @@
 	__d_methodheader(name, generic-type:generic-type, partial:partial)
 	for m in methods {
 		if type(m) == "array" {
-			method[#m.at(0)][
+			method(m.at(0))[
 				#__content(m.at(1))
 			]
 		} else {
-			method[#m.signature][
+			method(m.signature)[
 				#__content(m.descr)
 			]
 		}
@@ -74,7 +70,7 @@
 
 #let display( key, descr:true ) = {
 	if key not in doc-data {
-		panic("No docs for name " + name)
+		panic("No docs for name " + key)
 	}
 
 	let scheme = doc-data.at(key)

@@ -1,13 +1,16 @@
 /********************************\
 *    Typographic enhancements    *
 \********************************/
-// #import "@local/showybox:0.2.0": showybox
+
+#import "@preview/codelst:2.0.0"
+#import "@preview/showybox:2.0.1": showybox
+#import "@preview/t4t:0.3.2": get
+#import "@preview/unify:0.4.0"
+
 #import "@local/typopts:0.0.4": options
-#import "@local/codelst:0.0.3"
-#import "@local/showybox:0.2.1": showybox
-#import "@local/t4t:0.1.0": get
 
 #import "./theme.typ"
+
 
 // ============================
 // Text scaling
@@ -15,6 +18,7 @@
 #let scaled(content, size: 0.8) = text(size*1em, content)
 #let small(content) = scaled(content, size:0.88)
 #let large(content) = scaled(content, size:1.2)
+
 
 // ============================
 // New text decorations
@@ -77,6 +81,7 @@
 	})
 }
 
+
 // ============================
 // Text highlights
 // ============================
@@ -92,6 +97,8 @@
 	[#name #smallcaps(last)]
 }
 
+#let highlight( body, color:yellow ) = box(fill:color, inset:(x:0.1em), outset:(y:0.1em), radius:0.1em, body)
+
 // German number format for integers / floats
 #let num( value ) = {
 	get.text(value).replace(".", ",")
@@ -99,6 +106,15 @@
 
 // SI units
 #let si(value, unit) = [#num(value)#h(0.2em)#unit]
+
+// Keys
+#let key(label) = box(stroke:.5pt + gray, inset:(x:2pt), outset:(y:2pt), radius:2pt, fill:theme.bg.muted, text(.88em, label))
+
+// Folders and files
+#let datei(name) = [#emoji.page#raw(block:false, get.text(name))]
+#let ordner(name) = [#emoji.folder#raw(block:false, get.text(name))]
+#let programm(name) = text(theme.primary, weight: 400, name)
+
 
 // ============================
 // Misc
@@ -126,17 +142,15 @@
 // ============================
 
 // Quelltexte
-#let sourcecode(numbers-style: codelst.numbers-style, ..args, body) = codelst.code-frame(codelst.sourcecode(numbers-style: numbers-style, ..args, body))
+// #let sourcecode(numbers-style: codelst.numbers-style, ..args, body) = codelst.code-frame(codelst.sourcecode(numbers-style: numbers-style, ..args, body))
+#let sourcecode = codelst.sourcecode
 
-#let lineref = codelst.lineref
+#let lineref = codelst.lineref.with(supplement:"Zeile")
+#let lineref- = codelst.lineref.with(supplement:"")
 
 // Code mit highlight, aber inline
 #let code(body, lang: "java") = {
-	if type(body) == "content" {
-		raw(body.at("text"), block: false, lang: lang)
-	} else {
-		raw(mty.codei(body, lang: lang))
-	}
+  raw(get.text(body), block: false, lang: lang)
 }
 
 // ============================
@@ -154,10 +168,11 @@
 ) = showybox(
 	frame: (
 		border-color: get.stroke-paint(stroke),
-		upper-color: get.stroke-paint(stroke),
-		lower-color: fill,
+		title-color: get.stroke-paint(stroke),
+		footer-color: fill,
+    body-color: fill,
 		radius: radius,
-		width: get.stroke-thickness(stroke),
+		thickness: get.stroke-thickness(stroke),
 	),
 	shadow: (
 		offset: shadow,

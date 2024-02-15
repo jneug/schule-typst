@@ -2,11 +2,12 @@
 *      Exercises and points      *
 \********************************/
 
-#import "@local/typopts:0.0.4": options
+#import "@local/typopts:0.0.4": options, states
 
 #import "./theme.typ"
 #import "./layout.typ": kopfzeile, fusszeile, d_seitenzahl, pagenumber-format
 #import "./typo.typ": luecke, marginnote
+#import "./util.typ": place-label
 
 
 // =================================
@@ -27,7 +28,7 @@
 
 // =================================
 //  Hilfsfunktionen
-// =================================
+// loesung=================================
 #let __foreach(
 	s,
 	func,
@@ -137,9 +138,9 @@
 #let d_aufg(
 	label:  "Aufgabe",
 	format: "1",
-	nr:     none
+	nr:     auto
 ) = [#label
-	#if nr == none {
+	#if nr in (none, auto) {
 		__c-aufgaben.display(
 			(..c) => numbering(format, c.pos().first())
 		)
@@ -224,7 +225,8 @@
 	__akt_aufg(aufg => block(
 		inset:0.5em,
 		fill: theme.bg.muted.lighten(50%),
-		radius:4pt
+		radius:4pt,
+    width: 100%
 	)[
 		=== Lösungen #d_aufg()
 		#__d_loesung(aufg)
@@ -239,10 +241,10 @@
 	footer: fusszeile(
 		rechts: () => {
 			set text(fill:theme.text.default)
-			d_seitenzahl(func:(cur, body, total, loc) => {
+			d_seitenzahl(format:(cur, body, total) => {
 				if cur > body {
 					numbering("I", cur - body)
-				} else [#pagenumber-format(cur, body, total, loc)]
+				} else [#pagenumber-format(cur, body, total)]
 			})
 		}
 	)
@@ -264,9 +266,11 @@
 #let aufgabe(
 	titel: none,
 	icons: none,
-	use:   true,
+	use: true,
 	header: true,
 	page:  false,
+  number: auto,
+  label: none,
 	body
 ) = {
 	if use {
@@ -274,7 +278,8 @@
 		__akt_aufgnr(n => {
 			__s-aufgaben.update(a => {
 				a.push((
-					nummer:      n,
+          id:          n,
+					nummer:      if number == auto { n } else { number },
 					titel:       titel,
 					teile:       0,
 					loesung:     (),
@@ -288,11 +293,17 @@
 			ic = marginnote(dy:.2em)[#text(size:0.88em)[#{(icons,).flatten().join()}]]
 		}
 		if page { pagebreak() }
-		if header [== #ic#d_aufg()#if titel != none [#h(2em)#text(fill:theme.text.default)[#titel]]#h(1fr)#punkte(func:p=>if p > 0 {text(fill:theme.secondary,size:0.88em)[#d_punkte(p)]}) <aufgabe>]
+		if header [== #ic#d_aufg(nr:number)#if titel != none [#h(2em)#text(fill:theme.text.default)[#titel]]#h(1fr)#punkte(func:p=>if p > 0 {text(fill:theme.secondary,size:0.88em)[#d_punkte(p)]}) <aufgabe>]
 		// if type(icons) != none {
 		// 	icons = (icons,).flatten()
 		// 	marginnote(dy:-1.5em)[#icons.join()]
 		// }
+    if label != none {
+      // place-label(label, kind:"Aufgabe")
+      place([#figure(kind:"aufgabe", supplement:"Aufgabe", [])#label])
+    } else {
+      place([#figure(kind:"aufgabe", supplement:"Aufgabe", [])])
+    }
 		body
 		options.get("loesungen", value => {
 			if value == "folgend" [

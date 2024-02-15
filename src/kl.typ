@@ -29,8 +29,8 @@
 
 		fontsize: fontsize,
 
-		_init: () => {
-			options.addconfig("dauer", default:180, type:"integer")
+		module-init: () => {
+			options.add-argument("dauer", default:180, type:"integer")
 		},
 
 		body

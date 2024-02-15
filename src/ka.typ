@@ -1,7 +1,7 @@
 #import "./ab.typ": *
 #import  "./bewertung.typ": *
 
-#import "@local/t4t:0.1.0": alias
+#import "@preview/t4t:0.3.2": alias
 
 // #import "./layout.typ": kopfzeile
 
@@ -21,11 +21,11 @@
 
 		..args,
 
-		_init: () => {
-			options.extendparser("schule", options.arg(
+		module-init: () => {
+      options.add-argument(
 				"variante",
 				default: 0,
-				types: ("integer", "string"),
+				type: ("integer", "string"),
 				code: v => {
 					let varis = "ABCDEFGHIJKLMN"
 					if type(v) == "string" {
@@ -38,7 +38,7 @@
 						v
 					}
 				}
-			))
+			)
 		},
 
 		body

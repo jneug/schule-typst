@@ -1,5 +1,6 @@
 #import "./ab.typ": *
 #import "./figures.typ": tablefill
+#import "theme.typ"
 
 #let checkup(
 	..args,
@@ -42,11 +43,27 @@
 	[#sym.dots #body], [#smilies], [#aufgaben.children.filter(c => c.func() != [ ].func()).join([\ ])]
 )
 
-#let checkuptable( ..cells ) = table(
-	columns: (1fr, auto, auto),
-	fill: tablefill(oddfill:white),
-	align: (c,r) => (left+horizon, center+horizon, left+top).at(c),
-	[*Ich kann #sym.dots*], [], [*Informationen &
-Aufgaben*],
-	..cells.pos().flatten()
+#let trenner( content ) = (
+  [#content], [], []
 )
+
+#let checkuptable( ..cells ) = {
+  let fills = (
+    rows: (:), cols: (:)
+  )
+  for (i,row) in cells.pos().enumerate() {
+    if row.at(1) == [] {
+      fills.rows.insert(str(i+1), theme.table.header)
+    }
+  }
+  table(
+  	columns: (1fr, auto, auto),
+  	fill: tablefill(
+     fills: fills
+    ),
+  	align: (c,r) => (left+horizon, center+horizon, left+horizon).at(c),
+  	[*Ich kann #sym.dots*], [], [*Informationen &
+  Aufgaben*],
+  	..cells.pos().flatten()
+  )
+}

@@ -1,6 +1,8 @@
 #import "./theme.typ"
 #import "@preview/tablex:0.0.4": tablex, colspanx, rowspanx, cellx
 
+// #import "@preview/wrap-it"
+
 // Utilities
 #let __setstate( abbr, supplement ) = {
 	state("@pref-" + abbr).update(supplement)
@@ -13,9 +15,9 @@
 }
 
 
-// ================================
-// =         Pretty refs          =
-// ================================
+// =================================
+//  Pretty refs
+// =================================
 #let pfigure(
 	target,
 	content,
@@ -23,7 +25,7 @@
 ) = [#figure(
 	content,
 	..args
-) #label(str(target))]
+)#target)]
 
 #let newref( abbr, supplement ) = {
 	let _ = __setstate(abbr, supplement)
@@ -49,16 +51,60 @@
 	})
 }
 
+#let prettyref( refs:("aufg": "Aufgabe"), keep-prefix:false, body ) = {
+  show ref: r => {
+    let p = str(r.target).position(":")
+    if p != none {
+      let prefix = str(r.target).slice(0, p)
+      if prefix in refs {
+        let target
+        if keep-prefix {
+          target = label(str(r.target))
+        } else {
+          target = label(str(r.target).slice(p + 1))
+        }
+        return ref(target, supplement: refs.at(prefix))
+      }
+    }
+    return r
+  }
+  body
+}
+
 
 // ================================
 // =           Tabellen           =
 // ================================
 
-// default fill formater for tables
-#let tablefill(fill:white, headerfill:theme.table.header, footerfill:theme.table.header, oddfill:theme.bg.muted, headers:1, footers:0, colheaders:0, colfooters:0) = (column, row) => {
-	if row < headers or col < colheaders { return headerfill }
-	else if calc.odd(row) { return oddfill }
-	else { return fill }
+// default fill formatter for tables
+#let tablefill(
+  fill: white,
+  headerfill: theme.table.header,
+  footerfill: theme.table.header,
+  oddfill: theme.bg.muted,
+  headers: 1,
+  footers: 0,
+  colheaders: 0,
+  colfooters: 0,
+  columns: auto,
+  rows: auto,
+  fills: (rows: (:), cols: (:))
+) = (column, row) => {
+	if row < headers or column < colheaders {
+    return headerfill
+  } else if rows != auto and (row >= rows - footers) {
+    return footerfill
+  } else if columns != auto and (column >= columns - colfooters) {
+    return footerfill
+  } else if str(row) in fills.rows {
+    return fills.rows.at(str(row))
+  } else if str(column) in fills.cols {
+    return fills.cols.at(str(column))
+  } else if calc.odd(row) {
+    return oddfill
+  } else {
+    return fill
+  }
 }
 
 
@@ -81,8 +127,7 @@
 		#table(
 			inset: inset,
 			fill: _fill,
-			..args.named(),
-			..args.pos(),
+			..args
 		)
 		#if header != none {
 			place(top+left, dy:-1*insets.top)[

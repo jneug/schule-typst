@@ -156,7 +156,7 @@
 			__s-aufgaben.final(loc)
 				.map(aufg => {
 					let cells = ([*#{aufg.nummer}*],
-					[#d_ew_text(aufg.nummer)],
+					[#if aufg.titel != "" [_*#aufg.titel*_\ ]#d_ew_text(aufg.nummer)],
 					[#d_ew_punkte(aufg.nummer)],
 					[ ])
 
@@ -172,6 +172,7 @@
 				.flatten()
 		}
 
+    set par(leading: .75em)
 		table(
 			columns: (auto, 1fr, auto, auto),
 			inset: 5pt,
@@ -185,7 +186,7 @@
 				else if col == 1 { left + horizon }
 				else { left }
 			},
-			[*Aufg.*], [*Die Schülerin / Der Schüler kann #sym.dots.h*],
+			[*Aufg.*], [*Die Schülerin / Der Schüler #sym.dots.h*],
 			[*mögl. \ Punkte*], [*erreicht*],
 			.._ew_cells(),
 			[],  [
@@ -215,7 +216,7 @@
 	)[
 	= Erwartungshorizont <erwartungshorizont>
 	\
-	Name: #luecke(symbol: ".")
+	Name: #luecke()
 
 	#locate(loc => {
 		let _ew_cells() = {
@@ -251,6 +252,7 @@
 			})
 			.flatten()
 
+    set par(leading: .75em)
 		table(
 			columns: (auto, 1fr, auto, auto),
 			inset: 5pt,

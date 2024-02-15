@@ -1,3 +1,0 @@
-[submodule "lib/typopts"]
-	path = lib/typopts
-	url = https://github.com/jneug/typst-typopts.git

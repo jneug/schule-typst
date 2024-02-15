@@ -1,4 +1,4 @@
-#import "./util.typ": clamp
+#import "@preview/t4t:0.3.2"
 
 // #let cancelto(base, new, dx:2pt, dy:-1pt) = $cancel(base)^#move(dx:dx, dy:dy, $new$)$
 
@@ -23,7 +23,7 @@
 				square(
 					size:size,
 					fill:if num > 0 {fill} else {blank},
-					stroke:clamp(size/10, .2pt, 2pt)+black
+					stroke: t4t.math.clamp(size/10, .2pt, 2pt)+black
 				)
 			)
 			num -= 1
