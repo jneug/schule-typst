@@ -31,7 +31,21 @@
 
 = About
 
-= Usage
+= Verwendung der Vorlagen
+
+== Installation
+
+The best way to use MANTYS is to install the package into the system dependent local package repository#footnote(link("https://github.com/typst/packages#local-packages")).
+
+Either download the current release from GitHub#footnote[#link("https://github.com/jneug/typst-typopts/releases/latest")] and unpack the archive into the correct versioned subfolder or clone it directly via `git`:
+#codesnippet[```shell-unix-generic
+git clone https://github.com/jneug/schule-typst.git schule/0.0.5
+```]
+
+After installing the package just import it inside your `typ` file:
+#codesnippet[```typ
+#import "@local/schule:0.0.5": *
+```]
 
 = Command reference
 
