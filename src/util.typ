@@ -21,5 +21,5 @@
 
 #let as-arr( ..values ) = (..values.pos(),).flatten()
 
-// PLace a hidden label in the content
+// Place a hidden label in the content
 #let place-label( label ) = [#place(box(width:0pt, height:0pt, clip:true, ""))#label]

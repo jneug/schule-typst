@@ -7,8 +7,8 @@
 #import "./theme.typ"
 #import "./util.typ": *
 
-#import "./layout.typ": *
-#import "./typo.typ": *
+#import "./layout.typ" as layout: *
+#import "./typo.typ" as typo: *
 #import "./figures.typ": *
 #import "./aufgaben.typ": *
 
@@ -212,3 +212,6 @@
 	#body
 ]
 #let anh(target) = ref(label("anh:"+target), supplement: "Anhang")
+
+
+#let __all__ = typo.__all__ + layout.__all__

@@ -15,8 +15,20 @@
     ],
 
 	examples-scope: (
-    schule: schule
+    schule: schule,
+
+    ..schule.ab.__all__
   )
+)
+
+#import "@local/tidy:0.2.0"
+
+#let show-module(name, scope:(:)) = tidy-module(
+  read("../src/" + name + ".typ"),
+  name: name,
+  include-examples-scope: true,
+  tidy: tidy,
+  extract-headings: 3
 )
 
 // #let footlink( url, label ) = [#link(url, label)#footnote(link(url))]
@@ -35,125 +47,72 @@
 
 == Installation
 
-The best way to use MANTYS is to install the package into the system dependent local package repository#footnote(link("https://github.com/typst/packages#local-packages")).
+= Vorlagen
 
-Either download the current release from GitHub#footnote[#link("https://github.com/jneug/typst-typopts/releases/latest")] and unpack the archive into the correct versioned subfolder or clone it directly via `git`:
-#codesnippet[```shell-unix-generic
-git clone https://github.com/jneug/schule-typst.git schule/0.0.5
+Kernstück von SCHULE-TYPST sind die Dokumentvorlagen.
+
+== Arbeitsblatt (`ab`)
+
+Die Vorlage #cmd[arbeitsblatt] ist die Basisvorlage für alle anderen Vorlagen und Grundlage für die Gestaltung von Arbeitsmaterialien. Alle Argumente, die von #cmd-[arbeitsblatt] akzeptiert werden, werden daher auch von allen anderen Vorlagen akzeptiert.
+
+#command("arbeitsblatt",
+  ..args(
+    "autor", "kuerzel", "titel",
+    "reihe", "nummer", "fach",
+    "kurs", "version", "datum",
+
+    typ: "Arbeitsblatt",
+    loesungen: "sofort",
+
+    fontsize: 13pt,
+
+    paper: "a4",
+    flipped: false,
+    "margin",
+    lochung: false,
+  ),
+  sarg("args"),
+  barg("body")
+)[
+  Alle zusätzlichen Argumente in #barg[args] werden nach Prefix gefiltert und an die entsprechende Funktion weitergegeben. Beispielsweise wird #arg(par-justify: false) als #arg(justify: false) an #doc("text/par") weitergegeben.
+  - `par-` an #doc("text/par")
+  - `font-` an #doc("text/text")
+]
+
+=== Basisvorlage für ein Arbeitsblatt
+
+#sourcecode[```typ
+#import "@local/schule:0.1.0": ab
+#import ab: *
+
+#show: arbeitsblatt.with(
+  titel: "Potenzmengenkonstruktion",
+  reihe: "Endliche Automaten und formale Sprachen",
+  nummer: "AB.IV.11",
+  kurs: "Q2-LK",
+
+  autor: "J. Neugebauer",
+  kuerzel: "Ngb",
+
+  version: "2024-02-16",
+  datum: datetime.today()
+)
+
+#abtitel()
+
+#lorem(100)
 ```]
 
-After installing the package just import it inside your `typ` file:
-#codesnippet[```typ
-#import "@local/schule:0.0.5": *
-```]
+== Klassenarbeit (`ka`)
 
-= Command reference
+== Klausur (`kl`)
 
-// == typo.typ
+= Allgemeine Kommandos
 
+== Dokumentinformationen
 
-// #command("operator", barg[operator])[
-// 	Auszeichnung von Operatoren:
+== Auszeichnungen
+#show-module("typo")
 
-// 	#example(```
-// 	#operator[Entwirf] einen Algorithmus und #operator[stelle] ihn in geeigneter Form #operator[dar].
-
-// 	#operator[Implementiere] den Algorithmus nach deinem Entwurf.
-// 	```)
-// ]
-
-// #command("name", arg(last:none), barg[name])[
-// 	Darstellung eines Namens:
-
-// 	#example(```
-// 	- #name[Jonas Neugebauer]
-// 	- #name[John William Mauchly]
-// 	- #name[Adriaan van Wijngaarden]
-// 	- #name("Adriaan", last:"van Wijngaarden")
-// 	```)
-// ]
-
-// #command("uunderline", ..args(stroke: auto, offset: auto, extent: 0pt, evade: true), barg[content])[
-// 	Doppelte Untertstreichung:
-
-// 	- #quickex(`#uunderline[doppelt unterstrichen]`)
-
-// 	Die Argumente entsprechen denen von #doc("text/underline").
-// ]
-// #command("suiggly", arg(stroke:1pt + black), barg[content])[
-// 	Unterschlängelung:
-
-// 	- #quickex(`#squiggly[unterschlängelt]`)
-
-// 	#arg[stroke] bestimmt die Linienart der Unterschlängelung.
-// ]
-
-// #command("rahmen", barg[body])[
-// 	#example(```
-// 	#rahmen[#lorem(50)]
-// 	```)
-// ]
-
-// #command("kasten", barg[body])[
-// 	#example(```
-// 	#kasten[#lorem(50)]
-// 	```)
-// ]
-
-// #command("schattenbox", barg[body])[
-// 	#example(```
-// 	#schattenbox[#lorem(50)]
-// 	```)
-// ]
-
-// #command("infobox", barg[body])[
-// 	#example(```
-// 	#infobox[#lorem(50)]
-// 	```)
-// ]
-
-// #command("warnungbox", barg[body])[
-// 	#example(```
-// 	#warnungbox[#lorem(50)]
-// 	```)
-// ]
-
-// #command("hinweis", barg[body])[
-// 	#example(```
-// 	#hinweis[#lorem(50)]
-// 	```)
-// ]
-
-// #command("tipp", barg[body])[
-// 	#example(```
-// 	#tipp[#lorem(50)]
-// 	```)
-// ]
-
-// #command("info", barg[body])[
-// 	#example(```
-// 	#info[#lorem(50)]
-// 	```)
-// ]
-
-// #command("tasks", ..args(cols: 3, gutter: 4%, numbering: "1)", [body]))[
-// 	Erzeugt eine vertikale Liste.
-
-// 	#example[```
-// 	#tasks[
-// 		- Aufgabe 1
-// 		- Aufgabe 2
-// 		- Aufgabe 3
-// 	]
-// 	```]
-// ]
-
-// #command("si", arg[value], arg[unit])[
-// 	Erzeugt einen Wert mit Einheit.
-
-// 	#example[```
-// 	- #num(3.2)
-// 	- #si[4.5][m]
-// 	- #si[4.5][$frac("k", "mh")$]
-// 	```]
-// ]
+== Layout
+#show-module("layout")

@@ -165,3 +165,8 @@
 		__place_wrapfig(align, width, gutter:gutter, dx:dx, dy:dy, element, body)
 	}
 })
+
+
+#let __all__ = (
+  pagenumber-format,
+).fold((:), (a, b) => {a.insert(repr(b), b); a})
