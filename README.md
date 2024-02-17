@@ -1,1 +1,1 @@
-# schule-typst (0.1.0)
+# schule-typst (0.0.5)
