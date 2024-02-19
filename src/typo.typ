@@ -7,7 +7,7 @@
 #import "@preview/t4t:0.3.2": get, def
 #import "@preview/unify:0.4.0"
 
-#import "@local/typopts:0.0.4": options
+#import "lib/typopts/typopts.typ": options
 
 #import "./theme.typ"
 

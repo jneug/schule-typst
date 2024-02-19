@@ -2,7 +2,7 @@
 #import "@preview/t4t:0.3.2": is, def, assert, alias
 
 // Import submodule dependencies
-#import "@local/typopts:0.0.4": options, states
+#import "lib/typopts/typopts.typ": options, states
 
 #import "./theme.typ"
 #import "./util.typ": *

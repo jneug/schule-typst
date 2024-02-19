@@ -2,7 +2,7 @@
 *          Page layout           *
 \********************************/
 
-#import "@local/typopts:0.0.4": options
+#import "lib/typopts/typopts.typ": options
 
 #import "./theme.typ"
 #import "./typo.typ": small, luecke

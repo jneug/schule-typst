@@ -2,7 +2,7 @@
 *      Exercises and points      *
 \********************************/
 
-#import "@local/typopts:0.0.4": options, states
+#import "lib/typopts/typopts.typ": options, states
 
 #import "./theme.typ"
 #import "./layout.typ": kopfzeile, fusszeile, d_seitenzahl, pagenumber-format
