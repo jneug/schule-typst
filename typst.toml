@@ -2,6 +2,7 @@
 name = "schule"
 version = "0.0.5"
 entrypoint = "schule.typ"
+entrypoint = "src/schule.typ"
 authors = ["J. Neugebauer"]
 license = "MIT"
 description = "Arbeitsblätter und Klausuren."
