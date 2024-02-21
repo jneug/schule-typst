@@ -95,10 +95,10 @@
 /**
  *
  */
-#let ins( name, key, value ) = {
-	state(name).update(dict => {
-		dict.insert(key, value)
-		dict
+#let ins( name, key, value, func:ident ) = {
+	state(name).update(arr => {
+		arr.insert(key, value)
+		arr
 	})
 }
 
@@ -106,9 +106,9 @@
  *
  */
 #let rem( name, key ) = {
-	state(name).update(dict => {
-		let _ = dict.remove(key)
-		dict
+	state(name).update(arr => {
+		let _ = arr.remove(key)
+		arr
 	})
 }
 

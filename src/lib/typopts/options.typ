@@ -2,20 +2,16 @@
 |      Option handling and      |
 |      argument parsing.        |
 \*******************************/
-#import "./states.typ"
-
-#let __s_options_name = "@typopts-options"
-#let __s_config_name = "@typopts-config"
 
 // global state to store options
-#let __s_options = state(__s_options_name, (:))
+#let __s_options = state("@options", (:))
 // global state to store configuration
-#let __s_config  = state(__s_config_name, (:))
+#let __s_config   = state("@config", (:))
 
 
 // Option storage
 
-// get the proper option key from name
+// get the proper optoin key from name
 // and namespace values
 #let __ns(name, ns) = {
 	if ns != none {
@@ -78,12 +74,7 @@
 
 // Updates all options in the given dict to a new value.
 #let update-all( values, ns:none ) = {
-	__s_options.update(o => {
-		for (name, value) in values {
-			o.insert(__ns(name, ns), value)
-		}
-		o
-	})
+	values.pairs().map(v => update(..v, ns:ns))
 }
 
 // Remove an option from the store.
@@ -98,7 +89,7 @@
 #let display( name, format: value => value, default:none, final:false, ns:none ) = get(__ns(name, ns), format, default:default, final:final)
 
 // File loading
-#let load( filename, argparser:none ) = {
+#let load( filename ) = {
 	let m = filename.match(regex("\.([^.]+)$"))
 	if m != none {
 		let loaders = (
@@ -122,155 +113,162 @@
 }
 
 // Argument parsing
-#let argparser( unknown:none, ..args ) = {
-	let arguments = (:)
-	for arg in args.pos() {
-		arguments.insert(arg.name, arg)
-	}
-	return (arguments: arguments, unknown: unknown)
-}
-
-#let saveparser( name, unknown:none, ..args ) = {
-	let config = argparser(unknown:unknown, ..args)
-	__s_config.update(o => {
-		o.insert(name, config)
-		o
-	})
-}
-
-#let extendparser( name, ..args ) = {
-	let config = argparser(..args)
-	__s_config.update(o => {
-		if not name in o {
-			o.insert(name, config)
-		} else {
-			let old-config = o.at(name)
-			old-config.arguments += config.arguments
-			o.at(name) = old-config
-		}
-		o
-	})
-}
-
-#let init-module( module ) = {
-	if not module.ends-with(".typ") {
-		module = module + ".typ"
-	}
-	import module: __init-options
-	__init-options()
-}
-
-#let addarg( config, ..args ) = {
-	for arg in args.pos() {
-		config.arguments.insert(arg.name, arg)
-	}
-	return config
-}
-
-#let arg(
+#let add-option(
 	name,
-	kind:     "named",
-	types:    ("string", "content"),
-	ns:       none,
-	store:    true,
+	type:     ("string", "content"),
 	required: false,
 	default:  none,
 	choices:  none,
+	store:    true,
 	pipe:     none,
 	code:     none
-) = {(
-	option-type: kind,
-	types:     types,
-	name:     name,
-	ns:       ns,
-	store-option: store,
-	required: required,
-	default:  default,
-	choices:  choices,
-	pipe:     pipe,
-	code:     code
-)}
-#let pos = arg.with(kind: "positional")
+) = {
+	__s_config.update(c => {
+		c.insert(name, (
+			_option:  "positional",
+			type:     type,
+			name:     name,
+			required: required,
+			default:  default,
+			choices:  choices,
+			store:    store,
+			pipe:     pipe,
+			code:     code
+		))
+		c
+	})
+}
 
-#let parsevalues( provided-pos, provided-named, config ) = {
-	let pos = 0
-	let values = (:)
+#let add-argument(
+	name,
+	type:     ("string", "content"),
+	required: false,
+	default:  none,
+	choices:  none,
+	store:    true,
+	pipe:     none,
+	code:     none
+) = {
+	__s_config.update(c => {
+		c.insert(name, (
+			_option:  "named",
+			type:     type,
+			name:     name,
+			required: required,
+			default:  default,
+			choices:  choices,
+			store:    store,
+			pipe:     pipe,
+			code:     code
+		))
+		c
+	})
+}
 
-	for (name, def) in config.arguments {
-		let value = none
-		if def.option-type == "positional" {
-			if pos < provided-pos.len() {
-				value = provided-pos.at(pos)
-				pos += 1
-			} else if "required" in def and def.required {
-				assert(pos < provided-pos, message:"Positional argument '" + name + "' not provided but is required.")
-			} else {
-				value = def.default
-			}
+#let getconfig( name, final:false ) = {
+	locate(loc => {
+		//let conf = __s_config.final(loc)
+		let conf = __s_config.at(loc)
+		if name in conf {
+			conf.at(name)
 		} else {
-			if name in provided-named {
-				value = provided-named.at(name)
-			} else if def.required {
-				assert(name in provided-named, message:"Named argument '" + name + "' not provided but is required.")
+			none
+		}
+	})
+}
+
+#let parseconfig( _unknown:none, _opts:none, ..args ) = {
+	// Run additional module configurations
+	if _opts != none {
+		assert(type(_opts) == "array")
+		for _addopts in _opts {
+			_addopts()
+		}
+	}
+
+	locate(loc => {
+		//let conf = __s_config.final(loc)
+		let conf = __s_config.at(loc)
+		let provided-pos = args.pos()
+		let provided-named = args.named()
+		let pos = 0
+
+		for opt in conf.pairs() {
+			let name = opt.at(0)
+			let def  = opt.at(1)
+
+			let value = none
+			if def._option == "positional" {
+				if pos < provided-pos.len() {
+					value = provided-pos.at(pos)
+					pos += 1
+				} else if "required" in def and def.required {
+					assert(pos < provided-pos, message:"Positional argument '" + name + "' not provided but is required.")
+				} else {
+					value = def.default
+				}
 			} else {
-				value = def.default
+				if name in provided-named {
+					value = provided-named.at(name)
+				} else if "required" in def and def.required {
+					assert(name in provided-named, message:"Ma,ed argument '" + name + "' not provided but is required.")
+				} else if "default" in def {
+					value = def.default
+				}
 			}
-		}
 
-		let types = ("none", def.types).flatten()
-		assert(
-			types.any(v => type(value) == v),
-			message: "Wrong type for option '" + name + "': got '" + type(value) + "', but expected one of '" + types.join(", ", last:" or ") + "'"
-		)
+			// assert(
+			// 	value == none or type(value) == def.type,
+			// 	message: "Wrong type for option '" + name + "': got '" + type(value) + "', but expected '" + def.type + "'"
+			// )
+			let types = ("none", def.type).flatten()
+			assert(
+				types.any(v => type(value) == v),
+				message: "Wrong type for option '" + name + "': got '" + type(value) + "', but expected one of '" + types.join(", ") + "'"
+			)
 
-		if def.choices != none {
-			let choices = (def.choices).flatten()
-			assert(value in choices, message:"Value for option '" + name + "' not allowed: got '" + value + "' but expected one of '" + choices.join(", ", last:" or ") + "'")
-		}
+			if "choices" in def and def.choices != none {
+				let choices = (def.choices).flatten()
+				assert(value in choices, message:"Value for option '" + name + "' not allowed: got '" + value + "' but expected one of '" + choices.join(", ") + "'")
+			}
 
-		if def.code != none {
-			let func = def.code
-			value = func(value)
-		}
+			if name in provided-named {
+				if "code" in def and def.code != none {
+					let func = def.code
+					if type(func) == "function" {
+						value = func(value)
+					}
+				}
+			}
 
-		values.insert(name, value)
-		// config.at(name).insert("value", value)
+			conf.at(name).insert("value", value)
+			if def.store {
+				update(name, value)
+			}
 
-		if type(def.pipe) == "array" {
-			for oopt in def.pipe {
-				if oopt.len() >= 2 {
-					provided-named.insert(oopt.at(0), oopt.at(1))
+			// TODO: Handle with pipe option
+			if name in provided-named {
+				if type(def.pipe) == "array" {
+					for oopt in def.pipe {
+						if oopt.len() >= 2 {
+							provided-named.insert(oopt.at(0), oopt.at(1))
+						}
+					}
 				}
 			}
 		}
-	}
 
-	if config.unknown != none {
-		for opt in provided-named.pairs() {
-			if opt.at(0) not in config {
-				config.unknown(opt.at(0), opt.at(1))
+		__s_config.update(conf)
+
+		if _unknown != none {
+			for opt in provided-named.pairs() {
+				if opt.at(0) not in conf {
+					_unknown(opt.at(0), opt.at(1))
+				}
 			}
 		}
-	}
-
-	//config
-	return values
+	})
 }
-#let parseargs( args, config ) = parsevalues(args.pos(), args.named(), config)
-#let parseopts( args, config ) = locate(loc => {
-	let conf = config
-	if type(config) == "string" {
-		//config = __s_config.get(loc)
-		let o = __s_config.final(loc)
-		if config in o {
-			conf = o.at(config)
-		} else {
-			panic()
-		}
-	}
-	let values = parsevalues(args.pos(), args.named(), conf)
-	update-all(values)
-})
 
 #let ignore = none
 #let store(k, v) = update(k, v)
@@ -284,13 +282,13 @@
 // 	else if key in var.pos() { var.pos().at(key) }
 // 	else { default }
 // }
-#let extract( args, _prefix:"", _positional:false, ..keys ) = {
+#let extract( var, _prefix:"", _positional:false, ..keys ) = {
 	let vars = (:)
 	for key in keys.named().pairs() {
 		let k = _prefix + key.at(0)
 
-		if k in args.named() {
-			vars.insert(key.at(0), args.named().at(k))
+		if k in var.named() {
+			vars.insert(key.at(0), var.named().at(k))
 		} else {
 			vars.insert(key.at(0), key.at(1))
 		}
