@@ -53,9 +53,9 @@
 		#rect(width:100%, stroke:2pt + black, fill:white, inset:0.25em)[
 			#set align(center)
 			#set text(fill:theme.text.title)
-			= #smallcaps(titel) (#diedauer Minuten)
+			#heading(level:1, outlined: false, bookmarked: false)[#smallcaps(titel) (#diedauer Minuten)]
 			#v(-1em)
-			== #dasfach #derkurs (#daskuerzel)
+			#heading(level:2, outlined: false, bookmarked: false)[#dasfach #derkurs (#daskuerzel)]
 			#v(0.25em)
 		]
 	]

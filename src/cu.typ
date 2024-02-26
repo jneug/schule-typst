@@ -15,9 +15,7 @@
 	)
 }
 
-#let cutitel() = {
-	[= Checkup zur #dertitel: #text(fill:theme.secondary, diereihe)]
-}
+#let cutitel() = heading(level:1, outlined: false, bookmarked: false)[Checkup zur #dertitel: #text(fill:theme.secondary, diereihe)]
 
 #let CheckupBild = image("./assets/checkup.png", width:2cm)
 

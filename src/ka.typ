@@ -52,7 +52,7 @@
 ) =titleblock({
 	if titel == none { titel = dertitel }
 	set align(center)
-	text(theme.primary, heading(level: 1, titel))
+	text(theme.primary, heading(level: 1, outlined: false, bookmarked: false, titel))
 })
 
 #let dievariante(numbering: "A") = options.display(

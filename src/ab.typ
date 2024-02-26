@@ -177,10 +177,10 @@
 
 	set align(center)
 	if reihe != none {
-		heading(level:3, text(theme.text.subject, smallcaps(reihe)))
+		heading(level:3, outlined: false, bookmarked: false, text(theme.text.subject, smallcaps(reihe)))
 	}
   move(dy:-0.4em,
-    heading(level:1, text(theme.primary, smallcaps(titel)))
+    heading(level:1, outlined: false, bookmarked: false, text(theme.primary, smallcaps(titel)))
   )
   if rule {
     move(dy: -.8em, line(length: 100%))
