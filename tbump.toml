@@ -45,4 +45,4 @@ search = 'schule:{current_version}'
 # cmd = "ln -s schule ../schule-{new_version}"
 [[before_commit]]
 name = "compile manual"
-cmd = "typst compile manual.typ"
+cmd = "typst compile --root . docs/schule-manual.typ"
