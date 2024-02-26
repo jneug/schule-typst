@@ -287,3 +287,7 @@
 		namen:      ew_namen_oberstufe
 	)
 ]
+
+#let __all__ = (
+
+)

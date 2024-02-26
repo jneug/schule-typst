@@ -23,3 +23,8 @@
 
 // Place a hidden label in the content
 #let place-label( label ) = [#place(box(width:0pt, height:0pt, clip:true, ""))#label]
+
+
+#let __all__ = (
+
+)
