@@ -1,4 +1,5 @@
 #import "@local/mantys:0.1.0": *
+#import "@local/tidy:0.2.0"
 #import "../src/schule.typ"
 
 
@@ -42,7 +43,6 @@
   )
 )
 
-#import "@local/tidy:0.2.0"
 
 #let show-module(name, scope:(:)) = tidy-module(
   read("../src/" + name + ".typ"),
@@ -111,7 +111,7 @@ Die Vorlage #cmd[arbeitsblatt] ist die Basisvorlage für alle anderen Vorlagen u
 === Basisvorlage für ein Arbeitsblatt
 
 #sourcecode[```typ
-#import "@local/schule:0.1.0": ab
+#import "@local/schule:0.0.5": ab
 #import ab: *
 
 #show: arbeitsblatt.with(
