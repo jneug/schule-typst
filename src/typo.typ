@@ -45,6 +45,7 @@
 // ============================
 // New text decorations
 // ============================
+/// === Neue Textauszeichnungen
 /// Doppelte Unterstreichung.
 /// - #shortex(`#uunderline[#lorem(5)]`)
 /// - #shortex(`#uunderline(lorem(5), stroke:2pt+red, offset:2pt, distance: 1pt)`)
@@ -129,11 +130,19 @@
 	})
 }
 
+/// Textabschnitt hervorheben (ersetzt #doc("text/highlight")).
+/// - #shortex(`#highlight[#lorem(5)]`)
+///
+/// - color (color): Farbe der Hervorhebung.
+/// - body (string, content): Hervorzuhebender Inhalt.
+/// -> content
+#let highlight( body, color:yellow ) = box(fill:color, inset:(x:0.2em), outset:(y:0.2em), radius:0.1em, body)
+
 
 // ============================
 // Text highlights
 // ============================
-
+/// === Inhaltselemente
 ///	Auszeichnung von Operatoren:
 ///
 ///	#example[```
@@ -164,23 +173,24 @@
 	[#name #smallcaps(last)]
 }
 
-/// Textabschnitt hervorheben.
-/// - #shortex(`#highlight[#lorem(5)]`)
-#let highlight( body, color:yellow ) = box(fill:color, inset:(x:0.2em), outset:(y:0.2em), radius:0.1em, body)
 
-/// German number format for integers / floats
-/// - #shortex(`#num(2.3)`)
+// TODO Use package like metro or unify
+// German number format for integers / floats
+// - #shortex(`#num(2.3)`)
 #let num( value ) = {
 	get.text(value).replace(".", ",")
 }
 
-/// SI units
-/// - #shortex(`#si(3.5, $m^3$)`)
+// SI units
+// - #shortex(`#si(3.5, $m^3$)`)
 #let si(value, unit) = [#num(value)#h(0.2em)#unit]
 
-/// Keys
-/// - #shortex(`#key("Enter")`)
-#let key(label) = box(
+/// Formatierung von Tasten.
+/// - #shortex(`#taste("Enter")`)
+///
+/// - label (string, content): Aufschrift der Taste.
+/// -> content
+#let taste(label) = box(
   stroke:.5pt + gray,
   inset:(x:2pt),
   outset:(y:2pt),
@@ -190,29 +200,73 @@
   text(.88em, raw(label))
 )
 
-/// Dateien
+/// Formatierung von Tastenkürzeln.
+/// - #shortex(`#tastenkuerzel("Strg","C")`)
+/// - #shortex(`#tastenkuerzel("Strg","Cmd")`, sep:"/")
+/// - #shortex(`#tastenkuerzel("Strg","Shift","C", sep:"")`)
+///
+/// - ..labels (string, content): Aufschriften der Tasten.
+/// - sep (string): Separator zwischen Tasten.
+/// -> content
+#let tastenkuerzel( ..labels, sep: "+") = {
+  labels.pos().map(taste).join(sep)
+}
+
+/// Formatierung von Dateinamen.
 /// - #shortex(`#datei("beispiel.typ")`)
+///
+/// - name (string, content): Name der Datei.
+/// -> content
 #let datei(name) = [#emoji.page#raw(block:false, get.text(name))]
 
-/// Ordner
+/// Formatierung von Ordnernamen.
 /// - #shortex(`#ordner("arbeitsblaetter")`)
+///
+/// - name (string, content): Name des Ordners.
+/// -> content
 #let ordner(name) = [#emoji.folder#raw(block:false, get.text(name))]
 
-/// Programme
+/// Formatierung von Programmnamen.
 /// - #shortex(`#programm("VSCode")`)
+///
+/// - name (string, content): Name des Programms.
+/// -> content
 #let programm(name) = text(theme.primary, weight: 400, name)
 
 
 // ============================
 // Misc
 // ============================
-// Textlücke
-#let luecke(width: 4cm, stroke: 1pt + black, offset: 2pt) = {
-	box(width: width, move(dy:offset, line(stroke: stroke, length: 100%)))
+/// === Verschiedenes
+/// Textlücken.
+/// - #shortex(`#luecke()`)
+/// - #shortex(`#luecke(width: 2cm, offset: 5pt)`)
+/// - #shortex(`#luecke(text: "Hallo Welt!", stroke: .5pt+red)`)
+///
+/// - width (length): Breite der Textlücke, wenn #arg[text] nicht gegeben ist.
+/// - text (length): Text, anhand dessen die Breite der Textlücke bestimmt werden soll. Falls angegeben, wird #arg[width] ignoriert.
+/// - stroke (length): Linienstil der Unterstreichung.
+/// - offset (length): Abstand der Linie zur Basislinie des umliegenden Textes.
+/// -> content
+#let luecke(width: 4cm, stroke: 1pt + black, offset: 2pt, text:none) = {
+  if text != none {
+    box(stroke:(bottom:stroke), inset:(bottom:offset), baseline:offset, text)
+  } else {
+	  box(width:width, stroke:(bottom:stroke), inset:(bottom:offset), baseline:offset, [])
+  }
 }
 
-// Randnotizen
-#let marginnote(position: left, gutter: .5em, offset: 0pt, body) = {
+/// Erzeugt eine Randnotiz außerhalb des Textbereichs.
+/// #example[```
+/// #randnotiz(gutter:1cm, offset:-5pt)[Hallo\ Welt]
+/// ```]
+///
+/// - position (alignment): #value(left) oder #value(right).
+/// - gutter (length): Abstand zum Textbereich.
+/// - offset (length): Verschiebung entlang der y-Achse relativ zum Vorkommen im Text.
+/// - body (content): Inhalt der Randnotiz.
+/// -> content
+#let randnotiz(position: left, gutter: .5em, offset: 0pt, body) = {
 	style(styles => {
 		let _m = measure(body, styles)
 		if position == right {
@@ -222,20 +276,34 @@
 		}
 	})
 }
+#let marginnote = randnotiz
 
 
 // ============================
 // Code
 // ============================
-
-// Quelltexte
-// #let sourcecode(numbers-style: codelst.numbers-style, ..args, body) = codelst.code-frame(codelst.sourcecode(numbers-style: numbers-style, ..args, body))
-#let sourcecode = codelst.sourcecode
+/// === Quelltexte
+/// Zeigt Quelltext mit Zeilennummern und in einem #cmd[frame] an.
+/// Alias für #cmd("sourcecode", module:"codelst").
+/// #example[````
+/// #sourcecode[```python
+/// print("Hello, World!")
+/// ```]
+/// ````]
+///
+/// - ..args (any): Argument für #cmd-("sourcecode", module:"codelst").
+/// -> content
+#let sourcecode( ..args ) = codelst.sourcecode( ..args )
 
 #let lineref = codelst.lineref.with(supplement:"Zeile")
 #let lineref- = codelst.lineref.with(supplement:"")
+#let linerange-(from, to, sep: [ -- ]) = [#lineref-(from)#sep#lineref-(to)]
+#let linerange(from, to, supplement: "Zeilen", sep: [ -- ]) = [#supplement #linerange-(from, to)]
 
-// Code mit highlight, aber inline
+/// Inline-Code mit Syntax-Highlighting. Im Prinzip gleichwertig
+/// mit der Auszeichungsvariante mit drei Backticks:
+/// - #shortex(`#code(lang:"python", "print('Hallo, Welt')")`)
+/// - #shortex(raw("```python print('Hallo, Welt')```"))
 #let code(body, lang: "java") = {
   raw(get.text(body), block: false, lang: lang)
 }
@@ -243,7 +311,7 @@
 // ============================
 // Frames and Boxes
 // ============================
-
+/// === Kästen und Rahmen
 /// Eine generische Box um Inhalte. Verwendet #package[Showybox].
 /// Im Allgemeinen werden die spezifischeren Boxen benutzt:
 /// - @@rahmen
@@ -334,7 +402,7 @@
 // ============================
 // Hints
 // ============================
-
+/// === Hinweise
 /// Zeigt einen hervorgehobenen Hinweis an.
 /// #example[```
 /// #pad(left:10pt, hinweis[#lorem(8)])
@@ -357,7 +425,7 @@
 // ============================
 // Lists and enums
 // ============================
-
+/// === Listen und Aufzählungen
 /// Setzt das Nummernformat für Aufzählungen im #arg[body] auf `a)`.
 /// #example[```
 /// #enuma[
@@ -406,8 +474,30 @@
 	body
 }
 
-// Vertical task lists
 #let __c-task = counter("@schule-tasks")
+/// Horizontal angeordnete Aufzählungsliste (z.B. für Unteraufgaben).
+/// #example[```
+/// #tasks[
+///   + Eins
+///   + Zwei
+///   + Drei
+///   + Vier
+///   + Fünf
+/// ]
+/// #tasks(cols: 4, numbering:"(a)")[
+///   + Eins
+///   + Zwei
+///   + Drei
+///   + Vier
+///   + Fünf
+/// ]
+/// ```]
+///
+/// - cols (int): Anzahl Spalten.
+/// - gutter (length): Abstand zwischen zwei Spalten.
+/// - numbering (string): Nummernformat für die Einträge.
+/// - body (content): Inhalt mit einer Aufzählungsliste.
+/// -> content
 #let tasks(
 	cols: 3,
 	gutter: 4%,
@@ -440,9 +530,14 @@
   name,
   highlight,
 
+  sourcecode,
+  lineref,
+  code,
+
   num,
   si,
-  key,
+  taste,
+  tastenkuerzel,
   datei,
   ordner,
   programm,
@@ -465,4 +560,4 @@
   enumn,
   enumnn,
   tasks
-).fold((:), (a, b) => {a.insert(repr(b), b); a})
+)
