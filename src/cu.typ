@@ -1,5 +1,4 @@
 #import "./ab.typ": *
-#import "./figures.typ": tablefill
 #import "theme.typ"
 
 #let checkup(

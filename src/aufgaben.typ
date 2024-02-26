@@ -5,7 +5,7 @@
 #import "lib/typopts/typopts.typ": options, states
 
 #import "./theme.typ"
-#import "./layout.typ": kopfzeile, fusszeile, d_seitenzahl, pagenumber-format
+#import "./layout.typ": kopfzeile, fusszeile, seitenzahl, seitenzahl-format
 #import "./typo.typ": luecke, marginnote
 #import "./util.typ": place-label
 
@@ -241,10 +241,10 @@
 	footer: fusszeile(
 		rechts: () => {
 			set text(fill:theme.text.default)
-			d_seitenzahl(format:(cur, body, total) => {
+			seitenzahl(format:(cur, body, total) => {
 				if cur > body {
 					numbering("I", cur - body)
-				} else [#pagenumber-format(cur, body, total)]
+				} else [#seitenzahl-format(cur, body, total)]
 			})
 		}
 	)
@@ -304,6 +304,7 @@
     } else {
       place([#figure(kind:"aufgabe", supplement:"Aufgabe", [])])
     }
+    v(.63em)
 		body
 		options.get("loesungen", value => {
 			if value == "folgend" [
@@ -413,3 +414,7 @@
 		})
 	})
 }
+
+#let __all__ = (
+
+)

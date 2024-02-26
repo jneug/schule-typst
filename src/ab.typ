@@ -9,8 +9,7 @@
 
 #import "./layout.typ" as layout: *
 #import "./typo.typ" as typo: *
-#import "./figures.typ": *
-#import "./aufgaben.typ": *
+#import "./aufgaben.typ" as aufgaben: *
 
 
 #let arbeitsblatt(
@@ -81,6 +80,7 @@
 		fill: theme.primary
 	)
   show link: set text(fill: theme.secondary)
+  // set raw(theme: "./BW.tmTheme")
 
 	// Handle options (after setting up page with header / footer)
 	for opt in (
@@ -120,8 +120,6 @@
 	}
 
 	options.parseconfig(..args)
-
-  // show: prettyref
 
 	place-label(<ab-start>)
 
@@ -214,4 +212,4 @@
 #let anh(target) = ref(label("anh:"+target), supplement: "Anhang")
 
 
-#let __all__ = typo.__all__ + layout.__all__
+#let __all__ = typo.__all__ + layout.__all__ + aufgaben.__all__
