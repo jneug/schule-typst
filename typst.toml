@@ -1,6 +1,6 @@
 [package]
 name = "schule"
-version = "0.0.5"
+version = "0.1.0"
 entrypoint = "src/schule.typ"
 authors = ["J. Neugebauer"]
 license = "MIT"

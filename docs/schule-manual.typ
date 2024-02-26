@@ -30,7 +30,7 @@
     info:		[#lorem(10)],
     authors:    "Jonas Neugebauer",
     url:        "https://github.com/jneug/schule-typst",
-    version:    "0.0.5",
+    version:    "0.1.0",
     date:       datetime.today(),
     abstract:   [
 		  SCHULE-TYPST ist eine Sammlung von Typst Vorlagen zur Gestaltung von Arbeitsmaterialien (Arbeitsblätter, Klausuren, Wochenpläne ...) für die Schule. Das Paket ist eine Adaption meines #LaTeX Pakets für Typst.
@@ -111,7 +111,7 @@ Die Vorlage #cmd[arbeitsblatt] ist die Basisvorlage für alle anderen Vorlagen u
 === Basisvorlage für ein Arbeitsblatt
 
 #sourcecode[```typ
-#import "@local/schule:0.0.5": ab
+#import "@local/schule:0.1.0": ab
 #import ab: *
 
 #show: arbeitsblatt.with(
