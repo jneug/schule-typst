@@ -2,6 +2,8 @@
 #import "./typo.typ": rahmen
 #import "@preview/t4t:0.3.2": is, assert, def
 
+#import "@preview/cetz:0.2.0"
+
 // Array
 #let arr( len, ..data ) = {
   let d = data.pos() + ([],) * calc.max(0, (len - data.pos().len()))
@@ -78,6 +80,10 @@
 	[(#text(1.2em, raw(result)))#sub[#base]]
 }
 
+// ================================
+// =        UML Diagramme         =
+// ================================
+#import "if/uml.typ"
 
 // ================================
 // =       Dokumentationen        =
@@ -99,14 +105,51 @@
 #let fkey( name ) = [#sym.arrow.t.filled#name]
 #let fpkey( name ) = pkey(fkey(name))
 
-
 // =================================
 //  Automaten
 // =================================
-// #import "@local/finite:0.1.0": automaton, layout
+#import "if/automaten.typ"
 
 
 // =================================
 //  Datenbanken
 // =================================
 #import "if/db.typ"
+
+
+// =================================
+//  Bäume
+// =================================
+
+#let tree-node(node, empty:none, size:.5, stroke:1pt+black, padding:.1,..) = {
+  if node.content == empty {
+    cetz.draw.content((), "")
+  } else {
+    cetz.draw.circle((), radius:size, stroke:stroke)
+    cetz.draw.content(
+      (),
+      [#node.content],
+      padding: padding
+    )
+  }
+}
+
+#let tree-edge(from, to, source, target, empty:none, size:.5, ..) = {
+  if target.content == empty {
+    ()
+  } else {
+    let (a, b) = (from + ".center", to + ".center")
+    cetz.draw.line((a: a, b: b, abs: true, number: size), (a: b, b: a, abs: true, number: size))
+  }
+}
+
+#let tree( ..nodes ) = cetz.canvas({
+  cetz.tree.tree(
+    nodes.pos(),
+    spread: 2,
+    grow: 1.25,
+    draw-node: tree-node,
+    draw-edge: tree-edge,
+    ..nodes.named()
+  )
+})

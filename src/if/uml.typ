@@ -1,7 +1,7 @@
 #import "@preview/cetz:0.2.0"
 #import "@preview/fletcher:0.4.1"
 
-#let connect(from, to, c:none) = {((
+#let klasse(from, to, c:none) = {((
 	type:"edge",
 	from:from, to:to,
   id: repr(from) + "-" + repr(to),
@@ -9,14 +9,14 @@
   func: fletcher.edge
 ),)}
 
-#let entity( pos, id, content ) = {((
+#let objekt( pos, id, content ) = {((
   type:"entity",
   pos:pos, id:id,
 	content:content,
   func: fletcher.node
 ),)}
 
-#let attribute(pos, id, content, to:none) = {
+#let benutzt(pos, id, content, to:none) = {
   let r = ((
     type:"attribute",
     pos:pos, id:id,
@@ -29,7 +29,7 @@
   return r
 }
 
-#let relation( pos, id, e1: none, c1: none, e2: none, c2: none, content ) = {
+#let erbt( pos, id, e1: none, c1: none, e2: none, c2: none, content ) = {
   let r = ((
     type:"relation",
     pos:pos, id:id,
@@ -45,8 +45,8 @@
   return r
 }
 
-#let erd(
-	width: auto, //100%,
+#let klassendiagramm(
+	width: auto,
 	height: auto,
 	padding: 5pt,
   inset: 6mm,

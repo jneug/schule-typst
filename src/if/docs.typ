@@ -30,7 +30,7 @@
 	]
 }
 
-#let method( signature, body ) = {
+#let methode( signature, body ) = {
 	if type(signature) == "content" and signature.func() == raw {
 		signature = signature.text
 	}
@@ -43,12 +43,14 @@
 		below: 4pt
 	)[
 		#set text(size:0.85em)
-		#if not _ab_highlight_doku [*#signature*] else [#raw(signature, block:false, lang:"java")]
+		#if not _ab_highlight_doku [#strong(signature)] else [#raw(signature, block:false, lang:"java")]
 	]
 	body
 }
+// {deprecated}
+#let method = methode
 
-#let class( name, generic-type:none, descr:none, partial:false,methods ) = {
+#let klasse( name, generic-type:none, descr:none, partial:false,methods ) = {
 	if descr != none {
 		__d_classheader(name, generic-type:generic-type)
 		__content(descr)
@@ -67,6 +69,8 @@
 		}
 	}
 }
+// {deprecated}
+#let class = klasse
 
 #let display( key, descr:true ) = {
 	if key not in doc-data {
