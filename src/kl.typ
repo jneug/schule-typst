@@ -31,6 +31,7 @@
 
 		module-init: () => {
 			options.add-argument("dauer", default:180, type:"integer")
+			options.add-argument("punkte-pro-erwartung", default:false, type:"boolean")
 		},
 
 		body

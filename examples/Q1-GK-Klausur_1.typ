@@ -1,4 +1,4 @@
-#import "@local/schule:0.0.5": kl, informatik
+#import "@local/schule:0.1.0": kl, informatik
 #import kl: *
 #import informatik: docs
 
@@ -17,6 +17,7 @@
 	dauer: 135,
 	datum: "20.09.2023",
 	loesungen: "seite",
+  punkte-pro-erwartung: true
 )
 
 #let key(label) = box(stroke:.5pt + gray, inset:(x:2pt), outset:(y:2pt), radius:2pt, fill:theme.bg.muted, text(.88em, label))

@@ -231,9 +231,25 @@
 
 					for i in range(aufg.teile) {
 						cells.push(numbering("a)", i + 1))
-						cells.push(d_ew_text(aufg.nummer, teil:i + 1))
-						cells.push(d_ew_punkte(aufg.nummer, teil:i + 1))
-						cells.push([ ])
+						cells.push(
+              options.display("punkte-pro-erwartung", format: (ppe) => {
+                if ppe == true {
+                  d_ew_erwartungen(aufg.nummer, teil:i + 1, format:(t, p, last) => {
+                    table(columns:(100% + 5pt, 1.5cm), align:(left, center), stroke:none, gutter: 0pt, inset: 0pt, [#t], [#p])
+                  })
+                } else {
+                  d_ew_text(aufg.nummer, teil:i + 1)
+                }
+              })
+            )
+						cells.push(options.display("punkte-pro-erwartung", format: (ppe) => {
+              if ppe == true {
+                []
+              } else {
+                d_ew_punkte(aufg.nummer, teil:i + 1)
+              }
+            }))
+            cells.push([ ])
 					}
 
 					cells
@@ -254,7 +270,7 @@
 
     set par(leading: .75em)
 		table(
-			columns: (auto, 1fr, auto, auto),
+			columns: (1.2cm, 1fr, 1.5cm, 1.8cm),
 			inset: 5pt,
 			fill: (col, row) => {
 				if row == 0 { theme.table.header }
