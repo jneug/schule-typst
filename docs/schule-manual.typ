@@ -180,12 +180,8 @@ Die Vorlage #cmd[arbeitsblatt] ist die Basisvorlage für alle anderen Vorlagen u
   }
 
   #let p = ()
-  #if pages == 1 {
-    p = ("../examples/" + filename + ".svg", )
-  } else {
-    for n in range(pages) {
-      p.push("../examples/" + filename + "-" + str(n+1) + ".svg")
-    }
+  #for n in range(pages) {
+    p.push("../examples/" + filename + "-" + str(n+1) + ".svg")
   }
 
   #if as-grid {
