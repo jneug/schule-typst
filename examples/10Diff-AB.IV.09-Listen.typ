@@ -1,4 +1,4 @@
-#import "@local/schule:0.1.0": ab
+#import "@local/schule:0.1.1": ab
 #import ab: *
 
 #show: arbeitsblatt.with(

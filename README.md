@@ -1,4 +1,4 @@
-# schule-typst (0.1.0)
+# schule-typst (0.1.1)
 
 
 ## Changelog

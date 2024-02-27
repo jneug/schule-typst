@@ -1,4 +1,4 @@
-#import "@local/schule:0.1.0": kl, informatik
+#import "@local/schule:0.1.1": kl, informatik
 #import kl: *
 #import informatik: docs
 
