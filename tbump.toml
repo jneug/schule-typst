@@ -49,10 +49,10 @@ search = 'schule:{current_version}'
 # cmd = "ln -s schule ../schule-{new_version}"
 [[before_commit]]
 name = "compile examples (pdf)"
-cmd = "for f in examples/*.typ; typst compile --root . $f; end"
+cmd = "for f in examples/*.typ; do typst compile --root . \"$f\"; done "
 [[before_commit]]
 name = "compile examples (svg)"
-cmd = "for f in examples/*.typ; typst compile --root . -f svg $f (string replace '.typ' -- '-{n}.svg' $f); end"
+cmd = "for f in examples/*.typ; do ff=${{f/.typ/}}\"-{{n}}.svg\"; typst compile --root . -f svg \"$f\" \"$ff\"; done"
 [[before_commit]]
 name = "compile manual"
 cmd = "typst compile --root . docs/schule-manual.typ"
