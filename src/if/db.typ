@@ -1,4 +1,5 @@
 #import "./erd.typ"
+#import "../layout.typ": tablefill
 
 #let primary-key( name ) = underline(stroke:.1em, offset:2pt, name)
 #let foreign-key( name ) = box()[#sym.arrow.t.filled#name]
@@ -26,4 +27,18 @@
       )
     )
   }
+}
+
+#let example-data(name: none, headers: (), ..data) = {
+  let h-len = headers.len()
+  headers = headers.map(h => text(hyphenate: false, h))
+  if name != none {
+    headers.insert(0, table.cell(colspan: h-len, raw(block:false, name)))
+  }
+  table(
+    columns: h-len,
+    fill: tablefill(headers:if name != none {2} else {1}),
+    table.header(..headers),
+    ..data.pos()
+  )
 }

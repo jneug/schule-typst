@@ -1,4 +1,5 @@
 
+#import "./theme.typ"
 #import "./typo.typ": rahmen
 #import "@preview/t4t:0.3.2": is, assert, def
 
@@ -9,12 +10,21 @@
   let d = data.pos() + ([],) * calc.max(0, (len - data.pos().len()))
   table(
     columns: (auto,) + (8mm,) * len,
-    fill: (c,r) => if r == 1 { theme.bg.muted },
+    fill: (c,r) => if c == 0 { theme.table.header } else if r == 1 { theme.bg.muted },
     align: center,
-    [*Inhalt*], ..d,
+    [*Inhalt*], ..d.map(i => if type(i) == int { str(i) } else { i }),
     [*Index*], ..range(len).map(str).map(raw)
   )
 }
+
+
+// =================================
+//  Struktogramme
+// =================================
+//#import "if/strukt.typ" as strukt
+#import "@local/nassi:0.1.0"
+
+#let struktogramm = nassi.diagram
 
 
 // =================================

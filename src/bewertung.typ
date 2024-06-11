@@ -156,7 +156,7 @@
 			__s-aufgaben.final(loc)
 				.map(aufg => {
 					let cells = ([*#{aufg.nummer}*],
-					[#if aufg.titel != "" [_*#aufg.titel*_\ ]#d_ew_text(aufg.nummer)],
+					[#if aufg.titel != "" and aufg.titel != none [_*#aufg.titel*_\ ]#d_ew_text(aufg.nummer)],
 					[#d_ew_punkte(aufg.nummer)],
 					[ ])
 

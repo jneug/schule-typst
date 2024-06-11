@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+name: KnowHowPC
+file_extensions: [khp]
+scope: source.khp
+
+contexts:
+  main:
+    - match: \b(isz|jmp|stp|inc|dec)\b
+      scope: keyword.control.khp

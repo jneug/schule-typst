@@ -30,3 +30,5 @@
 		}
 	}
 )
+
+#let lsg( x ) = math.underline(math.underline(math.bold(x)))

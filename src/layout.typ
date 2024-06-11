@@ -10,7 +10,6 @@
 #import "@preview/tablex:0.0.4": tablex, colspanx, rowspanx, cellx
 #import "@preview/wrap-it:0.1.0": wrap-content
 
-
 // ============================
 // Page numbers
 // ============================
@@ -31,19 +30,21 @@
 /// - total (int): Gesamtanzahl Seiten im Dokument inklusive automatisch generierte Seiten wie Lösungen.
 /// -> content
 #let seitenzahl-format(
-	current, body, total
+  current,
+  body,
+  total,
 ) = {
-	if current > total [
-		#sym.dash
-	] else if current > body {
-		numbering("I", (current - body))
-		if total - body > 2 [
-			von #numbering("I", (total - body))
-		]
-	} else {
-		if body > 1 [ #current ]
-		if body > 2 [ von #body ]
-	}
+  if current > total [
+    #sym.dash
+  ] else if current > body {
+    numbering("I", (current - body))
+    if total - body > 2 [
+      von #numbering("I", (total - body))
+    ]
+  } else {
+    if body > 1 [ #current ]
+    if body > 2 [ von #body ]
+  }
 }
 
 /// Zeigt die aktuelle Seitenzahl an. Als Standard wird die Seitenzahl mit
@@ -53,20 +54,19 @@
 /// - #shortex(`#seitenzahl(format: (c, b, t) => [#c/#b])`)
 ///
 /// - format (function): Eine Funktion #lambda("int", "int", "int", ret:"content"). Für eine Beschreibung der Paramter siehe @@seitenzahl-format.
-#let seitenzahl( format: seitenzahl-format ) = locate(loc => {
-	let bodyend = query(<body-end>, loc)
-	if bodyend != () {
-		bodyend = bodyend.first().location().page()
-	} else {
-		bodyend = counter(page).final(loc).first()
-	}
-	format(
-		counter(page).at(loc).first(),
-		bodyend,
-		counter(page).final(loc).first()
-	)
+#let seitenzahl(format: seitenzahl-format) = locate(loc => {
+  let bodyend = query(<body-end>, loc)
+  if bodyend != () {
+    bodyend = bodyend.first().location().page()
+  } else {
+    bodyend = counter(page).final(loc).first()
+  }
+  format(
+    counter(page).at(loc).first(),
+    bodyend,
+    counter(page).final(loc).first(),
+  )
 })
-
 
 // =================================
 //  Kopf- / Fußzeile
@@ -75,9 +75,15 @@
 /// === Kopf- und Fußzeilen
 /// Format für den linken Teil der Kopfzeile.
 #let kopfLinks() = [
-  #options.display("fach", final:true)
-  #options.display("kurs", final:true)
-  #options.display("kuerzel", format: v=>{if v != none [(#v)]}, final:true)
+  #options.display("fach", final: true)
+  #options.display("kurs", final: true)
+  #options.display(
+    "kuerzel",
+    format: v => {
+      if v != none [(#v)]
+    },
+    final: true,
+  )
 ]
 
 /// Format für den mittleren Teil der Kopfzeile.
@@ -87,15 +93,21 @@
 
 /// Format für den rechten Teil der Kopfzeile.
 #let kopfRechts() = [
-  #options.display("typ", final:true)
-  #options.display("nummer", format: v=>{if v != none [Nr. #v]}, final:true)
+  #options.display("typ", final: true)
+  #options.display(
+    "nummer",
+    format: v => {
+      if v != none [Nr. #v]
+    },
+    final: true,
+  )
 ]
 
 /// Formatierung der Kopfzeile in drei Teilen: #arg[links], #arg[mitte], #arg[rechts].
 #let kopfzeile(
   links: kopfLinks,
   mitte: kopfMitte,
-  rechts: kopfRechts
+  rechts: kopfRechts,
 ) = {
   set text(theme.text.header, 0.88em)
   grid(
@@ -108,14 +120,20 @@
     {
       set align(right)
       rechts()
-    }
+    },
   )
-  box(line(length:100%, stroke:.5pt))
+  box(line(length: 100%, stroke: .5pt))
 }
 
 /// Format für den linken Teil der Fußzeile.
 #let fussLinks() = [
-  #options.display("version", format: v=>{if v != none [ver.#v]}, final:true)
+  #options.display(
+    "version",
+    format: v => {
+      if v != none [ver.#v]
+    },
+    final: true,
+  )
 ]
 
 /// Format für den mittleren Teil der Fußzeile.
@@ -130,7 +148,7 @@
 #let fusszeile(
   links: fussLinks,
   mitte: fussMitte,
-  rechts: fussRechts
+  rechts: fussRechts,
 ) = {
   set text(theme.text.footer, 0.88em)
   grid(
@@ -143,10 +161,9 @@
     {
       set align(right)
       rechts()
-    }
+    },
   )
 }
-
 
 // =================================
 //  Figures and tables
@@ -161,15 +178,20 @@
 /// )
 /// ```]
 #let wrapfig(
-	align,
-	width: auto,
-	gutter: 0.75em,
-	element,
-	body
+  align,
+  width: auto,
+  gutter: 0.75em,
+  element,
+  body,
 ) = {
-  if align.y == none { align = align + top }
-  else if align.y == horizon { align = align.x + top }
-  if align.x == none { align = left + align }
+  if align.y == none {
+    align = align + top
+  } else if align.y == horizon {
+    align = align.x + top
+  }
+  if align.x == none {
+    align = left + align
+  }
   let align-inv = align.inv()
 
   wrap-content(
@@ -177,11 +199,11 @@
     box(
       inset: (
         repr(align-inv.x): gutter,
-        repr(align-inv.y): gutter
+        repr(align-inv.y): gutter,
       ),
-      element
+      element,
     ),
-    body
+    body,
   )
 }
 
@@ -213,9 +235,9 @@
   colfooters: 0,
   columns: auto,
   rows: auto,
-  fills: (rows: (:), cols: (:))
+  fills: (rows: (:), cols: (:)),
 ) = (column, row) => {
-	if row < headers or column < colheaders {
+  if row < headers or column < colheaders {
     return headerfill
   } else if rows != auto and (row >= rows - footers) {
     return footerfill
@@ -240,46 +262,74 @@
 /// )
 /// ```]
 #let tabular(
-	inset: 5pt,
-	fill: none,
-	line-height: 1.5em,
-	header: none,
-	footer: none,
-	..args
+  inset: 5pt,
+  fill: none,
+  line-height: 1.5em,
+  header: none,
+  footer: none,
+  ..args,
 ) = {
-	let insets = (top: 0pt, bottom: 0pt)
-	if header != none { insets.top = line-height + inset }
-	if footer != none { insets.bottom = line-height + inset }
-	let _fill(c, r) = if r == -1 {theme.table.header}
-	if fill != none {
-		_fill = (c, r) => fill(c, r+1)
-	}
-	block(inset:insets)[
-		#table(
-			inset: inset,
-			fill: _fill,
-			..args
-		)
-		#if header != none {
-			place(top+left, dy:-1*insets.top)[
-				#block(
-					width: 100%,
-					height: insets.top,
-					inset: inset,
-					fill: _fill(0, -1),
-					stroke: if "stroke" in args.named() { args.named().at("stroke") } else { 1pt + black })[
-					#align(left + horizon)[#header]
-				]
-			]
-		}
-	]
+  let insets = (top: 0pt, bottom: 0pt)
+  if header != none {
+    insets.top = line-height + inset
+  }
+  if footer != none {
+    insets.bottom = line-height + inset
+  }
+  let _fill(c, r) = if r == -1 {
+    theme.table.header
+  }
+  if fill != none {
+    _fill = (c, r) => fill(c, r + 1)
+  }
+  block(inset: insets)[
+    #table(
+      inset: inset,
+      fill: _fill,
+      ..args,
+    )
+    #if header != none {
+      place(top + left, dy: -1 * insets.top)[
+        #block(
+          width: 100%,
+          height: insets.top,
+          inset: inset,
+          fill: _fill(0, -1),
+          stroke: if "stroke" in args.named() {
+            args.named().at("stroke")
+          } else {
+            1pt + black
+          },
+        )[
+          #align(left + horizon)[#header]
+        ]
+      ]
+    }
+  ]
 }
 
 #let __all__ = (
   seitenzahl-format,
   seitenzahl,
-
   wrapfig,
   tablefill,
-  tabular
+  tabular,
 )
+
+#let repeat(n, sep: pagebreak, body) = {
+  for i in range(n) {
+    if i > 0 {
+      sep()
+    }
+    body
+  }
+}
+
+#let pnup(n, body) = {
+  grid(
+    columns: calc.ceil(calc.sqrt(n)),
+    ..for i in range(n) {
+      ([#body],)
+    },
+  )
+}

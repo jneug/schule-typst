@@ -29,6 +29,8 @@
 	default:   ("Fira Sans", "Liberation Sans", "Avenir Next", "Avenir", "Helvetica Neue", "Helvetica"),
 	headings:  ("Charter", "Georgia"),
 	code:      ("Fira Code", "Liberation Mono", "Courier New"),
+  serif:     ("Charter", "Georgia"),
+  sans:      ("Fira Sans", "Liberation Sans", "Avenir Next", "Avenir", "Helvetica Neue", "Helvetica")
 )
 
 // Table colors and styles
@@ -42,3 +44,39 @@
 #let code = (
 	bg:      bg.muted,
 )
+
+// Read custom theme file
+#let theme-file = sys.inputs.at("theme", default:none)
+
+#if theme-file != none {
+  let theme = toml(theme-file)
+
+  if "primary" in theme {
+    primary = rgb(theme.primary)
+  }
+  if "secondary" in theme {
+    secondary = rgb(theme.secondary)
+  }
+  if "muted" in theme {
+    muted = rgb(theme.muted)
+  }
+
+  let parse-colors(origin, new) = {
+    for k in origin.keys() {
+      if k in new {
+        origin.insert(k, rgb(new.at(k)))
+      }
+    }
+    return origin
+  }
+
+  if "bg" in theme {
+    bg = parse-colors(bg, theme.bg)
+  }
+  if "table" in theme {
+    table = parse-colors(table, theme.table)
+  }
+  if "code" in theme {
+    code = parse-colors(code, theme.code)
+  }
+}

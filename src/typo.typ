@@ -2,7 +2,7 @@
 *    Typographic enhancements    *
 \********************************/
 
-#import "@preview/codelst:2.0.0"
+#import "@preview/codelst:2.0.1"
 #import "@preview/showybox:2.0.1": showybox
 #import "@preview/t4t:0.3.2": get, def
 #import "@preview/unify:0.4.0"
@@ -293,7 +293,7 @@
 ///
 /// - ..args (any): Argument für #cmd-("sourcecode", module:"codelst").
 /// -> content
-#let sourcecode( ..args ) = codelst.sourcecode( ..args )
+#let sourcecode( ..args ) = codelst.sourcecode(frame: codelst.code-frame.with(fill:theme.code.bg), ..args )
 
 #let lineref = codelst.lineref.with(supplement:"Zeile")
 #let lineref- = codelst.lineref.with(supplement:"")
@@ -334,7 +334,7 @@
 	fill:   white,
 	inset:  8pt,
 	shadow: 0pt,
-	radius: 0pt,
+	radius: 3pt,
 	..args,
 	body
 ) = showybox(
@@ -348,7 +348,7 @@
 	),
 	shadow: (
 		offset: shadow,
-		color: typst-stroke(stroke).paint.darken(40%)
+		color: def.if-auto(silver, typst-stroke(stroke).paint).darken(40%)
 	),
 	..args,
 	body

@@ -15,6 +15,8 @@
 
 	fontsize: 11pt,
 
+  deckblatt: true,
+
 	body
 ) = {
 	show <ab-end>: body => {
@@ -33,8 +35,7 @@
 			options.add-argument("dauer", default:180, type:"integer")
 			options.add-argument("punkte-pro-erwartung", default:false, type:"boolean")
 		},
-
-		body
+    body
 	)
 }
 
@@ -61,3 +62,50 @@
 		]
 	]
 }
+
+#let deckblatt( message: [Klausuren und Informationen für die Aufsicht] ) = [
+  #v(.5fr)
+  #align(center)[
+    #text(4em, font:theme.fonts.sans, weight:"bold")[
+      #dienummer. #dertyp #dasfach
+    ]
+
+    #text(3em, font:theme.fonts.sans, weight:"bold")[
+      #sym.tilde #derkurs #sym.tilde
+    ]
+
+    #v(4em)
+
+    #text(3em, font:theme.fonts.sans, weight:"bold")[
+      #options.display("datum", format: (dt)=> if dt != none {
+        ("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag").at(dt.weekday())
+
+        dt.display(", [day].[month].[year]")
+      })
+    ]
+
+    #v(2em)
+
+    #text(2em, weight:400, message)
+
+    #v(2em)
+
+    #block()[
+      #set text(1.2em)
+      #set align(right)
+      / Beginn: #luecke(width: 2cm) Uhr
+      / Abgabe: #luecke(width: 2cm) Uhr
+    ]
+  ]
+
+  #v(1fr)
+
+  #grid(columns:(1fr,1fr), gutter:3cm,
+    [*Anwesend:*],
+    [*Abwesend:*]
+  )
+
+  #v(1fr)
+
+  #pagebreak()
+]
