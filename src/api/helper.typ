@@ -16,7 +16,7 @@
 ///   ..range(36).map(str)
 /// )
 /// ```]
-#let tablefill(
+#let table-fill(
   fill: white,
   headerfill: theme.table.header,
   footerfill: theme.table.header,

@@ -1,5 +1,5 @@
 #import "./cs-erd.typ" as erd
-#import "../api/helper.typ": tablefill
+#import "../api/helper.typ": table-fill
 
 #let primary-key(name) = underline(stroke: .1em, offset: 2pt, name)
 #let foreign-key(name) = box()[#sym.arrow.t.filled#name]
@@ -44,7 +44,7 @@
   }
   table(
     columns: h-len,
-    fill: tablefill(headers: if name != none {
+    fill: table-fill(headers: if name != none {
       2
     } else {
       1
