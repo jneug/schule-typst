@@ -6,7 +6,6 @@
 #import "../util/util.typ"
 #import "../core/document.typ"
 #import "../theme.typ"
-#import "../core/typo.typ": marginnote
 
 // =================================
 //  Validation schema
@@ -185,7 +184,7 @@
 }
 
 #let points-format-margin(points) = {
-  marginnote(
+  util.marginnote(
     position: right,
     gutter: .64em,
     block(

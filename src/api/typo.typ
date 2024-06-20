@@ -177,27 +177,6 @@
   }
 }
 
-/// Erzeugt eine Randnotiz außerhalb des Textbereichs.
-/// #example[```
-/// #randnotiz(gutter:1cm, offset:-5pt)[Hallo\ Welt]
-/// ```]
-///
-/// - position (alignment): #value(left) oder #value(right).
-/// - gutter (length): Abstand zum Textbereich.
-/// - offset (length): Verschiebung entlang der y-Achse relativ zum Vorkommen im Text.
-/// - body (content): Inhalt der Randnotiz.
-/// -> content
-#let marginnote(position: left, gutter: .5em, offset: 0pt, body) = {
-  style(styles => {
-    let _m = measure(body, styles)
-    if position == right {
-      place(position, dx: gutter + _m.width, dy: offset, body)
-    } else {
-      place(position, dx: -1 * gutter - _m.width, dy: offset, body)
-    }
-  })
-}
-
 // ============================
 // Code
 // ============================
@@ -341,7 +320,7 @@
 /// - body (content): Inhalte des Hinweises.
 /// -> content
 #let hinweis(typ: "Hinweis", icon: emoji.info, body) = {
-  marginnote[#text(fill: theme.secondary)[#icon]]
+  util.marginnote[#text(fill: theme.secondary)[#icon]]
   text(fill: theme.secondary)[*#typ:* ]
   body
 }

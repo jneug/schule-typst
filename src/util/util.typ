@@ -89,5 +89,26 @@
   }
 }
 
-
+/// Alias for #cmd[raw] with #arg(block: false) set.
 #let rawi = raw.with(block: false)
+
+/// Positions #arg[body] in the margin of the page
+/// #example[```
+/// #marginnote(gutter:1cm, offset:-5pt)[Hallo\ Welt]
+/// ```]
+///
+/// - position (alignment): Either #value(left) or #value(right).
+/// - gutter (length): Gutter between text and note.
+/// - offset (length): How much to offset the note along the y-axis.
+/// - body (content): Content of the note.
+/// -> content
+#let marginnote(position: left, gutter: .5em, offset: 0pt, body) = {
+  style(styles => {
+    let _m = measure(body, styles)
+    if position == right {
+      place(position, dx: gutter + _m.width, dy: offset, body)
+    } else {
+      place(position, dx: -1 * gutter - _m.width, dy: offset, body)
+    }
+  })
+}

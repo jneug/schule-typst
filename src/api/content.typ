@@ -1,4 +1,4 @@
-#import "../core/typo.typ"
+#import "typo.typ"
 #import "../core/base.typ": appendix
 
 // Setzt den Inhalt als Anhang für das Dokument.

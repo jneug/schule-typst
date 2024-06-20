@@ -8,7 +8,7 @@
 #import "util/types.typ" as t
 #import "theme.typ"
 
-#import "core/typo.typ": *
+#import "api/typo.typ": *
 #import "api/helper.typ": *
 #import "api/content.typ": *
 #import "api/aufgaben.typ": *
