@@ -48,6 +48,7 @@
   header: bg.primary,
   even: bg.muted,
   odd: white,
+  stroke: .6pt + muted,
 )
 
 #let cards = (

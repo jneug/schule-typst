@@ -60,6 +60,8 @@
     )
     show link: set text(fill: theme.secondary)
 
+    set table(stroke: theme.table.stroke)
+
     set page(
       ..args.extract-args(
         document-args,
