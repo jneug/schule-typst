@@ -1,89 +1,73 @@
-#import "./ab.typ": *
-#import "./bewertung.typ": *
+#import "core/layout.typ": base-header, header-left, header-right
 
-#import "@preview/t4t:0.3.2": alias
+#import "_imports.typ": *
 
-// #import "./layout.typ": kopfzeile
+#let grading-table = (
+  /* @typststyle:off */
+  "6": .0,
+  "5-": .20, "5": .27, "5+": .33,
+  "4-": .40, "4": .45, "4+": .50,
+  "3-": .55, "3": .60, "3+": .65,
+  "2-": .70, "2": .75, "2+": .80,
+  "1-": .85, "1": .90, "1+": .95
+)
 
-#let klassenarbeit(
-  ..args,
-  body,
-) = {
-  show <ab-end>: body => {
-    d_ew_unterstufe()
-    body
-  }
+#let ewh(exercises) = {
+  v(8mm)
+  [Name: #box(stroke:(bottom:.6pt+black), width:6cm)]
 
-  let transform-vari(v) = {
-    let varis = "ABCDEFGHIJKLMN"
-    if type(v) == "string" {
-      if v in varis {
-        varis.position(v) + 1
-      } else {
-        0
-      }
-    } else {
-      v
-    }
-  }
+  ex.grading.display-expectations-table(exercises)
 
-  arbeitsblatt(
-    typ: "Klassenarbeit",
-    ..args,
-    module-init: () => {
-      options.add-argument(
-        "variante",
-        default: if "variante" in sys.inputs {
-          transform-vari(sys.inputs.variante)
-        } else {
-          0
-        },
-        type: ("integer", "string"),
-        code: transform-vari,
-      )
-    },
-    body,
+  v(4mm)
+  align(right, [*Note:* #box(stroke:(bottom:.6pt+black), width:4cm)])
+  align(right, [Datum, Unterschrift: #box(stroke:(bottom:.6pt+black), width:4cm)])
+
+  v(1fr)
+  align(
+    center,
+    ex.grading.display-grading-table(
+      exercises,
+      grading-table,
+    ),
   )
 }
 
-#let katitel(
-  titel: none,
-  reihe: none,
-  rule: false,
-) = titleblock({
-  if titel == none {
-    titel = dertitel
-  }
-  set align(center)
-  text(theme.primary, heading(level: 1, outlined: false, bookmarked: false, titel))
-})
-
-#let dievariante(numbering: "A") = options.display(
-  "variante",
-  final: true,
-  format: v => {
-    if v != none and v > 0 {
-      alias.numbering(numbering, v)
-    } else {
-      ""
-    }
-  },
-)
-
-#let vari(..args) = {
-  options.get(
-    "variante",
-    vari => {
-      if vari != none and vari > 0 {
-        if args.pos().len() >= vari {
-          args.pos().at(vari - 1)
-        } else {
-          // []
-          args.pos().last()
-        }
-      } else {
-        args.pos().first()
-      }
-    },
+#let klassenarbeit(
+  ewh: ewh,
+  ..args,
+  body,
+) = {
+  let (doc, page-init, tpl) = base-template(
+    type: "KA",
+    type-long: "Klassenarbeit",
+    _tpl: (
+      options: (
+        duration: t.integer(default: 180),
+        double-grading-page: t.boolean(default: false),
+      ),
+      aliases: (
+        dauer: "duration",
+        doppelter-ewh: "double-grading-page",
+      ),
+    ),
+    ..args,
+    body,
   )
+
+  {
+    show: page-init
+    tpl
+  }
+
+  if doc.solutions == "page" {
+    show: page-init.with(header-center: (..) => [== Lösungen])
+    context ex.solutions.display-solutions-page(ex.get-exercises())
+  }
+
+  show: page-init.with(
+    header-center: (..) => [== Erwartungshorizont],
+    footer: (..) => [],
+  )
+  context ewh(ex.get-exercises())
+}
 }
