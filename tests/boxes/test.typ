@@ -18,3 +18,37 @@
 
   version:   "2024-06-15",
 )
+
+
+#rahmen[
+  #lorem(100)
+]
+
+
+#kasten[
+  #lorem(100)
+]
+
+
+#schattenbox[
+  #lorem(100)
+]
+
+
+#infobox[
+  #lorem(100)
+]
+
+
+#warnungbox[
+  #lorem(100)
+]
+
+
+#hinweis[
+  #lorem(33)
+]
+
+#tipp[
+  #lorem(33)
+]
