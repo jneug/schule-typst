@@ -70,4 +70,3 @@
   )
   context ewh(ex.get-exercises())
 }
-}
