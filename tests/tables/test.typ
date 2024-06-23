@@ -22,9 +22,14 @@
 #table(
   columns: 4,
   align: center,
+  table.header(
+    [Aa],
+    [Bb],
+    [Cc],
+    [Dd],
+  ),
   ..range(12).map(str)
 )
-
 
 #table(
   columns: 4,

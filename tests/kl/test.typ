@@ -508,3 +508,8 @@
 ]
 
 #vielErfolg
+
+#anhang[
+  = Dokumentation
+  #info.docs.display("list")
+]

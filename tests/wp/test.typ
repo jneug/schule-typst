@@ -1,7 +1,7 @@
-#import "../src/schule.typ": ab
-#import ab: *
+#import "@local/schule:1.0.0": wp
+#import wp: *
 
-#show: arbeitsblatt.with(
+#show: wochenplan.with(
   /* @typstyle:off */
   titel:     "Base template test",
   reihe:     "TYPST-TEST",
@@ -18,3 +18,15 @@
 
   version:   "2024-06-15",
 )
+
+#gruppe("Pflichtaufgaben")[
+  #lorem(10)
+][
+  - #bu((1, 2, 3, 4), (1, 2, 3))
+]
+
+#gruppe("Pflichtaufgaben")[
+  #lorem(10)
+][
+  - #bu((1, 2, 3, 4), (1, 2, 3))
+]
