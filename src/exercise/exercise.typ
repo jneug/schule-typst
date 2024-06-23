@@ -185,7 +185,7 @@
 
 #let points-format-margin(points) = {
   util.marginnote(
-    position: right,
+    position: top + right,
     gutter: .64em,
     block(
       stroke: .6pt + theme.muted,

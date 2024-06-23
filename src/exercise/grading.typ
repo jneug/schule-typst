@@ -18,12 +18,7 @@
 }
 
 #let display-points(points, singular: "Punkt", plural: "Punkte") = {
-  if points == 0 [
-  ] else if points == 1 [
-    #points #singular
-  ] else [
-    #points #plural
-  ]
+  if points == 0 [] else if points == 1 [#points #singular] else [#points #plural]
 }
 
 #let display-total(exercise, singular: "Punkt", plural: "Punkte") = {
