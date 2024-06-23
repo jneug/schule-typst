@@ -75,3 +75,9 @@
 } else {
   do(dict.at(key))
 }
+
+#let as-arr(value) = if type(value) == type(()) {
+  value
+} else {
+  (value,)
+}
