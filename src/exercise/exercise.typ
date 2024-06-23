@@ -426,11 +426,19 @@
   context {
     if in-sub-exercise() {
       update-current-sub-exercise(sub-ex => {
-        grading.add-expectation(sub-ex, text, points)
+        sub-ex.grading.expectations.push((
+          text: text,
+          points: points,
+        ))
+        sub-ex
       })
     } else {
       update-current-exercise(ex => {
-        grading.add-expectation(ex, text, points)
+        ex.grading.expectations.push((
+          text: text,
+          points: points,
+        ))
+        ex
       })
     }
   }

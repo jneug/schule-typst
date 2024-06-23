@@ -37,15 +37,6 @@
   }
 }
 
-// TODO: Remove
-#let add-expectation(exercise, text, points) = {
-  exercise.grading.expectations.push((
-    text: text,
-    points: points,
-  ))
-  return exercise
-}
-
 #let display-grading-table(
   exercises,
   grading-table,
