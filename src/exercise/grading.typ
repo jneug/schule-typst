@@ -1,9 +1,13 @@
 #import "../theme.typ"
 
-#let get-points(exercise) = exercise.grading.expectations.fold(
-  0,
-  (a, exp) => a + exp.points,
-)
+#let get-points(exercise) = if exercise != none and "grading" in exercise {
+  exercise.grading.expectations.fold(
+    0,
+    (a, exp) => a + exp.points,
+  )
+} else {
+  0
+}
 
 #let get-total-points(exercise) = {
   let points = get-points(exercise)
@@ -43,7 +47,7 @@
 ) = {
   let (names, thresholds) = (grading-table.keys(), grading-table.values())
 
-  let total-points = exercises.values().map(get-total-points).sum()
+  let total-points = exercises.values().map(get-total-points).sum(default: 0)
   let cells = ([Note],)
   for grade in names.rev() {
     cells.push([#grade])
@@ -81,7 +85,7 @@
 }
 
 #let display-expectations-table(exercises) = {
-  let total-points = exercises.values().map(get-total-points).sum()
+  let total-points = exercises.values().map(get-total-points).sum(default: 0)
 
   let muted-cell = table.cell.with(fill: theme.table.even)
   let header-cell = table.cell.with(fill: theme.table.header)
