@@ -66,8 +66,6 @@
   )
 ]
 #let footer-right(doc) = [
-  // #doc.counters.content-pages.display() / #counter(page).display() \
-
   #context {
     format-pagenumber(
       here().page(),
