@@ -129,33 +129,9 @@
       return it
     }
   }
-  let d = t.parse(args.named(), schema)
+  let doc = t.parse(args.named(), schema)
 
-  let doc = d + (
-    // _schema: schema,
-    _metadata: (
-      "title",
-      "author",
-      "type",
-      "number",
-      "date",
-      "subject",
-      "class",
-      "license",
-      "version",
-      "variant",
-      "type-long",
-    ),
-    // TODO: remove theses
-    _states: (),
-    _counters: (
-      content-pages: counter("schule.content-pages"),
-      appendix-pages: counter("schule.appendix-pages"),
-      pages: counter(page),
-      exercises: counter("schule.exercises"),
-      points: counter("schule.points"),
-    ),
-  )
+  doc.insert("_debug", sys.inputs.at("debug", default: false) in ("1", "true", 1, true))
 
   // add some utility function
   doc += (
@@ -173,6 +149,8 @@
 #let _state-document = state("schule.document", (:))
 
 #let save(doc) = _state-document.update(doc)
+
+#let save-meta(doc) = [#metadata(doc)<schule-document>]
 
 #let update(func) = _state-document.update(doc => func(doc))
 

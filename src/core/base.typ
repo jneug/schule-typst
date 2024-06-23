@@ -81,7 +81,7 @@
       header: {
         // TODO: add conditional stepping?
         // TODO: Remove counters from doc
-        doc._counters.content-pages.step()
+        // doc._counters.content-pages.step()
         header(
           doc,
           header-left(doc, layout.header-left(doc)),
@@ -132,16 +132,24 @@
     doc,
     page-init,
     {
+      if doc._debug {
+        page(paper: "a3", flipped: true, columns: 3)[
+          == Document
+          #doc
 
-      // TODO: let sub-template do this?
-      // show: page-init
-      // [#doc._schema]
+          == Exercises
+          #import "../exercise/exercise.typ" as ex
+          #context ex.get-exercises(final: true)
+        ]
+      }
+
       document.save(doc)
+      document.save-meta(doc)
 
       // TODO: remove _metadata key?
-      for key in doc._metadata {
-        [#metadata(doc.at(key))#label("schule." + key)]
-      }
+      // for key in doc._metadata {
+      //   [#metadata(doc.at(key))#label("schule-" + key)]
+      // }
 
       marks.place-meta(<content-start>)
       marks.env-open("content")
@@ -154,16 +162,6 @@
     },
   )
 }
-
-// TODO: Add individual the- functions or access via document.typ?
-#let _the-meta(key) = context query(label("schule." + key)).first().value
-#let the-title = _the-meta("title")
-#let the-date = _the-meta("date")
-#let the-topic = _the-meta("topic")
-#let the-number = _the-meta("number")
-#let the-class = _the-meta("class")
-#let the-type = _the-meta("type-long")
-#let the-subject = _the-meta("subject")
 
 #let appendix(body, title: [Anhang], ..page-args) = {
   set page(..page-args.named())
