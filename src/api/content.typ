@@ -1,6 +1,12 @@
-#import "typo.typ"
+
+#import "@preview/codelst:2.0.1"
+#import "@preview/showybox:2.0.1": showybox
+
 #import "../util/util.typ"
+#import "../util/typst.typ"
+#import "../util/args.typ"
 #import "../core/base.typ": appendix
+#import "../theme.typ"
 
 // Setzt den Inhalt als Anhang für das Dokument.
 // Die Kopfzeile und die Nummerierung der Überschriften wird angepasst.
@@ -101,14 +107,6 @@
 /// -> content
 #let programm(name) = text(typo.theme.primary, weight: 400, name)
 
-/// TYPO
-// TODO: Del with typo.typ and add elements here
-#let rahmen = typo.rahmen
-#let kasten = typo.kasten
-#let hinweis = typo.hinweis
-#let tipp = typo.tipp
-#let enuma = typo.enuma
-
 // Symbols
 #let icon = (
   // Sozialformen
@@ -122,7 +120,6 @@
   tablet: emoji.phone,
   computer: emoji.laptop
 )
-
 
 #let aufg-neu(prefix) = (..aufg-args) => [#prefix
   #util.combine-ranges(aufg-args.pos(), last: " und ")]
@@ -159,3 +156,236 @@
 #let bu = quelle-neu("Buch")
 #let ah = quelle-neu("AH")
 #let ab = quelle-neu("", seiten-format: aufg-neu("AB"))
+
+
+// ============================
+// Misc
+// ============================
+/// === Verschiedenes
+/// Textlücken.
+/// - #shortex(`#luecke()`)
+/// - #shortex(`#luecke(width: 2cm, offset: 5pt)`)
+/// - #shortex(`#luecke(text: "Hallo Welt!", stroke: .5pt+red)`)
+///
+/// - width (length): Breite der Textlücke, wenn #arg[text] nicht gegeben ist.
+/// - text (length): Text, anhand dessen die Breite der Textlücke bestimmt werden soll. Falls angegeben, wird #arg[width] ignoriert.
+/// - stroke (length): Linienstil der Unterstreichung.
+/// - offset (length): Abstand der Linie zur Basislinie des umliegenden Textes.
+/// -> content
+#let luecke(width: 4cm, stroke: 1pt + black, offset: 2pt, text: none) = {
+  if text != none {
+    box(stroke: (bottom: stroke), inset: (bottom: offset), baseline: offset, text)
+  } else {
+    box(width: width, stroke: (bottom: stroke), inset: (bottom: offset), baseline: offset, [])
+  }
+}
+
+// ============================
+// Code
+// ============================
+/// === Quelltexte
+/// Zeigt Quelltext mit Zeilennummern und in einem #cmd[frame] an.
+/// Alias für #cmd("sourcecode", module:"codelst").
+/// #example[````
+/// #sourcecode[```python
+/// print("Hello, World!")
+/// ```]
+/// ````]
+///
+/// - ..args (any): Argument für #cmd-("sourcecode", module:"codelst").
+/// -> content
+#let sourcecode(..args) = codelst.sourcecode(frame: codelst.code-frame.with(fill: theme.bg.code), ..args)
+
+#let lineref = codelst.lineref.with(supplement: "Zeile")
+#let lineref- = codelst.lineref.with(supplement: "")
+#let linerange-(from, to, sep: [ -- ]) = [#lineref-(from)#sep#lineref-(to)]
+#let linerange(from, to, supplement: "Zeilen", sep: [ -- ]) = [#supplement #linerange-(from, to)]
+
+/// Inline-Code mit Syntax-Highlighting. Im Prinzip gleichwertig
+/// mit der Auszeichungsvariante mit drei Backticks:
+/// - #shortex(`#code(lang:"python", "print('Hallo, Welt')")`)
+/// - #shortex(raw("```python print('Hallo, Welt')```"))
+#let code(body, lang: none) = raw(block: false, lang: lang, util.get-text(body))
+
+// ============================
+// Frames and Boxes
+// ============================
+/// === Kästen und Rahmen
+/// Eine generische Box um Inhalte. Verwendet #package[Showybox].
+/// Im Allgemeinen werden die spezifischeren Boxen benutzt:
+/// - @@rahmen
+/// - @@kasten
+/// - @@schattenbox
+/// - @@infobox
+/// - @@warnungbox
+///
+/// - width (length): Breite der Box.
+/// - stroke (stroke): Rahmenlinie um die Box.
+/// - fill (color): Hintergrundfarbe der Box.
+/// - inset (length, dictionary): Innenabstände der Box.
+/// - shadow (length): Schattenabstand.
+/// - radius (length): Radius der abgrundeten Ecken.
+/// - ..args (any): Weitere Argumente, die an #package[Showybox] weitergereicht werden.
+/// -> content
+#let container(
+  width: 100%,
+  stroke: 2pt + black,
+  fill: white,
+  inset: 8pt,
+  shadow: 0pt,
+  radius: 3pt,
+  ..box-args,
+  body,
+) = showybox(
+  frame: (
+    border-color: typst.stroke(stroke).paint,
+    title-color: typst.stroke(stroke).paint,
+    footer-color: fill,
+    body-color: fill,
+    radius: radius,
+    thickness: typst.stroke(stroke).thickness,
+  ),
+  shadow: (
+    offset: shadow,
+    color: args.if-auto(silver, typst.stroke(stroke).paint).darken(40%),
+  ),
+  ..box-args,
+  body,
+)
+
+/// Ein Rahmen um Inhalte.
+/// #example[```
+/// #rahmen[#lorem(10)]
+/// ```]
+///
+/// - ..args (any): Argumente für @@container.
+/// -> content
+#let rahmen = container.with(stroke: 2pt + theme.secondary)
+
+/// Ein Kasten um Inhalte.
+/// #example[```
+/// #kasten[#lorem(10)]
+/// ```]
+///
+/// - ..args (any): Argumente für @@container.
+/// -> content
+#let kasten(..args) = container.with(fill: theme.bg.muted, stroke: 2pt + theme.secondary)(..args)
+
+/// Eine Box mit Schatten um Inhalte.
+/// #example[```
+/// #schattenbox[#lorem(10)]
+/// ```]
+///
+/// - ..args (any): Argumente für @@container.
+/// -> content
+#let schattenbox(..args) = container.with(shadow: 3pt)(..args)
+
+/// Eine Infobox um Inhalte.
+/// #example[```
+/// #infobox[#lorem(10)]
+/// ```]
+///
+/// - ..args (any): Argumente für @@container.
+/// -> content
+#let infobox(..args, body) = container.with(
+  radius: 4pt,
+  fill: theme.bg.primary,
+  stroke: 2pt + theme.primary,
+  shadow: 3pt,
+)(..args)[
+  #set text(fill: theme.primary, weight: 400)
+  #body
+]
+
+/// Eine Warnungsbox um Inhalte.
+/// #example[```
+/// #warnungbox[#lorem(10)]
+/// ```]
+///
+/// - ..args (any): Argumente für @@container.
+/// -> content
+#let warnungbox(..args, body) = container.with(
+  radius: 4pt,
+  fill: cmyk(0%, 6%, 18%, 2%),
+  stroke: 2pt + cmyk(0%, 30%, 100%, 0%),
+  shadow: 3pt,
+)(..args)[
+  #set text(fill: cmyk(0%, 20.72%, 74.77%, 56.47%), weight: 400)
+  #body
+]
+
+// ============================
+// Hints
+// ============================
+/// === Hinweise
+/// Zeigt einen hervorgehobenen Hinweis an.
+/// #example[```
+/// #pad(left:10pt, hinweis[#lorem(8)])
+///
+/// #hinweis(typ:"Tipp", icon:emoji.face.halo)[#lorem(8)]
+/// ```]
+///
+/// - typ (string): Art des Hinweises.
+/// - icon (symbol): Ein Symbol für den Hinweis..
+/// - body (content): Inhalte des Hinweises.
+/// -> content
+#let hinweis(typ: "Hinweis", icon: emoji.info, body) = {
+  util.marginnote[#text(fill: theme.secondary)[#icon]]
+  text(fill: theme.secondary)[*#typ:* ]
+  body
+}
+
+#let tipp(body) = hinweis(typ: "Tipp", icon: emoji.lightbulb, body)
+
+// ============================
+// Lists and enums
+// ============================
+/// === Listen und Aufzählungen
+/// Setzt das Nummernformat für Aufzählungen im #arg[body] auf `a)`.
+/// #example[```
+/// #enuma[
+///   + Eins
+///   + Zwei
+///   + Drei
+/// ]
+/// ```]
+///
+/// - body (content): Inhalte mit Aufzählungen.
+/// -> content
+#let enuma(body) = {
+  set enum(numbering: "a)")
+  body
+}
+
+/// Setzt das Nummernformat für Aufzählungen im #arg[body] auf `1)`.
+/// #example[```
+/// #enumn[
+///   + Eins
+///   + Zwei
+///   + Drei
+/// ]
+/// ```]
+///
+/// - body (content): Inhalte mit Aufzählungen.
+/// -> content
+#let enumn(body) = {
+  set enum(numbering: "1)", tight: false, spacing: 1.5em)
+  body
+}
+
+/// Setzt das Nummernformat für Aufzählungen im #arg[body] auf `(1)`.
+/// #example[```
+/// #enumnn[
+///   + Eins
+///   + Zwei
+///   + Drei
+/// ]
+/// ```]
+///
+/// - body (content): Inhalte mit Aufzählungen.
+/// -> content
+#let enumnn(body) = {
+  set enum(numbering: "(1)")
+  body
+}
+
