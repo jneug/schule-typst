@@ -172,3 +172,5 @@
 
   #pagebreak()
 ]
+
+#let teilaufgabe = teilaufgabe.with(points-format: ex.points-format-join)
