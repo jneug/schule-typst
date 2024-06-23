@@ -169,7 +169,6 @@
   set page(..page-args.named())
   pagebreak(weak: true)
 
-  marks.place-meta(<appendix-start>)
   marks.env-open("appendix")
   // state("schule.appendix").update(true)
   set heading(numbering: (..n) => {
@@ -182,5 +181,4 @@
   heading(level: 1, title)
   body
   marks.env-close("appendix")
-  marks.place-meta(<appendix-end>)
 }
