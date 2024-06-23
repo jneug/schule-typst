@@ -1,4 +1,5 @@
 #import "typo.typ"
+#import "../util/util.typ"
 #import "../core/base.typ": appendix
 
 // Setzt den Inhalt als Anhang für das Dokument.
@@ -121,3 +122,40 @@
   tablet: emoji.phone,
   computer: emoji.laptop
 )
+
+
+#let aufg-neu(prefix) = (..aufg-args) => [#prefix
+  #util.combine-ranges(aufg-args.pos(), last: " und ")]
+
+#let seiten = aufg-neu("S.")
+#let aufg = aufg-neu("Aufg.")
+
+#let quelle-neu(
+  name,
+  seiten-format: seiten,
+  aufgaben-format: aufg,
+  sep: ": ",
+) = {
+  (..q-args) => {
+    let pages = ()
+    let tasks = ()
+    if type(q-args.pos().first()) == array {
+      pages = q-args.pos().first()
+      if q-args.pos().len() > 1 {
+        tasks = q-args.pos().at(1)
+      }
+    } else {
+      pages = q-args.pos()
+    }
+
+    if tasks.len() > 0 [
+      #name #seiten-format(..pages)#sep#aufgaben-format(..tasks)
+    ] else [
+      #name #seiten-format(..pages)
+    ]
+  }
+}
+
+#let bu = quelle-neu("Buch")
+#let ah = quelle-neu("AH")
+#let ab = quelle-neu("", seiten-format: aufg-neu("AB"))

@@ -40,6 +40,19 @@
   body
 }
 
+/// Auto-joins items with #arg[sep] and #[last]. If #arg[items]
+/// is an array, the items are joined, otherwise the value
+/// is returened as is.
+/// - items (any): The items to join.
+/// - sep (content): The separator for joining.
+/// - last (content): The last separator to use.
+/// -> content
+#let auto-join(items, sep: ", ", last: " and ") = if type(items) == "array" {
+  items.map(str).join(", ", last: " und ")
+} else {
+  items
+}
+
 /// Creates an #cmd-[enum] from the supplied #sarg[args].
 /// If only one argument is given, the content is shown as is,
 /// without wrapping it in an enum.
@@ -89,6 +102,8 @@
   }
 }
 
+
+
 /// Alias for #cmd[raw] with #arg(block: false) set.
 #let rawi = raw.with(block: false)
 
@@ -111,4 +126,35 @@
       place(position, dx: -1 * gutter - _m.width, dy: offset, body)
     }
   })
+}
+
+#let combine-ranges(
+  numbers,
+  sep: ", ",
+  last: " and ",
+  range-sep: [#h(.2em)--#h(.2em)],
+  max-items: 2,
+) = {
+  let numbers = numbers.dedup().sorted()
+  let ranges = (
+    (
+      numbers.first(),
+      numbers.first(),
+    ),
+  )
+
+  for j in numbers.slice(1) {
+    if j == ranges.last().last() + 1 {
+      ranges.last().at(1) = j
+    } else {
+      ranges.push((j, j))
+    }
+  }
+
+  ranges.map(((from, to)) => if from == to [#from] else if to - from < max-items {
+    range(from, to + 1).map(str)
+  } else [#from#range-sep#to]).flatten().join(
+    sep,
+    last: last,
+  )
 }
