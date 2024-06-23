@@ -118,14 +118,14 @@
 /// - body (content): Content of the note.
 /// -> content
 #let marginnote(position: left, gutter: .5em, offset: 0pt, body) = {
-  style(styles => {
-    let _m = measure(body, styles)
-    if position == right {
+  context {
+    let _m = measure(body)
+    if position.x == right {
       place(position, dx: gutter + _m.width, dy: offset, body)
     } else {
       place(position, dx: -1 * gutter - _m.width, dy: offset, body)
     }
-  })
+  }
 }
 
 #let combine-ranges(
