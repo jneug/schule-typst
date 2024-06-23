@@ -1,5 +1,3 @@
-// TODO: Restructure file, move to api/
-
 // ================================
 // =   Typographic enhancements   =
 // ================================
@@ -143,12 +141,8 @@
 // Text highlights
 // ============================
 
-// TODO Use package like metro or unify
 // German number format for integers / floats
 // - #shortex(`#num(2.3)`)
-#let num(value) = {
-  get.text(value).replace(".", ",")
-}
 #let num = unify.num
 
 // SI units
