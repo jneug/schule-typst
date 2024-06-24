@@ -12,3 +12,4 @@
 #let numbering = numbering
 #let text = text
 #let content = content
+#let align = align

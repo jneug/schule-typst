@@ -1,16 +1,18 @@
-// TODO: Improve theme support
-// TODO: Add more theme style keys
+/********************************\
+*  Variables and some functions *
+*   for setting a common theme  *
+\********************************/
 
 #let typst-text = text
 
 // General colors
-#let primary = rgb(40, 70, 167)
-#let secondary = rgb(204, 74, 71)
+#let primary = rgb("#0096ff")
+#let secondary = rgb("#ff2f93")
 #let muted = luma(174)
 
 // General backgrounds
 #let bg = (
-  primary: primary.lighten(90%),
+  primary: primary.lighten(80%),
   secondary: secondary.lighten(90%),
   muted: muted.lighten(90%),
   code: muted.lighten(90%),
@@ -19,9 +21,9 @@
 
 // Text colors
 #let text = (
-	default:   black,
-	header:    luma(20%), // primary
-	footer:    luma(70%),
+	default:   luma(20%),
+	header:    luma(50%), // primary
+	footer:    luma(75%),
 	title:     primary,
 	subject:   luma(33%),
   primary:   white,
@@ -30,16 +32,8 @@
 
 // Font settings
 #let fonts = (
-  default: (
-    "Fira Sans",
-    "Liberation Sans",
-    "Avenir Next",
-    "Avenir",
-    "Helvetica Neue",
-    "Helvetica",
-    "Apple Color Emoji",
-  ),
-  headings: ("Charter", "Georgia", "Apple Color Emoji"),
+  default: ("Source Sans Pro", "Roboto", "Avenir Next", "Avenir", "Helvetica"),
+  headings: ("Helvetica Neue", "Avenir Next", "Avenir", "Helvetica"),
   code: ("Fira Code", "Liberation Mono", "Courier New"),
   serif: (/*"EB Garamond 12",*/ "Garamond", "Charter", "Georgia"),
   sans: ("Fira Sans", "Liberation Sans", "Avenir Next", "Avenir", "Helvetica Neue", "Helvetica"),
@@ -47,8 +41,8 @@
 
 // Table colors and styles
 #let table = (
-  header: bg.primary,
-  even: bg.muted,
+  header: rgb("#99b9ff"),
+  even: rgb("#fcfcef"),
   odd: white,
   stroke: .6pt + muted,
 )
@@ -62,5 +56,8 @@
 )
 
 #let init(body) = {
+  set typst-text(font: fonts.default, weight: "medium")
+  show figure.caption: it => [
+    #typst-text(secondary, weight: 400, [#it.supplement #it.numbering])#h(1.28em)#emph(it.body)]
   body
 }

@@ -158,3 +158,24 @@
     last: last,
   )
 }
+
+#let inset-at(direction, inset, default: 0pt) = {
+  direction = repr(direction) // allows use of alignment values
+  if type(inset) == "dictionary" {
+    if direction in inset {
+      return inset.at(direction)
+    } else if direction in ("left", "right") and "x" in inset {
+      return inset.x
+    } else if direction in ("top", "bottom") and "y" in inset {
+      return inset.y
+    } else if "rest" in inset {
+      return inset.rest
+    } else {
+      return default
+    }
+  } else if inset == none {
+    return default
+  } else {
+    return inset
+  }
+}

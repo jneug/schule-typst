@@ -25,7 +25,9 @@
 	header:    luma(20%), // primary
 	footer:    luma(70%),
 	title:     primary,
-	subject:   luma(33%)
+	subject:   luma(33%),
+  primary:   white,
+  secondary:  white
 )
 
 // Font settings
@@ -42,6 +44,15 @@
   header: bg.primary,
   even: bg.muted,
   odd: white,
+  stroke: .6pt + muted,
+)
+
+#let cards = (
+  type1: rgb("#36c737"),
+  type2: rgb("#ffcc02"),
+  type3: rgb("#cd362c"),
+  help: rgb("#b955b6"),
+  back: rgb("#ffffb2"),
 )
 
 #let init(body) = {

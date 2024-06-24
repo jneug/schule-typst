@@ -157,3 +157,5 @@
 #let get(func) = context func(_state-document.get())
 
 #let get-value(key, func, default: none) = context func(_state-document.get().at(key, default: default))
+
+#let use-value(key, func, default: none) = context func(_state-document.get().at(key, default: default))
