@@ -1,7 +1,7 @@
-#import "@local/mantys:0.1.0": *
-#import "@local/tidy:0.2.0"
-#import "../src/schule.typ"
+#import "@local/mantys:0.1.4": *
+#import "@preview/tidy:0.3.0"
 
+#import "../src/schule.typ"
 
 #let TeX = style(styles => {
   set text(font: "New Computer Modern")
@@ -22,187 +22,67 @@
   box(L + h(-a.width * 0.67) + A + h(-a.width * 0.25) + TeX)
 })
 
-
 #show: mantys.with(
-    name:       "schule-typst",
-    title:      "Typst Vorlagen für die Schule",
-    subtitle:   [Vorlagen für Arbeitsblätter, Klausuren und andere Materialien für die Schule.],
-    info:		[#lorem(10)],
-    authors:    "Jonas Neugebauer",
-    url:        "https://github.com/jneug/schule-typst",
-    version:    "0.1.1",
-    date:       datetime.today(),
-    abstract:   [
-		  SCHULE-TYPST ist eine Sammlung von Typst Vorlagen zur Gestaltung von Arbeitsmaterialien (Arbeitsblätter, Klausuren, Wochenpläne ...) für die Schule. Das Paket ist eine Adaption meines #LaTeX Pakets für Typst.
-    ],
-
-	examples-scope: (
+  ..toml("../typst.toml"),
+  date: datetime.today(),
+  abstract: [
+    SCHULE ist eine Sammlung von Typst Vorlagen zur Gestaltung von Arbeitsmaterialien (Arbeitsblätter, Klausuren, Wochenpläne ...) für die Schule. Das Paket ist eine Adaption meines #mty.footlink("https://github.com/jneug/arbeitsblatt", [#LaTeX Pakets]) für Typst.
+  ],
+  examples-scope: (
     schule: schule,
-
-    ..schule.ab.__all__.fold((:), (a, b) => {a.insert(repr(b), b); a})
-  )
+  ),
 )
 
-
-#let show-module(name, scope:(:)) = tidy-module(
+#let show-module(name, scope: (:)) = tidy-module(
   read("../src/" + name + ".typ"),
   name: name,
   include-examples-scope: true,
-  tidy: tidy,
-  extract-headings: 3
+  scope: scope,
 )
 
-#let exampleout( name, cap: none ) = {
+#let exampleout(name, cap: none) = {
   figure(
-    mty.frame(width: 50%, image("../examples/" + name + ".svg", width:100%)),
-    caption: if cap != none [#cap (#mty.rawc(theme.colors.secondary, "examples/" + name + ".pdf"))] else [#mty.rawc(theme.colors.secondary, "examples/" + name + ".pdf")],
-    kind: image
+    mty.frame(width: 50%, image("examples/" + name + ".svg", width: 100%)),
+    caption: if cap != none [#cap (#mty.rawc(theme.colors.secondary, "examples/" + name + ".pdf"))] else [#mty.rawc(
+        theme.colors.secondary,
+        "examples/" + name + ".pdf",
+      )],
+    kind: image,
   )
 }
+#let examplefile(name, cap: none) = {
+  let code = read("examples/" + name + ".typ")
+  mty.codelst.sourcefile(code.replace("../src/schule.typ", "@local/schule:0.1.1"), lang: "typ")
 
-// #let footlink( url, label ) = [#link(url, label)#footnote(link(url))]
-// #let gitlink( repo ) = footlink("https://github.com/" + repo, repo)
-// #let pkglink( repo ) = footlink("https://github.com/" + repo, repo)
-
-// #import "../src/util.typ": *
-// #import "../src/typo.typ": *
-// #import "../src/layout.typ": *
-
-// End preamble
+  exampleout(name, cap: cap)
+}
 
 = About
+
+SCHULE ist ein Typst Paket, mit dem Arbeitsblätter, Klausuren und andere Materialien für den Informatikunterricht erstellt werden können.
+
+Das Paket ist ein Port des #LaTeX Pakets #mty.gitlink("jneug/arbeitsblatt"), welches wiederum auf dem #mty.footlink("https://ctan.org/pkg/schule", "schule Paket") basierte.
+
+Durch die Adaption für Typst wurden mit der Zeit Funktionalitäten ergänzt, entfernt und verändert, um das Paket an die modernere Typst-Umgebung und das wachsende Ökosystem von verfügbaren Paketen anzupassen.
 
 = Verwendung der Vorlagen
 
 == Installation
 
-= Vorlagen
+SCHULE ist derzeit nicht im Typst-Universum als öffentliche Vorlage verfügbar. Die Installation muss lokal erfolgen.
 
-Kernstück von SCHULE-TYPST sind die Dokumentvorlagen.
+== Vorlagen
 
-== Arbeitsblatt (`ab`)
+=== Arbeitsblatt
 
-Die Vorlage #cmd[arbeitsblatt] ist die Basisvorlage für alle anderen Vorlagen und Grundlage für die Gestaltung von Arbeitsmaterialien. Alle Argumente, die von #cmd-[arbeitsblatt] akzeptiert werden, werden daher auch von allen anderen Vorlagen akzeptiert.
+=== Klassenarbeit
 
-#command("arbeitsblatt",
-  ..args(
-    "autor", "kuerzel", "titel",
-    "reihe", "nummer", "fach",
-    "kurs", "version", "datum",
+=== Klausur
 
-    typ: "Arbeitsblatt",
-    loesungen: "sofort",
+== Module
 
-    fontsize: 13pt,
+=== Aufgaben
 
-    paper: "a4",
-    flipped: false,
-    "margin",
-    lochung: false,
-  ),
-  sarg("args"),
-  barg("body")
-)[
-  Alle zusätzlichen Argumente in #barg[args] werden nach Prefix gefiltert und an die entsprechende Funktion weitergegeben. Beispielsweise wird #arg(par-justify: false) als #arg(justify: false) an #doc("text/par") weitergegeben.
-  - `par-` an #doc("text/par")
-  - `font-` an #doc("text/text")
-]
-
-=== Basisvorlage für ein Arbeitsblatt
-
-#sourcecode[```typ
-#import "@local/schule:0.1.1": ab
-#import ab: *
-
-#show: arbeitsblatt.with(
-  titel: "Potenzmengenkonstruktion",
-  reihe: "Endliche Automaten und formale Sprachen",
-  nummer: "IV.11",
-  kurs: "Q2-LK",
-
-  autor: "J. Neugebauer",
-  kuerzel: "Ngb",
-
-  version: "2024-02-16",
-  datum: datetime.today()
-)
-
-#abtitel()
-
-#lorem(100)
-
-#aufgabe[
-  #lorem(50)
-]
-```]
-
-#exampleout("ab", cap:[Ausgabe der Basisvorlage])
-
-== Klassenarbeit (`ka`)
-
-== Klausur (`kl`)
-
-= Allgemeine Kommandos
-
-== Dokumentinformationen
-
-== Auszeichnungen
-// #show-module("typo")
-
-== Layout
-#show-module("layout")
-
-= Beispiele
-
-#let example-file(
-  filename,
-  size: .5em,
-  pages: 1,
-  preview:(0,70),
-  caption: auto,
-  as-grid: auto,
-  columns: 2
-) = [
-  #pagebreak(weak:true)
-  === #raw(block:false, "examples/" + filename + ".typ")
-  #figure({
-    set text(size: size)
-    sourcecode(
-      numbers-style: (n) => text(luma(160), n),
-      showrange:preview,
-      raw(lang:"typ", read("../examples/" + filename + ".typ"))
-    )},
-    caption: if caption == auto [Quelltextvorschau des Beispiels #filename] else {caption}
-  )
-
-  #if as-grid == auto {
-    as-grid = pages > 1
-  }
-
-  #let p = ()
-  #for n in range(pages) {
-    p.push("../examples/" + filename + "-" + str(n+1) + ".svg")
-  }
-
-  #if as-grid {
-    grid( columns: (1fr, )*columns, gutter: .63em,
-      ..for page in p {
-        (mty.frame(image(page, width: 100%)), )
-      }
-    )
-  } else {
-    for page in p [
-      #pagebreak(weak:true)
-      #align(center, mty.frame(image(page, width: 100%)))
-    ]
-  }
-]
-
-== Vorlage Arbeitsblatt
-
-#example-file("10Diff-AB.IV.09-Listen")
-
-#pagebreak()
-=== Vorlage Klausur
-
-#example-file("Q1-GK-Klausur_1", pages:7)
+=== Layout- und Text-Elemente
+// #import "../src/api/content.typ": __all__
+// #show-module("api/content", scope: __all__)
