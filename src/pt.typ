@@ -91,9 +91,8 @@
 #let empty-slide = slide.with(header: [], footer: [])
 
 #let title-slide(title, subtitle: none) = {
-  set text(1.5em)
-
   empty-slide(title: none, subtitle: none, align: left + horizon, show-progress: false)[
+    #set text(1.5em)
     #heading(level: 1, outlined: false, bookmarked: false, title)
 
     #if subtitle != none {
@@ -245,12 +244,11 @@
 }
 
 #let quote-slide(attribution: none, ..slide-args, body) = {
-  set text(font: theme.fonts.serif)
-
   slide(
     align: center + horizon,
     ..slide-args,
     {
+      set text(font: theme.fonts.serif)
       quote(attribution: attribution, body)
     },
   )
