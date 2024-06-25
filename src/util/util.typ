@@ -1,4 +1,6 @@
 
+#import "../theme.typ"
+
 // ================================
 // =       General utilities      =
 // ================================
@@ -20,6 +22,17 @@
     return ""
   } else {
     str(element)
+  }
+}
+
+#let get-text-color(background, light: theme.text.light, dark: theme.text.default, threshold: 62%) = {
+  if type(background) == gradient {
+    background = background.sample(50%)
+  }
+  if color.hsl(background).components(alpha: false).last() < threshold {
+    light
+  } else {
+    dark
   }
 }
 
