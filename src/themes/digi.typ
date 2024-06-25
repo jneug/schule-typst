@@ -22,6 +22,7 @@
 // Text colors
 #let text = (
 	default:   luma(20%),
+	light:     white,
 	header:    luma(50%), // primary
 	footer:    luma(75%),
 	title:     primary,

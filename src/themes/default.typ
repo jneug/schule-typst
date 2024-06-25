@@ -20,6 +20,7 @@
 // Text colors
 #let text = (
 	default:   black,
+	light:     white,
 	header:    luma(20%), // primary
 	footer:    luma(70%),
 	title:     primary,
@@ -53,13 +54,22 @@
   stroke: .6pt + muted,
 )
 
-#let cards = (
-  type1: rgb("#36c737"),
-  type2: rgb("#ffcc02"),
-  type3: rgb("#cd362c"),
-  help: rgb("#b955b6"),
-  back: rgb("#ffffb2"),
-)
+#let cards = {
+  let (type1, type2, type3, help) = (
+    rgb("#36c737"),
+    rgb("#ffcc02"),
+    rgb("#cd362c"),
+    rgb("#b955b6"),
+  )
+
+  (
+    type1: gradient.linear(type1.lighten(15%), type1.darken(15%), angle: 90deg),
+    type2: gradient.linear(type2.lighten(15%), type2.darken(15%), angle: 90deg),
+    type3: gradient.linear(type3.lighten(15%), type3.darken(15%), angle: 90deg),
+    help: gradient.linear(help.lighten(15%), help.darken(15%), angle: 90deg),
+    back: rgb("#ffffb2"),
+  )
+}
 
 #let init(body) = {
   body
