@@ -135,7 +135,7 @@
     #v(4em)
 
     #text(3em, font: theme.fonts.sans, weight: "bold")[
-      #document.get-value("date", d => d.display())
+      #document.use-value("date", d => d.display())
       // #options.display(
       //   "datum",
       //   format: dt => if dt != none {

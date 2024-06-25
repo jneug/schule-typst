@@ -12,7 +12,7 @@
 
 /// Setzt eine Aufgabe in mehreren Varianten.
 #let vari(..args) = {
-  document.get-value(
+  document.use-value(
     "variant",
     variant => {
       let vari = 0

@@ -284,7 +284,7 @@
       body
       marks.env-close("exercise")
 
-      document.get-value(
+      document.use-value(
         "solutions",
         opt => {
           if opt == "after" {
@@ -412,7 +412,7 @@
     }
   }
 
-  document.get-value(
+  document.use-value(
     "solutions",
     opt => {
       if opt == "here" {
