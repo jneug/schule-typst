@@ -17,9 +17,10 @@
   ),
 
   version:   "2024-06-24",
+  theme: "digi"
 )
 
-#metadata("modern")<schule.theme>
+// #metadata("modern")<schule.theme>
 
 #slide(subtitle: "Foo")[
   = Organisatorisches
