@@ -236,7 +236,7 @@
 
       let ic = []
       if ex-data.icons != () {
-        ic = marginnote(
+        ic = util.marginnote(
           offset: .2em,
           text(size: .88em, theme.secondary, (ex-data.icons,).flatten().join()),
         )
