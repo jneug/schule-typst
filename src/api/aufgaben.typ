@@ -30,4 +30,14 @@
       }
     },
   )
+  document.update-value(
+    "variants",
+    vars => {
+      let v = range(calc.min(14, args.pos().len())).map(i => "ABCDEFGHIJKLMN".at(i))
+      if vars != none {
+        v = vars + v
+      }
+      return v.dedup()
+    },
+  )
 }

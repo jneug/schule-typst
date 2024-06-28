@@ -7,20 +7,18 @@
 #import "document.typ"
 #import "layout.typ"
 
+#import "../theme.typ"
+
 // Basisvorlage für alle Dokumentvorlagen
 #let base-template(
   title-block: layout.base-title,
   //
   _tpl: (:),
   //
-  theme: "default",
   ..document-args,
   //
   body,
 ) = {
-  let meta-theme = theme
-  import "../theme.typ"
-
   let doc = document.create(
     ..document-args,
     options: args.if-has(_tpl, "options", () => (:)),
@@ -147,12 +145,6 @@
 
       document.save(doc)
       document.save-meta(doc)
-      marks.place-meta(<schule.theme>, data: meta-theme)
-
-      // TODO: remove _metadata key?
-      // for key in doc._metadata {
-      //   [#metadata(doc.at(key))#label("schule-" + key)]
-      // }
 
       marks.place-meta(<content-start>)
       marks.env-open("content")
@@ -165,8 +157,6 @@
     },
   )
 }
-
-#import "../theme.typ"
 
 #let appendix(body, title: [Anhang], ..page-args) = {
   set page(..page-args.named())

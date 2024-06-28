@@ -376,13 +376,14 @@
 #let tasks(
   cols: 3,
   gutter: 4%,
+  width: 1fr,
   numbering: "a)",
   sub-numbering: "(1)",
   body,
 ) = {
   _counter-tasks.update(0)
   grid(
-    columns: (1fr,) * cols,
+    columns: (width,) * cols,
     gutter: gutter,
     ..body.children.filter(c => c.func() in (enum.item, list.item)).map(it => {
       _counter-tasks.step()

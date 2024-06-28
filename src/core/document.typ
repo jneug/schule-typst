@@ -86,6 +86,7 @@
         "folgend": "after",
       ),
     ),
+    preferred-theme: t.string(default: "default"),
   ),
   aliases: (
     "typ": "type",
@@ -109,6 +110,7 @@
     "lizenz": "license",
     "solution": "solutions",
     "loesungen": "solutions",
+    "theme": "preferred-theme",
   ),
 )
 
@@ -148,16 +150,25 @@
 
 #let _state-document = state("schule.document", (:))
 
-#let save(doc) = _state-document.update(doc)
-
-#let save-meta(doc) = [#metadata(doc)<schule-document>]
-
 #let update(func) = _state-document.update(doc => func(doc))
 
-#let get(func) = _state-document.get()
+#let update-value(key, func) = _state-document.update(doc => {
+  doc.insert(key, func(doc.at(key, default: none)))
+  doc
+})
+
+#let get() = _state-document.get()
+
+#let final() = _state-document.final()
 
 #let use(func) = context func(_state-document.get())
 
 #let get-value(key, default: none) = _state-document.get().at(key, default: default)
 
 #let use-value(key, func, default: none) = context func(get-value(key, default: default))
+
+#let save(doc) = _state-document.update(doc)
+
+#let save-meta(doc) = context {
+  [#metadata(final())<schule-document>]
+}

@@ -16,14 +16,41 @@
   )
 }
 
-#let display-solutions-block(exercise, title: "Lösung", numbering: "(i)") = {
+#let display-solutions(exercise, title: "Lösungen", numbering: "(i)") = {
+  if title != none [
+    === #title Aufgabe #exercise.display-number
+  ]
+  util.auto-enum(
+    numbering: numbering,
+    ..exercise.solutions,
+  )
+  enum(
+    numbering: "a)",
+    ..for sub-ex in exercise.sub-exercises {
+      if sub-ex.solutions != () {
+        (
+          util.auto-enum(
+            numbering: "(i)",
+            ..sub-ex.solutions,
+          ),
+        )
+      } else {
+        (sym.dash,)
+      }
+    },
+  )
+}
+
+#let display-solutions-block(exercise, title: "Lösungen", numbering: "(i)") = {
   block(
     width: 100%,
     inset: 0.5em,
     fill: theme.bg.solution,
     radius: 4pt,
     [
-      === #title Aufgabe #exercise.display-number
+      #if title != none [
+        === #title Aufgabe #exercise.display-number
+      ]
       #util.auto-enum(
         numbering: numbering,
         ..exercise.solutions,

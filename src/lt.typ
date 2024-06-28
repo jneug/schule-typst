@@ -144,7 +144,7 @@
         breakable: false,
         {
           set align(center + horizon)
-          fake-heading(fill: util.get-text-color(fill), title)
+          fake-heading(fill: util.get-text-color(fill), upper(title))
         },
       )
     },
@@ -237,7 +237,7 @@
 }
 
 #let karte(
-  titel,
+  titel: auto,
   infotext: none,
   nr: auto,
   icon: none,
@@ -246,14 +246,20 @@
   label: none,
   body,
 ) = {
+  let (titel, body) = (titel, body)
+  if titel == auto {
+    (titel, body) = util.extract-title(body)
+  }
+
   pagebreak(weak: true)
+
+  _card-header(titel, counter: _counter-cards, no: nr, fill: fill, icon: icon, label: label)
   _card-body({
     if hilfen != none {
       hilfe-marker(..hilfen)
     }
     body
   })
-  _card-header(titel, counter: _counter-cards, no: nr, fill: fill, icon: icon, label: label)
   _card-footer(infotext: infotext)
 }
 
@@ -262,7 +268,7 @@
 #let karte3 = karte.with(fill: theme.cards.type3)
 
 #let hilfekarte(
-  titel,
+  titel: auto,
   infotext: none,
   nr: auto,
   icon: emoji.ringbuoy,
@@ -270,6 +276,11 @@
   label: auto,
   body,
 ) = {
+  let (titel, body) = (titel, body)
+  if titel == auto {
+    (titel, body) = util.extract-title(body)
+  }
+
   if nr == auto {
     nr = (
       n,
@@ -278,21 +289,26 @@
   }
 
   pagebreak(weak: true)
-  _card-body(body)
   _card-header(titel, counter: _counter-cards-help, no: nr, fill: fill, icon: icon, label: none)
+  _card-body(body)
   _card-footer(infotext: infotext)
 }
 
 #let rueckseite(
-  titel,
+  titel: auto,
   infotext: none,
   icon: none,
   fill: theme.cards.back,
   body,
 ) = {
+  let (titel, body) = (titel, body)
+  if titel == auto {
+    (titel, body) = util.extract-title(body)
+  }
+
   pagebreak(weak: true)
-  _card-body(body)
   _card-header-back(titel, fill: fill)
+  _card-body(body)
   _card-footer(infotext: infotext)
 }
 
@@ -300,6 +316,20 @@
   pagebreak(weak: false)
 }
 
-#let loesung = rueckseite.with("Lösung")
+// #let loesung = rueckseite.with(titel: "Lösung")
+
+#let loesungskarte(..args) = {
+  rueckseite(titel: "Lösungen")[
+    #if args.pos() != () {
+      args.pos().first()
+    }
+
+    #context ex.solutions.display-solutions(ex.get-current-exercise(), title: none)
+
+    #if args.pos().len() > 1 {
+      args.pos().last()
+    }
+  ]
+}
 
 #let infotext-loesung(sol) = rotate(180deg, sol)

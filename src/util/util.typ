@@ -36,6 +36,47 @@
   }
 }
 
+#let extract-element(func, body, filter: it => true, all: false) = {
+  let _filter = it => return type(it) == content and it.func() == func and filter(it)
+
+  let elems = (body,)
+  if repr(body.func()) == "sequence" {
+    elems = body.children
+  }
+
+  let elem = elems.find(_filter)
+
+  if elem == none {
+    return (none, body)
+  } else {
+    return (
+      elem,
+      {
+        let found = false
+        for it in elems {
+          if not found and _filter(it) {
+            found = true
+          } else {
+            it
+          }
+        }
+      },
+    )
+  }
+}
+
+#let extract-title(body, level: 1, all: false) = {
+  let (title, rest) = extract-element(heading, body, filter: it => it.at("depth", default: 0) == level)
+  return (
+    if title != none {
+      title.body
+    } else {
+      none
+    },
+    rest,
+  )
+}
+
 /// Use in a #cmd-[show] rule to fix the decimal separator in math
 /// mode from a dot to a comma.
 /// - body (content): Body of the document.

@@ -4,24 +4,6 @@
 #import "_imports.typ": *
 #import "util/harbinger.typ": shadow-box
 
-#let _split-title(body) = {
-  let items = if repr(body.func()) != "sequence" {
-    (body,)
-  } else {
-    body.children
-  }
-  let first-heading = items.find(it => it.func() == heading and it.at("depth", default: 0) == 1)
-
-  return (
-    if first-heading != none {
-      first-heading.body
-    } else {
-      none
-    },
-    items.filter(it => it != first-heading and it != [ ]).join(""),
-  )
-}
-
 #let slide(
   title: auto,
   subtitle: none,
@@ -35,7 +17,7 @@
 ) = {
   let (title, rest) = (title, body)
   if title == auto {
-    (title, rest) = _split-title(body)
+    (title, rest) = util.extract-title(body)
   }
 
   let page-args = (:)
@@ -115,6 +97,7 @@
     _tpl: (
       options: (
         show-progress: t.boolean(default: true),
+        // TODO: Add polylux options and pass to init
         polylux: t.dictionary(
           (
             theme: t.string(optional: true)
@@ -186,7 +169,7 @@
 }
 
 #let subsection-slide(body, level: 1, ..slide-args) = {
-  let (title, rest) = _split-title(body)
+  let (title, rest) = util.extract-title(body)
 
   empty-slide(
     fill: theme.bg.muted,

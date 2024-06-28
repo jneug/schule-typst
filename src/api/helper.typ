@@ -47,6 +47,13 @@
   }
 }
 
+#let eval-math(term) = {
+  // eval(term.text, mode: "math")
+  // " = "
+  let _eval_term = term.text.replace(":", "/").replace("dot", "*")
+  [#eval(_eval_term, mode: "code")]
+}
+
 #let repeat(n, sep: pagebreak, body) = {
   for i in range(n) {
     if i > 0 {
