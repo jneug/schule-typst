@@ -69,9 +69,9 @@
   inset: (x: .25em),
   outset: (y: .25em),
   radius: 2pt,
-  // fill: gradient.linear(luma(100%), typo.theme.bg.muted, angle:90deg),
+  // fill: gradient.linear(luma(100%), theme.bg.muted, angle:90deg),
   fill: gradient.linear(luma(100%), luma(88%), angle:90deg),
-  text(.88em, font:typo.theme.fonts.code, label))
+  text(.88em, font:theme.fonts.code, label))
 )
 
 // Formatierung von Tastenkürzeln.
@@ -105,7 +105,7 @@
 ///
 /// - name (string, content): Name des Programms.
 /// -> content
-#let programm(name) = text(typo.theme.primary, weight: 400, name)
+#let programm(name) = text(theme.primary, weight: 400, name)
 
 // Symbols
 #let icon = (
