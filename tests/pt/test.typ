@@ -20,8 +20,6 @@
   theme: "digi"
 )
 
-// #metadata("modern")<schule.theme>
-
 #slide(subtitle: "Foo")[
   = Organisatorisches
 

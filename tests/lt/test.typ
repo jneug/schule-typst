@@ -22,10 +22,10 @@
 )
 
 #hilfekarte(
-  "Die Lerntheke",
   label: <die-lerntheke>,
   infotext: ["Malvorlage Wissenschaft lernen" von #link("http://www.schulbilder.org", "Schulbilder.org")],
-)[<lerntheke>
+)[
+  = Die Lerntheke
 
   #wrap-content(
     align: right,
@@ -47,7 +47,7 @@
   )
   #v(1fr)
 ]
-#rueckseite("Arbeitsweise")[
+#rueckseite(titel: "Arbeitsweise")[
   #align(center)[Hier findest du in der Regel die *Lösung einer Station*.]
 
   Zu Beginn erstellt du in deinem Heft eine Tabelle, in der du deinen Fortschritt festhältst. Die Tabelle enthält folgende Spalten:
@@ -83,7 +83,7 @@
   // #align(center, image(width: 100%, "images/0.1-LT-Abb_Tabelle_2.jpg"))
 ]
 
-#hilfekarte("Die Stationenkarten", label: <stationenkarten>)[
+#hilfekarte(titel: "Die Stationenkarten", label: <stationenkarten>)[
   #align(
     center,
     cetz.canvas({
@@ -170,7 +170,7 @@
   )
 ]
 
-#loesung()[
+#rueckseite()[
   #align(center, [Hier findest du in der Regel die *Lösung einer Station*.])
 
   Bei manchen Stationen ist die Lösung aber auch _klein auf die Vorderseite gedruckt_, oder ist zum Beispiel als Kontrollwort in der Aufgabe angegeben.
@@ -182,7 +182,7 @@
 
 ]
 
-#hilfekarte("Hilfekarten", label: <hilfekarten>)[
+#hilfekarte(titel: "Hilfekarten", label: <hilfekarten>)[
   // #hilfe-marker(3)
   #hilfe-marker(<die-lerntheke>, <stationenkarten>)
 
@@ -217,7 +217,7 @@
   )
 ]
 
-#rueckseite("Rückseiten")[
+#rueckseite(titel: "Rückseiten")[
   #align(center, text(1.2em)[Auf der Rückseite einer Karte findest du in der Regel die *Lösungen der Aufgaben*.])
 
   Hilfekarten haben normalerweise keine Lösung. Aber wenn auf der Vorderseite nicht genug Platz war, stehen auf der Rückseite manchmal weitere Informationen.
@@ -225,7 +225,7 @@
   #align(center, [So wie hier. #emoji.face.grin])
 ]
 
-#hilfekarte("Das Expertenposter", label: <expertenposter>)[
+#hilfekarte(titel: "Das Expertenposter", label: <expertenposter>)[
   #wrap-content(
     align: right,
     image(width: 4.5cm, "images/0.1-LT-Abb_Expertenposter.jpg"),
@@ -241,7 +241,7 @@
 #leer()
 
 #hilfekarte(
-  "Die Lehrperson",
+  titel: "Die Lehrperson",
   label: <lehrperson>,
   infotext: ["Malvorlage Lehrer und Schüler" von #link("http://www.schulbilder.org", "Schulbilder.org").],
 )[
@@ -259,3 +259,16 @@
 ]
 
 #leer()
+
+#karte1[
+  = Meine Karte
+  #aufgabe()[
+    Test
+
+    #loesung[
+      Foo bar
+    ]
+  ]
+]
+
+#loesungskarte()
