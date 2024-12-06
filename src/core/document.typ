@@ -3,7 +3,7 @@
 #let _author-schema = t.dictionary(
   (
     name: t.string(),
-    email: t.email(optional: true),
+    email: t.string(optional: true), // t.email(optional: true),
     abbr: t.string(optional: true),
   ),
   pre-transform: t.coerce.dictionary(it => (name: it)),
@@ -42,7 +42,7 @@
             month: int(parts.at(1)),
             day: int(parts.at(0)),
           )
-        } else if parts.contains("-") {
+        } else if it.contains("-") {
           parts = it.split("-")
           return datetime(
             year: int(parts.at(0)),
@@ -82,11 +82,13 @@
       aliases: (
         "seite": "page",
         "keine": "none",
+        "ohne": "none",
         "sofort": "here",
         "folgend": "after",
       ),
     ),
     preferred-theme: t.string(default: "default"),
+    nup: t.integer(default: 1),
   ),
   aliases: (
     "typ": "type",
@@ -169,6 +171,8 @@
 
 #let save(doc) = _state-document.update(doc)
 
-#let save-meta(doc) = context {
-  [#metadata(final())<schule-document>]
-}
+#let save-meta(doc) = (
+  context {
+    [#metadata(final())<schule-document>]
+  }
+)

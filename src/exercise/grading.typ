@@ -76,10 +76,12 @@
     align: center + horizon,
     ..cells,
   )
-
 }
 
-#let display-expectations-table(exercises) = {
+// TODO: Add options for tables
+#let display-expectations-table(
+  exercises,
+) = {
   let total-points = exercises.values().map(get-total-points).sum(default: 0)
 
   let muted-cell = table.cell.with(fill: theme.table.even)
@@ -119,7 +121,11 @@
             )
           }
         }),
-        muted-cell[#display-total(ex, singular: "", plural: "")],
+        muted-cell({
+          if ex.sub-exercises == () {
+            display-total(ex, singular: "", plural: "")
+          }
+        }),
         muted-cell[ ],
       ) + for sub-ex in ex.sub-exercises {
         if sub-ex.grading.expectations != () {
@@ -152,12 +158,12 @@
 #let display-expectations-table-expanded(exercises) = {
   let total-points = exercises.values().map(get-total-points).sum()
 
-  let muted-cell = table.cell.with(fill: theme.table.even)
+  let muted-cell = table.cell.with(fill: theme.bg.muted)
   let header-cell = table.cell.with(fill: theme.table.header)
   let stroked-cell(i, ..args) = table.cell(
     stroke: (
       top: if i > 0 {
-        theme.muted
+        theme.table.stroke
       },
     ),
     ..args,
@@ -173,7 +179,7 @@
         strong[#ex.display-number],
       ),
       muted-cell(strong(ex.title)),
-      muted-cell(strong[#get-total-points(ex)]),
+      muted-cell(strong[#sym.sum #get-total-points(ex)]),
       muted-cell([ ]),
     )
     // Add exercise expectations
@@ -191,7 +197,7 @@
       if sub-ex.grading.expectations.len() > 0 {
         // Number of expectations
         (
-          table.cell(
+          muted-cell(
             rowspan: sub-ex.grading.expectations.len(),
             numbering("a)", sub-ex.number),
           ),
@@ -211,7 +217,7 @@
   table(
     columns: (auto, 1fr, auto, auto),
     inset: 5pt,
-    fill: theme.table.odd,
+    fill: none,
     align: (col, row) => {
       if col in (0, 2, 3) {
         center + horizon
@@ -233,5 +239,49 @@
     ],
     header-cell[*#total-points*],
     header-cell[],
+  )
+}
+
+#let display-competencies(
+  exercises,
+  symbols: (
+    emoji.face.smile,
+    emoji.face.unhappy,
+  ),
+  header: "Kompetenz",
+) = {
+  let comp = (:)
+  for (_, ex) in exercises {
+    for (key, text) in ex.competencies {
+      if key not in comp {
+        comp.insert(key, (text: text, exercises: ()))
+      }
+      comp.at(key).exercises.push(ex.display-number)
+    }
+  }
+  let cells = exercises
+    .values()
+    .map(ex => ex.competencies)
+    .filter(comp => comp.len() > 0)
+    .map(c => c.map(x => x.text))
+    .flatten()
+    .dedup()
+
+  table(
+    columns: (auto, auto, 6cm),
+    fill: (_, r) => if r == 0 {
+      theme.table.header
+    } else {
+      (theme.table.even, theme.table.odd).at(calc.rem(r, 2))
+    },
+    align: (left + horizon, center + horizon, auto),
+    table.header(
+      strong(header),
+      strong[Aufg.],
+      symbols.join(h(1fr)),
+    ),
+    ..for (_, c) in comp {
+      (c.text, c.exercises.map(str).join(", "), [])
+    }
   )
 }

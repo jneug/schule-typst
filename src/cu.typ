@@ -1,5 +1,7 @@
 #import "_imports.typ": *
 
+#let checkmark-img = image.with("assets/checkmark.svg")
+
 #let checkup(
   ..args,
   body,
@@ -14,16 +16,20 @@
 
     //_tpl: (:),
     title-block: (doc) => {
-        place(right, image("assets/checkmark.svg", width:2cm))
         heading(
-        level: 1,
-        outlined: false,
-        bookmarked: false,
-      )[Checkup zur #doc.title: #text(fill:theme.secondary, doc.topic)]
+          level: 1,
+          outlined: false,
+          bookmarked: false,
+        )[Checkup zur #doc.title: #text(fill:theme.secondary, doc.topic)]
     },
 
     ..args,
-    body,
+
+      wrap-content(
+        align: right,
+        checkmark-img(width: 2cm),
+        body
+      ),
   )
 
   {
@@ -33,16 +39,11 @@
   }
 }
 
-#let skala(..icons, spacing: .5em) = grid(
-  columns: icons.pos().len(),
-  column-gutter: spacing,
-  ..icons.pos()
-)
-#let skala2 = skala(emoji.thumb.up, emoji.thumb.down)
-#let skala3 = skala(emoji.face.beam, emoji.face.neutral, emoji.face.weary)
-#let skala4 = skala(emoji.face.beam, emoji.face.happy, emoji.face.diagonal, emoji.face.weary)
-#let skala5 = skala(emoji.face.beam, emoji.face.happy, emoji.face.neutral, emoji.face.diagonal, emoji.face.weary)
-#let skala6 = skala(
+#let skala2-icons = (emoji.thumb.up, emoji.thumb.down)
+#let skala3-icons = (emoji.face.beam, emoji.face.neutral, emoji.face.weary)
+#let skala4-icons = (emoji.face.beam, emoji.face.happy, emoji.face.diagonal, emoji.face.weary)
+#let skala5-icons = (emoji.face.beam, emoji.face.happy, emoji.face.neutral, emoji.face.diagonal, emoji.face.weary)
+#let skala6-icons = (
   emoji.face.beam,
   emoji.face.grin,
   emoji.face.happy,
@@ -51,15 +52,39 @@
   emoji.face.weary,
 )
 
+
+#let skala(..icons, spacing: .5em) = grid(
+  columns: icons.pos().len(),
+  column-gutter: spacing,
+  ..icons.pos()
+)
+#let skala2 = skala(..skala2-icons)
+#let skala3 = skala(..skala3-icons)
+#let skala4 = skala(..skala4-icons)
+#let skala5 = skala(..skala5-icons)
+#let skala6 = skala(..skala6-icons)
+
 #let ichkann(
   body,
   aufgaben,
   skala: skala4,
-) = (
-  [#sym.dots #body],
-  [#skala],
-  [#aufgaben],
-)
+  rowspan: 1,
+) = {
+  let row = (
+    [#sym.dots #body],
+    [#skala],
+  )
+  if rowspan > 0 {
+    row += (
+      table.cell(rowspan: if rowspan == 0 {
+        1
+      } else {
+        rowspan
+      })[#aufgaben],
+    )
+  }
+  return row
+}
 
 
 #let trenner(content) = (table.cell(colspan: 3, fill: theme.table.header, content),)

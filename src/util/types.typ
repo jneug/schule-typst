@@ -1,9 +1,10 @@
+// TODO: Rename to "typing.typ"
 /// Wrapper module for valkyrie to add some missing types and augment existing
 /// ones.
 
 #import "typst.typ"
 
-#import "@preview/valkyrie:0.2.0": *
+#import "@preview/valkyrie:0.2.1": *
 
 // Aliases for the original valkyrie types.
 #let _choice = choice

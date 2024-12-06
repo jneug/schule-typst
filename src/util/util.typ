@@ -6,22 +6,24 @@
 // ================================
 
 #let get-text(element, sep: "") = {
-  if type(element) == "content" {
+  if type(element) in ("array", "dictionary") {
+    return ""
+  } else if type(element) == "content" {
     if element.has("text") {
       element.text
     } else if element.has("children") {
-      element.children.map(text).join(sep)
+      element.children.map(get-text).join(sep)
     } else if element.has("child") {
-      text(element.child)
+      get-text(element.child)
     } else if element.has("body") {
-      text(element.body)
+      get-text(element.body)
     } else {
       ""
     }
-  } else if type(element) in ("array", "dictionary") {
-    return ""
-  } else {
+  } else if type(it) in (symbol, int, float, version, bytes, label, type, str) {
     str(element)
+  } else {
+    repr(element)
   }
 }
 
@@ -40,7 +42,7 @@
   let _filter = it => return type(it) == content and it.func() == func and filter(it)
 
   let elems = (body,)
-  if repr(body.func()) == "sequence" {
+  if type(body) == content and repr(body.func()) == "sequence" {
     elems = body.children
   }
 
@@ -205,9 +207,12 @@
     }
   }
 
-  ranges.map(((from, to)) => if from == to [#from] else if to - from < max-items {
-    range(from, to + 1).map(str)
-  } else [#from#range-sep#to]).flatten().join(
+  ranges
+    .map(((from, to)) => if from == to [#from] else if to - from < max-items {
+        range(from, to + 1).map(str)
+      } else [#from#range-sep#to])
+    .flatten()
+    .join(
     sep,
     last: last,
   )

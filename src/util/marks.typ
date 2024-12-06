@@ -56,8 +56,6 @@
     [],
   )#label]
 
-
-
 /// Iterates over all items with a certain label found in the document (usually @cmd[metadata]).
 /// #hint[Needs to be called in a `context`.]
 /// #property(context: true)

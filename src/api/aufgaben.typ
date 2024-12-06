@@ -9,6 +9,7 @@
 
 #let loesung = ex.solution
 #let erwartung = ex.expectation
+#let kompetenz = ex.competency
 
 /// Setzt eine Aufgabe in mehreren Varianten.
 #let vari(..args) = {

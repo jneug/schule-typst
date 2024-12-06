@@ -2,6 +2,11 @@
 #import "../util/args.typ"
 #import "../theme.typ"
 
+// Landau-Symbole
+
+#let O(n) = $cal(O)(#n)$
+#let o(n) = $cal(o)(#n)$
+
 /// Erstellt eine Tabelle zur Visualisierung eines Arrays mit Indizes und Inhalten.
 #let arr(data, len: auto, empty: none, start: 0, cell-width: 8mm) = {
   len = args.if-auto(len, () => data.len())
@@ -29,7 +34,7 @@
 #import "cs-docs.typ" as docs
 
 // Ziffern bis Hexadezimal
-#let _nary-digits = "01234567890ABCDEF"
+#let _nary-digits = "0123456789ABCDEF"
 
 // string -> int
 #let nary-decode(num, base) = {
@@ -87,17 +92,60 @@
   return (number: result, base: base, display: () => [(#text(1.2em, raw(result)))#sub[#base]])
 }
 
-#let nary-display(num) = {
-  [(#text(1.2em, raw(num.number)))#sub[#num.base]]
+#let nary-display(num, sep: none, block-size: auto) = {
+  let block-size = block-size
+  if block-size == auto {
+    if num.base == 10 {
+      block-size = 3
+    } else {
+      block-size = 4
+    }
+  }
+
+  let str-num = str(num.number)
+  let blocks = ()
+  for i in range(str-num.len(), step: block-size) {
+    blocks.push(str-num.slice(i, calc.min(str-num.len(), i + block-size)))
+  }
+  [(#text(1.2em, raw(blocks.join(sep))))#sub[#num.base]]
 }
 
-// #import "cs-uml.typ" as uml
+#let nary(num, base, ..arg) = {
+  if type(num) == int {
+    let encode-args = args.extract-args(arg, "from", "pad")
+    let arg = arg.named()
+    _ = arg.remove("from", default: none)
+    _ = arg.remove("pad", default: none)
+
+    nary-display(
+      nary-encode(num, base, ..encode-args),
+      ..arg,
+    )
+  } else {
+    nary-display(
+      nary-decode(str(num), base),
+      ..arg,
+    )
+  }
+}
+
+#let nary-term(num) = {
+  let parts = ()
+  let len = num.number.len()
+  for i in range(len) {
+    parts.push(num.number.at(len - 1 - i) + " dot " + str(num.base) + "^" + str(i))
+  }
+  return eval(parts.rev().join(" + "), mode: "math")
+}
+
+#import "cs-uml.typ" as uml
 #import "cs-db.typ" as db
+
 
 // =================================
 //  Bäume
 // =================================
-#import "@preview/cetz:0.2.2"
+#import "@preview/cetz:0.3.1"
 
 #let tree-node(
   node,
@@ -127,7 +175,9 @@
     cetz.draw.set-style(..named.styles)
     let _ = named.remove("styles")
   }
-  cetz.tree.tree(
+  cetz
+    .tree
+    .tree(
     nodes,
     spread: 1.6,
     grow: 1.25,
@@ -145,3 +195,48 @@
     ..named
   )
 })
+
+
+// =================================
+//  Automaten
+// =================================
+// #import("@preview/finite:0.3.0"
+
+/// Übersetzt eine Grammatik aus der FLACI.com Syntax
+/// in eine im Unterricht übliche Darstellung.
+#let grammar(body) = {
+  let trim(s) = s.trim()
+  let math-eval(m) = if m.starts-with("$") and m.ends-with("$") {
+    return eval(mode: "math", m.slice(1, -1))
+  } else {
+    return m
+  }
+
+  let lines = body.text.split("\n")
+
+  // enum(
+  //   numbering: n => [p#sub([#n]):],
+  //   ..for line in lines {
+  //     (
+  //       line
+  //         .split("->")
+  //         .map(s => s.trim())
+  //         .map(part => part.split("|").map(s => s.trim()).join($#h(.2em)|#h(.2em)$))
+  //         .join([#h(.2em)#sym.arrow.r#h(.2em)]),
+  //     )
+  //   },
+  // )
+  grid(
+    columns: 4,
+    row-gutter: 1em, column-gutter: .64em,
+    ..for (p, l) in lines.enumerate() {
+      l = l.split("->").map(trim)
+      (
+        emph[p#sub([#p]):],
+        text(weight: 400, l.at(0)),
+        sym.arrow.r,
+        l.at(1).split("|").map(trim).map(math-eval).join($#h(.2em)|#h(.2em)$),
+      )
+    }
+  )
+}

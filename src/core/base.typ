@@ -62,6 +62,13 @@
 
     set table(stroke: theme.table.stroke)
 
+    if header == none {
+      header = (..) => []
+    }
+    if footer == none {
+      footer = (..) => []
+    }
+
     set page(
       ..args.extract-args(
         document-args,
@@ -108,8 +115,8 @@
     // Lists
     set enum(numbering: "1)")
     // Configure code blocks
-    show raw: set text(font: theme.fonts.code)
-    show raw.where(block: false): set text(fill: theme.primary)
+    // show raw: set text(font: theme.fonts.code)
+    // show raw.where(block: false): set text(fill: theme.primary)
     // set raw(theme: "./BW.tmTheme")
     show figure.caption: set text(.88em)
 

@@ -18,4 +18,4 @@
 #import "subjects/math.typ" as mathe
 
 // Some community packages to improve things
-#import "@preview/wrap-it:0.1.0": wrap-content
+#import "@preview/wrap-it:0.1.1": wrap-content

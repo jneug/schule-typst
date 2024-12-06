@@ -16,6 +16,10 @@
   (expectations: t.array()),
   default: (expectations: ()),
 )
+#let _competency-schema = t.array(
+  t.string(),
+  pre-transform: t.coerce.array,
+)
 #let _sub-exercise-schema = t.dictionary((
   id: t.string(),
   number: t.integer(),
@@ -40,13 +44,10 @@
         it
       },
     ),
-    // grading: t.array(
-    //   optional: true,
-    //   pre-transform: (..) => (),
-    // ),
     grading: t.constant(_grading-schema),
     solutions: t.constant(t.array()),
     sub-exercises: t.constant(t.array()),
+    competencies: _competency-schema,
   ),
   post-transform: (_, it) => {
     if it.id == none {
@@ -70,6 +71,7 @@
     "nutzen": "use",
     "ueberschrift": "header",
     "neue-seite": "pagebreak",
+    "kompetenzen": "competencies",
   ),
 )
 
@@ -325,7 +327,7 @@
       })
     }
 
-    _counter-exercises.display((ex-no, sub-ex-no, ..) => {
+    context _counter-exercises.display((ex-no, sub-ex-no, ..) => {
       enum(
         numbering: "a)",
         start: sub-ex-no,
@@ -379,13 +381,21 @@
   width: 1fr,
   numbering: "a)",
   sub-numbering: "(1)",
+  shuffle: false,
   body,
 ) = {
+  let items = body.children.filter(c => c.func() in (enum.item, list.item))
+  if shuffle {
+    import "@preview/suiji:0.3.0" as rand
+    let rng = rand.gen-rng(datetime.today().day())
+    (_, items) = rand.shuffle(rng, items)
+  }
+
   _counter-tasks.update(0)
   grid(
     columns: (width,) * cols,
     gutter: gutter,
-    ..body.children.filter(c => c.func() in (enum.item, list.item)).map(it => {
+    ..items.map(it => {
       _counter-tasks.step()
       context if in-sub-exercise() {
         _counter-tasks.display(sub-numbering)
@@ -442,5 +452,21 @@
         ex
       })
     }
+  }
+}
+
+// TODO: store competencies in sub-exercises?
+#let competency(key, text) = {
+  let key = if type(key) == label {
+    str(key)
+  } else {
+    key
+  }
+
+  context {
+    update-current-exercise(ex => {
+      ex.competencies.push((key: key, text: text))
+      ex
+    })
   }
 }

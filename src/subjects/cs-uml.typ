@@ -1,66 +1,17 @@
-#import "@preview/cetz:0.2.2"
+#import "@preview/cetz:0.3.1"
 #import "@preview/fletcher:0.5.0"
 
-#let klasse(from, to, c: none) = {
+#let klasse(pos, name, attributes, methods) = {
   (
     (
-      type: "edge",
-      from: from,
-      to: to,
-      id: repr(from) + "-" + repr(to),
-      c: c,
-      func: fletcher.edge,
-    ),
-  )
-}
-
-#let objekt(pos, id, content) = {
-  (
-    (
-      type: "entity",
+      type: "class",
+      id: repr(name),
+      name: name,
       pos: pos,
-      id: id,
-      content: content,
-      func: fletcher.node,
+      attributes: attributes,
+      methods: methods,
     ),
   )
-}
-
-#let benutzt(pos, id, content, to: none) = {
-  let r = (
-    (
-      type: "attribute",
-      pos: pos,
-      id: id,
-      content: content,
-      func: fletcher.node.with(shape: fletcher.shapes.pill),
-    ),
-  )
-  if to != none {
-    r.push(connect(id, to).first())
-  }
-  return r
-}
-
-#let erbt(pos, id, e1: none, c1: none, e2: none, c2: none, content) = {
-  let r = (
-    (
-      type: "relation",
-      pos: pos,
-      id: id,
-      content: content,
-      from: e1,
-      to: e1,
-      c1: c1,
-      c2: c2,
-      func: fletcher.node.with(shape: fletcher.shapes.diamond),
-    ),
-  )
-  if e1 != none and e2 != none {
-    r.push(connect(e1, id, c: c1).first())
-    r.push(connect(e2, id, c: c2).first())
-  }
-  return r
 }
 
 #let klassendiagramm(
@@ -88,15 +39,25 @@
 
   let f-elements = ()
   for (id, node) in nodes {
-    if node.type == "edge" {
-      node.from = resolve(node.from)
-      node.to = resolve(node.to)
-
-      f-elements.push((node.func)(node.from, node.to, label: node.c, label-pos: .33, label-side: left))
-    } else {
+    if node.type == "class" {
       node.pos = resolve(node.pos)
 
-      f-elements.push((node.func)(node.pos, node.content))
+      f-elements.push(
+        fletcher.node(
+          node.pos,
+          inset: 0pt,
+          stroke: none,
+          table(
+            columns: 1,
+            stroke: 1pt + black,
+            inset: .33em,
+            align: left,
+            align(center, strong(node.name)),
+            node.attributes.map(raw.with(lang: "java")).join(linebreak()),
+            node.methods.map(raw.with(lang: "java")).join(linebreak()),
+          ),
+        ),
+      )
     }
   }
 

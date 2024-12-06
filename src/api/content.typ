@@ -1,6 +1,6 @@
 
-#import "@preview/codelst:2.0.1"
-#import "@preview/showybox:2.0.1": showybox
+#import "@preview/codelst:2.0.2"
+#import "@preview/showybox:2.0.3": showybox
 
 #import "../util/util.typ"
 #import "../util/typst.typ"
@@ -91,14 +91,14 @@
 //
 // - name (string, content): Name der Datei.
 // -> content
-#let datei(name) = [#emoji.page#h(.1em)#typo.code(name)]
+#let datei(name) = [#emoji.page#h(.1em)#raw(block: false, util.get-text(name))]
 
 // Formatierung von Ordnernamen.
 // - #shortex(`#ordner("arbeitsblaetter")`)
 //
 // - name (string, content): Name des Ordners.
 // -> content
-#let ordner(name) = [#emoji.folder#h(.1em)#typo.code(name)]
+#let ordner(name) = [#emoji.folder#h(.1em)#raw(block: false, util.get-text(name))]
 
 /// Formatierung von Programmnamen.
 /// - #shortex(`#programm("VSCode")`)
@@ -118,11 +118,15 @@
   heft: emoji.book.open,
   mappe: emoji.book.spiral,
   tablet: emoji.phone,
-  computer: emoji.laptop
+  computer: emoji.laptop,
+  // Verschiedene
+  stern: emoji.star,
 )
 
-#let aufg-neu(prefix) = (..aufg-args) => [#prefix
-  #util.combine-ranges(aufg-args.pos(), last: " und ")]
+#let aufg-neu(prefix) = (
+  (..aufg-args) => [#prefix
+    #util.combine-ranges(aufg-args.pos(), last: " und ")]
+)
 
 #let seiten = aufg-neu("S.")
 #let aufg = aufg-neu("Aufg.")
@@ -133,6 +137,13 @@
   aufgaben-format: aufg,
   sep: ": ",
 ) = {
+  // Maybe strip unnecessary whitespace
+  name = if name.len() > 0 {
+    name + " "
+  } else {
+    ""
+  }
+
   (..q-args) => {
     let pages = ()
     let tasks = ()
@@ -146,9 +157,9 @@
     }
 
     if tasks.len() > 0 [
-      #name #seiten-format(..pages)#sep#aufgaben-format(..tasks)
+      #name#seiten-format(..pages)#sep#aufgaben-format(..tasks)
     ] else [
-      #name #seiten-format(..pages)
+      #name#seiten-format(..pages)
     ]
   }
 }
@@ -180,6 +191,25 @@
   }
 }
 
+#let linien(number-of-lines: 3, line-height: 1cm, stroke: 1pt + black) = block(
+  fill: pattern(
+    size: (1cm, line-height),
+    place(line(start: (0%, 100% - stroke.thickness), end: (100%, 100% - stroke.thickness), stroke: stroke)),
+  ),
+  height: line-height * number-of-lines,
+  width: 100%,
+)
+
+#let karos(width: 5, height: 5, unit: 5mm, stroke: 1pt + black, body: none) = block(
+  fill: pattern(
+    size: (unit, unit),
+    place(rect(width: 100%, height: 100%, stroke: stroke)),
+  ),
+  height: height * unit,
+  width: width * unit,
+  body,
+)
+
 // ============================
 // Code
 // ============================
@@ -195,6 +225,9 @@
 /// - ..args (any): Argument für #cmd-("sourcecode", module:"codelst").
 /// -> content
 #let sourcecode(..args) = codelst.sourcecode(frame: codelst.code-frame.with(fill: theme.bg.code), ..args)
+
+#let quelltext(..args) = codelst.sourcecode(frame: codelst.code-frame.with(fill: theme.bg.code), ..args)
+
 
 #let lineref = codelst.lineref.with(supplement: "Zeile")
 #let lineref- = codelst.lineref.with(supplement: "")
@@ -293,7 +326,7 @@
   stroke: 2pt + theme.primary,
   shadow: 3pt,
 )(..args)[
-  #set text(fill: theme.primary, weight: 400)
+  // #set text(fill: theme.primary, weight: 400)
   #body
 ]
 
@@ -330,9 +363,11 @@
 /// - body (content): Inhalte des Hinweises.
 /// -> content
 #let hinweis(typ: "Hinweis", icon: emoji.info, body) = {
-  util.marginnote[#text(fill: theme.secondary)[#icon]]
+  set text(size: .88em)
+  text(fill: theme.secondary)[#icon]
+  h(.2em)
   text(fill: theme.secondary)[*#typ:* ]
-  body
+  emph(body)
 }
 
 #let tipp(body) = hinweis(typ: "Tipp", icon: emoji.lightbulb, body)
@@ -387,5 +422,22 @@
 #let enumnn(body) = {
   set enum(numbering: "(1)")
   body
+}
+
+#let _counter-numbering = counter("@ab-numbering")
+
+#let reset-numbering() = _counter-numbering.update(0)
+
+#let arabic = {
+  _counter-numbering.step()
+  context _counter-numbering.display("1.")
+}
+#let alph = {
+  _counter-numbering.step()
+  context _counter-numbering.display("a)")
+}
+#let roman = {
+  _counter-numbering.step()
+  context _counter-numbering.display("I")
 }
 

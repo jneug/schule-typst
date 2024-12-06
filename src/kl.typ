@@ -8,7 +8,7 @@
   "1": .20,
   "2": .27,
   "3": .33,
-  "4": .40,
+  "4": .39,
   "5": .45,
   "6": .50,
   "7": .55,
@@ -77,6 +77,56 @@
   ],
 )
 
+// TODO: Rework this. Maybe add "pre-pages" and "post-pages" as conecpt in base-template / document?
+#let cover-sheet(doc, message: [Klausuren und Informationen für die Aufsicht]) = [
+  #v(.5fr)
+  #align(center)[
+    #text(4em, font: theme.fonts.sans, weight: "bold")[
+      #doc.number. #doc.type-long #doc.subject
+    ]
+
+    #text(3em, font: theme.fonts.sans, weight: "bold")[
+      #sym.tilde #doc.at("class") #sym.tilde
+    ]
+
+    #v(4em)
+
+    #text(3em, font: theme.fonts.sans, weight: "bold")[
+      #{
+        ("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag").at(doc.date.weekday())
+      },
+      #doc.date.display("[day].[month].[year]")
+    ]
+
+    #v(2em)
+
+    #text(2em, weight: 400, message)
+
+    #v(2em)
+
+    #block()[
+      #set text(1.2em)
+      #set align(right)
+      / Beginn: #luecke(width: 2cm) Uhr
+      / Abgabe: #luecke(width: 2cm) Uhr
+    ]
+  ]
+
+  #v(1fr)
+
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 3cm,
+    [*Anwesend:*], [*Abwesend:*],
+    [], [],
+  )
+
+  #v(1fr)
+
+  #pagebreak()
+  #counter(page).update(4)
+]
+
 #let klausur(
   ewh: ewh,
   ..args,
@@ -89,10 +139,16 @@
       options: (
         duration: t.integer(default: 180),
         split-expectations: t.boolean(default: false),
+        cover-sheet: t.either(
+          t.boolean(),
+          t.string(),
+          default: false,
+        ),
       ),
       aliases: (
         dauer: "duration",
         erwartungen-einzeln: "split-expectations",
+        deckblatt: "cover-sheet",
       ),
     ),
     fontsize: 10pt,
@@ -102,6 +158,16 @@
   )
 
   {
+    if doc.cover-sheet != false {
+      show: page-init.with(header: none, footer: none)
+
+      if type(doc.cover-sheet) == str {
+        cover-sheet(doc, message: doc.cover-sheet())
+      } else {
+        cover-sheet(doc)
+      }
+    }
+
     show: page-init.with(header: base-header.with(rule: true))
     tpl
   }
@@ -120,57 +186,6 @@
   }
 }
 
-// TODO: Rework this. Maybe add "pre-pages" and "post-pages" as conecpt in base-template / document?
-#let deckblatt(message: [Klausuren und Informationen für die Aufsicht]) = [
-  #v(.5fr)
-  #align(center)[
-    #text(4em, font: theme.fonts.sans, weight: "bold")[
-      #the-number. #the-type #the-subject
-    ]
-
-    #text(3em, font: theme.fonts.sans, weight: "bold")[
-      #sym.tilde #the-class #sym.tilde
-    ]
-
-    #v(4em)
-
-    #text(3em, font: theme.fonts.sans, weight: "bold")[
-      #document.use-value("date", d => d.display())
-      // #options.display(
-      //   "datum",
-      //   format: dt => if dt != none {
-      //     ("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag").at(dt.weekday())
-
-      //     dt.display(", [day].[month].[year]")
-      //   },
-      // )
-    ]
-
-    #v(2em)
-
-    #text(2em, weight: 400, message)
-
-    #v(2em)
-
-    #block()[
-      #set text(1.2em)
-      #set align(right)
-      // / Beginn: #luecke(width: 2cm) Uhr
-      // / Abgabe: #luecke(width: 2cm) Uhr
-    ]
-  ]
-
-  #v(1fr)
-
-  #grid(
-    columns: (1fr, 1fr),
-    gutter: 3cm,
-    [*Anwesend:*], [*Abwesend:*],
-  )
-
-  #v(1fr)
-
-  #pagebreak()
-]
+#let deckblatt = document.use(doc => cover-sheet(doc))
 
 #let teilaufgabe = teilaufgabe.with(points-format: ex.points-format-join)

@@ -35,20 +35,30 @@
     }
   }
 ]
-#let header-center(doc) = context if marks.in-env("appendix") [
-  Anhang
-] else {
-  if doc.date != none [
-    Datum: #doc.date.display("[day].[month].[year]")
-  ] else [
-    Datum: #box(move(dy:2pt, line(length: 3cm)))
-  ]
-}
+#let header-center(doc) = (
+  context if marks.in-env("appendix") [
+    Anhang
+  ] else {
+    if doc.date != none [
+      Datum: #doc.date.display("[day].[month].[year]")
+    ] else [
+      Datum: #box(move(dy:2pt, line(length: 3cm)))
+    ]
+  }
+)
 
 #let header-right(doc) = [
   #doc.type-long
   #args.if-none(doc.number, () => [], do: v => [Nr. #v])
-  #args.if-none(doc.variant, () => [], do: v => [#sym.dash #v])
+  #args.if-none(
+    doc.variant,
+    () => [],
+    do: v => if "variant-icons" in doc {
+      doc.variant-icons.at(v, default: str(v))
+    } else {
+      [#sym.dash #v]
+    },
+  )
 ]
 
 #let footer-left(doc) = [

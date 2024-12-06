@@ -79,8 +79,6 @@
 #let class = klasse
 
 #let display(key, descr: true) = {
-
-
   context {
     let doc-data = get()
     if key not in doc-data {

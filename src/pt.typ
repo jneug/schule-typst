@@ -1,8 +1,12 @@
 #import "@preview/polylux:0.3.1" as polylux: *
 #import "@preview/codetastic:0.2.2": qrcode
+#import "@preview/shadowed:0.1.2": shadowed
+#import "@preview/oasis-align:0.2.0"
+
+// #import "@preview/oasis-align:0.1.0"
 
 #import "_imports.typ": *
-#import "util/harbinger.typ": shadow-box
+
 
 #let slide(
   title: auto,
@@ -13,11 +17,16 @@
   section: none,
   show-progress: auto,
   align: top + left,
+  styles: (),
   body,
 ) = {
   let (title, rest) = (title, body)
   if title == auto {
     (title, rest) = util.extract-title(body)
+  }
+
+  if section != none {
+    polylux.utils.register-section(section)
   }
 
   let page-args = (:)
@@ -30,15 +39,20 @@
   if footer != auto {
     page-args.insert("footer", footer)
   }
-  set page(..page-args)
-
-  if section != none {
-    polylux.utils.register-section(section)
+  if "page" in styles {
+    page-args += styles.page
+  }
+  let text-args = (:)
+  if "text" in styles {
+    text-args += styles.text
   }
 
-  set typst.align(align)
+  set page(..page-args)
 
   polylux-slide({
+    set text(..text-args)
+    set std.align(align)
+
     context document.use-value(
       "show-progress",
       show-progress-doc => if (show-progress == auto and show-progress-doc) or show-progress {
@@ -64,6 +78,8 @@
     }
     if subtitle != none {
       move(dy: -.33em, text(weight: 600, subtitle))
+    } else {
+      v(1em)
     }
 
     rest
@@ -80,6 +96,22 @@
     #if subtitle != none {
       subtitle
     }
+
+    #context document.use-value(
+      "author",
+      authors => {
+        if authors != () {
+          let author = authors.first()
+
+          set text(.66em)
+          v(1em)
+          author.name
+          if "email" in author {
+            " " + sym.angle.l + link("mailto:" + author.email, author.email) + sym.angle.r
+          }
+        }
+      },
+    )
   ]
 }
 
@@ -118,13 +150,16 @@
 
   {
     show: page-init.with(
-      header: (doc, ..) => grid(
-        columns: (1fr, auto),
-        align: (left, right),
-        polylux.utils.current-section, doc.date.display("[day].[month].[year]"),
-      ),
+      header: (doc, ..) => {
+        set text(theme.muted)
+        grid(
+          columns: (1fr, auto),
+          align: (left, right),
+          polylux.utils.current-section, doc.date.display("[day].[month].[year]"),
+        )
+      },
       footer-right: (doc, body) => {
-        logic.logical-slide.display()
+        context logic.logical-slide.display()
         " / "
         polylux.utils.last-slide-number
       },
@@ -139,33 +174,47 @@
 }
 
 
-#let section-slide(section-name, subtitle: none, level: 1, ..slide-args) = {
-  empty-slide(
-    fill: if level == 1 {
-      theme.bg.primary
-    } else {
-      theme.bg.secondary
-    },
-    align: center + horizon,
-    ..slide-args,
-    title: none,
-    subtitle: none,
-    section: section-name,
-    heading(
-      depth: 1,
-      {
-        set text(
-          if level == 1 {
-            theme.primary
-          } else {
-            theme.secondary
-          },
-          1.5em,
-        )
-        section-name
+#let section-slide(section-name, subtitle: none, level: 1, hidden: false, ..slide-args) = {
+  // empty-slide(
+  //   fill: if level == 1 {
+  //     theme.bg.primary
+  //   } else {
+  //     theme.bg.secondary
+  //   },
+  //   align: center + horizon,
+  //   ..slide-args,
+  //   title: none,
+  //   subtitle: none,
+  //   section: section-name,
+  //   [],
+  // )
+  if not hidden {
+    empty-slide(
+      fill: if level == 1 {
+        theme.bg.primary
+      } else {
+        theme.bg.secondary
       },
-    ),
-  )
+      align: center + horizon,
+      ..slide-args,
+      title: none,
+      subtitle: none,
+      heading(
+        depth: 1,
+        {
+          set text(
+            if level == 1 {
+              theme.primary
+            } else {
+              theme.secondary
+            },
+            1.5em,
+          )
+          section-name
+        },
+      ),
+    )
+  }
 }
 
 #let subsection-slide(body, level: 1, ..slide-args) = {
@@ -177,7 +226,7 @@
     ..slide-args,
     {
       text(
-        2.5em,
+        2em,
         if level == 1 {
           theme.primary
         } else {
@@ -191,37 +240,58 @@
   )
 }
 
-#let image-slide(img, align: right, ..slide-args, body) = {
+#let image-slide(img, image-align: right + horizon, align: left + top, image-width: auto, ..slide-args, body) = {
+  let (title, rest) = util.extract-title(body)
+
+  // Use oasis-align
   slide(
+    title: title,
     ..slide-args,
-    {
-      if align == right {
-        side-by-side(body, img)
-      } else {
-        side-by-side(img, body)
-      }
+    align: top + left,
+    if image-align.x == right {
+      grid(
+        columns: (1fr, image-width),
+        align: (align, image-align),
+        gutter: 1em,
+        rest, img,
+      )
+    } else {
+      grid(
+        columns: (image-width, 1fr),
+        align: (image-align, align),
+        gutter: 1em,
+        img, rest,
+      )
     },
   )
 }
 
-#let full-image-slide(img, ..slide-args, overlay: []) = {
+// TODO: Fix
+#let full-image-slide(img, mode: "stretch", ..slide-args, overlay: []) = {
   set page(margin: 0pt)
 
+  assert(mode in ("stretch", "fit", "fill"), message: "mode needs to be one of stretch or fit, got: " + mode)
+
   context {
-    let _m = measure(img)
-    let factor = if _m.width > _m.height {
-      page.width / _m.width
-    } else {
-      page.height / _m.height
-    } * 100% + 100%
+    let _m = measure(img, width: 1000cm, height: 1000cm)
+
+    let x-factor = (page.width / _m.width) * 100%
+    let y-factor = (page.height / _m.height) * 100%
+
+    if mode == "fill" {
+      x-factor = calc.max(x-factor, y-factor)
+      y-factor = x-factor
+    } else if mode == "fit" {
+      x-factor = calc.min(x-factor, y-factor) * .9
+      y-factor = x-factor
+    }
 
     empty-slide(
       ..slide-args,
-      {
-        set align(center + horizon)
-
-        scale(img, x: factor, y: factor, origin: center + horizon)
-      },
+      place(
+        center + horizon,
+        scale(img, x: x-factor, y: y-factor, origin: center + horizon),
+      ),
     )
   }
 }
@@ -250,63 +320,119 @@
   )
 }
 
-#let code-frame(code, light: false) = {
-  let code = code.children.find(it => it.func() == raw)
 
-  shadow-box(
-    blur: 12,
+
+#let find-tag(root, tag) = {
+  if not (type(root) == array or "children" in root) {
+    panic("xml error: root element has no children")
+  }
+  if not type(root) == array {
+    root = root.children
+  }
+  return root.find(e => (type(e) == dictionary and "tag" in e and e.tag == tag))
+}
+
+#let find-dict-key(root, key) = {
+  if not "children" in root {
+    panic("xml error: root element has no children")
+  }
+  let i = root.children.position(e => (
+    type(e) == dictionary and "tag" in e and e.tag == "key" and e.children.first() == key
+  ))
+  return root.children.slice(i + 2).find(e => type(e) == dictionary and "tag" in e and e.tag != "key")
+}
+
+#let extract-colors(theme) = {
+  let data = find-tag(xml(theme), "plist")
+  let main-dict = find-tag(data, "dict")
+  let settings = find-dict-key(main-dict, "settings")
+  settings = find-tag(settings, "dict")
+  settings = find-dict-key(settings, "settings")
+  let fg = find-dict-key(settings, "foreground").children.first()
+  let bg = find-dict-key(settings, "background").children.first()
+
+  return (
+    foreground: if fg.starts-with("#") {
+      rgb(fg)
+    } else {
+      luma(int(fg))
+    },
+    background: if fg.starts-with("#") {
+      rgb(bg)
+    } else {
+      luma(int(bg))
+    },
+  )
+}
+
+#let code-frame(code, light: false, code-theme: auto) = {
+  // let code = code.children.find(it => it.func() == raw)
+
+  let code-theme = if code-theme == auto {
+    if light {
+      "assets/Eiffel.tmTheme"
+    } else {
+      "assets/1337.tmTheme"
+    }
+  } else {
+    code-theme
+  }
+  let colors = extract-colors(code-theme)
+
+  shadowed(
+    blur: 12pt,
+    color: theme.muted.transparentize(10%),
     radius: 6pt,
-    dy: 8pt,
-    block(
-      fill: if light {
-        rgb("#f4fafc")
-      } else {
-        rgb("#151718")
-      },
-      stroke: none,
-      radius: .33em,
-      inset: .5em,
+    inset: 6pt,
+    fill: colors.background,
+    {
+      set align(left)
+      block(
+        spacing: 0pt,
+        below: 6pt,
+        {
+          for clr in (red, yellow, green) {
+            box(
+              inset: (right: 4pt),
+              circle(radius: 5pt, fill: clr),
+            )
+          }
+        },
+      )
+      set text(colors.foreground)
+      block(
+        spacing: 0pt,
+        inset: 4pt,
+        raw(
+          lang: code.lang,
+          theme: code-theme,
+          code.text,
+        ),
+      )
+    },
+  )
+}
+
+#let code-slide(light: false, frame: true, theme: auto, ..slide-args, body) = {
+  let (code, rest) = util.extract-element(raw, body)
+
+  slide(
+    align: center + horizon,
+    ..slide-args,
+    place(
+      center + horizon,
       {
-        set align(left)
-        block(
-          spacing: 0pt,
-          below: .5em,
-          {
-            for clr in (red, yellow, green) {
-              box(
-                inset: (x: .2em),
-                circle(radius: .33em, fill: clr),
-              )
-            }
-          },
-        )
-        block(
-          spacing: 0pt,
-          inset: 4pt,
-          raw(
-            lang: code.lang,
-            theme: if light {
-              "assets/Eiffel.tmTheme"
-            } else {
-              "assets/Codeacademy.tmTheme"
-            },
-            code.text,
-          ),
-        )
+        if frame {
+          code-frame(code, code-theme: theme, light: light)
+        } else {
+          code
+        }
+        rest
       },
     ),
   )
 }
 
-#let code-slide(light: false, ..slide-args, body) = {
-  slide(
-    align: center + horizon,
-    ..slide-args,
-    {
-      code-frame(body, light: light)
-    },
-  )
-}
 
 #let note = showybox.with(
   frame: (
@@ -317,7 +443,7 @@
     thickness: .6pt,
   ),
   shadow: (
-    offset: 3pt,
+    offset: 2pt,
     color: theme.muted.transparentize(50%),
   ),
   body-style: (
@@ -335,10 +461,38 @@
     thickness: .6pt,
   ),
   shadow: (
-    offset: 3pt,
+    offset: 2pt,
     color: theme.muted.transparentize(50%),
   ),
   body-style: (
     color: theme.text.secondary,
   ),
 )
+
+
+#let position(pos, body) = place(
+  top + left,
+  dx: pos.first(),
+  dy: pos.last(),
+  body,
+)
+
+#let draft-grid(unit: 1cm, color: silver) = {
+  let pat = pattern(
+    size: (unit, unit),
+    {
+      // place(line(start: (0%, 0%), end: (100%, 100%)))
+      // place(line(start: (0%, 100%), end: (100%, 0%)))
+      rect(width: 100%, height: 100%, stroke: .5mm + color)
+    },
+  )
+
+  place(
+    top + left,
+    rect(
+      fill: pat,
+      width: 100%,
+      height: 100%,
+    ),
+  )
+}

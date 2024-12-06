@@ -61,15 +61,15 @@
   body,
 ) = {
   let thickness = args.if-auto(.0416em, stroke, do: s => typst.stroke(s).thickness)
-  distance = args.if-auto(.25em, distance)
+  distance = args.if-auto(.15em, distance)
   underline(
     stroke: stroke,
-    offset: def.if-auto(0pt, offset) + thickness + distance,
+    offset: args.if-auto(.15em, offset) + thickness + distance,
     extent: extent,
     evade: evade,
     underline(
       stroke: stroke,
-      offset: offset,
+      offset: args.if-auto(.15em, offset),
       extent: extent,
       evade: evade,
       body,
@@ -142,6 +142,8 @@
 // German number format for integers / floats
 // - #shortex(`#num(2.3)`)
 #let num = unify.num
+
+#let unit = unify.unit
 
 // SI units
 // - #shortex(`#si(3.5, $m^3$)`)
