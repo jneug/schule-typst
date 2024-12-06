@@ -1,7 +1,7 @@
 #import "../../src/schule.typ": lt
 #import lt: *
 
-#import "@preview/cetz:0.2.2"
+#import "@preview/cetz:0.3.1"
 
 #show: lerntheke.with(
   /* @typstyle:off */
