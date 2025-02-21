@@ -1,7 +1,7 @@
 #import "@local/schule:1.0.0": cu
 #import cu: *
 
-#show: checkup.with(
+#show: checkup(
   /* @typstyle:off */
   titel:     "Base template test",
   reihe:     "TYPST-TEST",
@@ -18,6 +18,8 @@
 
   version:   "2024-06-15",
 )
+
+#lorem(50)
 
 
 #checkup-table(

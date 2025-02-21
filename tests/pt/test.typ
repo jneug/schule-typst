@@ -1,99 +1,91 @@
 #import "../../src/schule.typ": pt
 #import pt: *
 
-#show: praesentation.with(
-  /* @typstyle:off */
-  titel:     "Informatik Leistungskurs Q1",
-  reihe:     "Schuljahr 2024/25",
-  datum:     "01.08.2024",
+#show: praesentation(
+  /* @typstyle off */
+  titel:         [Touying presentation],
+  reihe:         [TYPST-TEST],
 
-  nummer:    "1",
-  fach:      "Informatik",
-  kurs:      "Q1",
+  datum:        datetime.today(),
 
   autor: (
     name:    "J. Neugebauer",
     kuerzel: "Ngb",
+    email: "j.neugebauer@helmholtz-gym.de",
+    einrichtung: "Helmholtz-Gymnasium Bielefeld"
   ),
 
-  version:   "2024-06-24",
-  theme: "digi"
+  version:       datetime.today(),
+
+  // pt options
+  show-progress: true,
+  // progress-bar-height: 8pt,
 )
 
-#slide(subtitle: "Foo")[
-  = Organisatorisches
+= First section
 
-  - *Bewertungskriterien*
-    - Schriftliche Arbeiten (50 #sym.percent)
-      - 2 Arbeiten _im Halbjahr_, jeweils 90 Minuten
-]
+== First slide
 
+#lorem(80) *foo* #lorem(10)
 
-#empty-slide[]
+== Second slide
 
-// #empty-slide[
-//   #lorem(50)
-// ]
+#note(level: 2, lorem(10))
 
+= Second section
 
-// #slide()[
-//   = Organisatorisches
+== Third slide
 
-//   - *Bewertungskriterien*
-//     - Sonstige Mitarbeit (50 #sym.percent)
-//       - (Eigenverantwortliche) Beteiligung am Unterricht (Qualität und Quantität)
-//       - Präsentation von Lösungen und Zwischenprodukten
-//       - Selbstständiges Arbeiten in Kleingruppen
-//       - Projektergebnisse
+=== A heading
 
-//   #pause
+#lorem(12)
 
-//   #place(
-//     center + horizon,
-//     link(
-//       "https://www.helmholtz-bi.de/lernen/faecher/mathematik-naturwissenschaften/informatik/bewertung-des-bereichs-sonstige-mitarbeit/",
-//       note(width: 50%)[
-//         Siehe Leistungsbewertungs-\
-//         konzept Homepage
-//       ],
-//     ),
-//   )
-// ]
+---
 
-#section-slide("Speicherung primitiver Daten")
+=== Fourth slide
 
-#image-slide(image("wallpaper.jpg"), align: left, title: "Foo")[
+#lorem(10)
+
+#empty-slide()
+
+#image-slide(
+  image("wallpaper.jpg", width: 10cm),
+)[
   #lorem(10)
 ]
 
-#section-slide("Speicherung primitiver Daten", level: 2)
+#full-image-slide(
+  image("wallpaper.jpg"),
+  mode: "stretch",
+)
 
-#slide[]
-
-#full-image-slide(image("wallpaper.jpg"))
-
-#subsection-slide[
-  = Objektarrays
-  #lorem(20)
+#focus-slide[
+  Attention!
 ]
 
-#subsection-slide(level: 2)[
-  = Objektarrays
-  #lorem(20)
+#quote-slide(attribution: "Albert Einstein")[
+  Something important:
+][
+  $ E = M C^2 $
 ]
 
-#quote-slide()[
-  #lorem(33)
-]
+#link-slide("https://github.com/jneug")
 
-#link-slide("https://link.ngb.schule/arrays")
-
-#code-slide(light: true)[
-  ```java
-  public class Muppet implements ComparableContent<Muppet> {
-      private String name;
-      private String color;
-      private double height;
-  }
+#code-slide[
+  ```typst
+  #import "@preview/schule:1.0.0": ab
+  #import ab: *
   ```
 ]
+
+= Helper functions
+
+== Notes
+#note(lorem(20))
+
+== Helper grid
+#draft-grid()
+
+== Positioning
+#position((4cm, 3cm), [Some content])
+#position((10cm, 8cm), [Some content], angle: 45deg)

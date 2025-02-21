@@ -1,7 +1,7 @@
 #import "@local/schule:1.0.0": wp
 #import wp: *
 
-#show: wochenplan.with(
+#show: wochenplan(
   /* @typstyle:off */
   titel:     "Base template test",
   reihe:     "TYPST-TEST",

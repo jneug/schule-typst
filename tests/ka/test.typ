@@ -2,7 +2,7 @@
 #import ka: *
 #import mathe: *
 
-#show: klassenarbeit.with(
+#show: klassenarbeit(
   autor: (name: "J. Neugebauer", kuerzel: "Ngb"),
   titel: "2. Mathearbeit",
   reihe: "Zuordnungen",
@@ -20,14 +20,26 @@
 #let vielErfolg = {
   /* @typstyle:off */
   let mojis = (
-    emoji.heart, emoji.hands.heart, emoji.arm.muscle,
-    emoji.heart.box, emoji.frog.face, emoji.dog.face,
-    emoji.monkey.face, emoji.hamster.face,
+    emoji.heart,
+    emoji.hands.heart,
+    emoji.arm.muscle,
+    emoji.heart.box,
+    emoji.frog.face,
+    emoji.dog.face,
+    emoji.monkey.face,
+    emoji.hamster.face,
   )
-  align(right, text(
-    1.4em, theme.primary, weight: "bold", font: "Comic Neue",)[
+  align(
+    right,
+    text(
+      1.4em,
+      theme.primary,
+      weight: "bold",
+      font: "Comic Neue",
+    )[
       Viel Erfolg #mojis.at(calc.rem(datetime.today().day(), mojis.len()))
-  ],)
+    ],
+  )
 }
 #let lsg(x) = math.underline(math.underline(math.bold(x)))
 

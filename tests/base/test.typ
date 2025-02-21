@@ -1,7 +1,7 @@
 #import "@local/schule:1.0.0": ab
 #import ab: *
 
-#show: arbeitsblatt.with(
+#show: arbeitsblatt(
   /* @typstyle:off */
   titel:     "Base template test",
   reihe:     "TYPST-TEST",

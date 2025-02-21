@@ -9,7 +9,7 @@
 
 #test-env("content")
 
-#show: arbeitsblatt.with(
+#show: arbeitsblatt(
   /* @typstyle:off */
   titel:     "Base template test",
   reihe:     "TYPST-TEST",

@@ -3,7 +3,7 @@
 
 #import "@preview/cetz:0.3.1"
 
-#show: lerntheke.with(
+#show: lerntheke(
   /* @typstyle:off */
   titel:     "Base template test",
   reihe:     "TYPST-TEST",
@@ -128,7 +128,6 @@
       }
 
       let annotation(marker, rel, fill: rgb("#cc0100"), radius: .4, type: "circle", width: 5cm, body) = {
-
         let name = marker + "-annotation"
         let from = (rel: rel, to: marker)
         let to = marker
@@ -146,9 +145,9 @@
         Jede Station hat eine *Nummer*. Die Stationen können, _müssen aber nicht_ in dieser Reihenfolge bearbeitet werden. Überleg dir am besten eine _eigene Reihenfolge_.
       ]
       annotation("icon", (3, 1), width: 2.2cm)[
-        / #icon.einzel: Solo
-        / #icon.partner: Doppel
-        / #icon.gruppe: Gruppe
+        / #icons.einzel: Solo
+        / #icons.partner: Doppel
+        / #icons.gruppe: Gruppe
       ]
       annotation("help-marker", (3, -.5), width: 4cm)[
         Diese Symbole zeigen dir an, auf welchen Hilfekarten du bei Problemen nachsehen kannst.

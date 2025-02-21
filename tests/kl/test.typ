@@ -3,7 +3,7 @@
 
 #import "@preview/finite:0.3.0": automaton, layout, transition-table, cetz, draw, powerset
 
-#show: klausur.with(
+#show: klausur(
   autor: "J. Neugebauer",
   kuerzel: "Ngb",
   titel: "1. Klausur",

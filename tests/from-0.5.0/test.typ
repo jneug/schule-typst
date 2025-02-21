@@ -1,7 +1,7 @@
 #import "@local/schule:1.0.0": kl
 #import kl: *
 
-#show: klausur.with(
+#show: klausur(
   autor: (
     name: "J. Neugebauer",
     kuerzel: "Ngb",
