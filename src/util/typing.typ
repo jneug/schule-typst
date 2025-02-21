@@ -1,4 +1,3 @@
-// TODO: Rename to "typing.typ"
 /// Wrapper module for valkyrie to add some missing types and augment existing
 /// ones.
 
@@ -39,12 +38,6 @@
 /// Augments the content type to include #dtype("symbol") as allowed type.
 #let content = base-type.with(name: "content", types: (typst.content, str, symbol))
 
-/// Type for Typst build-in #dtype("version").
-#let version = base-type.with(name: "version", types: (version,))
-/// Type for Typst build-in #dtype("symbol").
-#let symbol = base-type.with(name: "symbol", types: (symbol,))
-/// Type for Typst build-in #dtype("label").
-#let label = base-type.with(name: "label", types: (label,))
 /// Type for Typst build-in #dtype("auto").
 #let aut0 = base-type.with(name: "auto", types: (type(auto),))
 
