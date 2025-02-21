@@ -4,30 +4,31 @@
 
 #let lernzielkontrolle(
   ..args,
-  body,
-) = {
-  let (doc, page-init, tpl) = base-template(
-    type: "LZK",
-    type-long: "Lernzielkontrolle",
-    _tpl: (
-      options: (
-        duration: t.integer(default: 180),
+) = (
+  body => {
+    let (doc, page-init, tpl) = base-template(
+      type: "LZK",
+      type-long: "Lernzielkontrolle",
+      _tpl: (
+        options: (
+          duration: t.integer(default: 180),
+        ),
+        aliases: (
+          dauer: "duration",
+        ),
       ),
-      aliases: (
-        dauer: "duration",
-      ),
-    ),
-    ..args,
-    body,
-  )
+      ..args,
+      body,
+    )
 
-  {
-    show: page-init
-    tpl
-  }
+    {
+      show: page-init
+      tpl
+    }
 
-  if doc.solutions == "page" {
-    show: page-init.with(header-center: (..) => [== Lösungen])
-    context ex.solutions.display-solutions-page(ex.get-exercises())
+    if doc.solutions == "page" {
+      show: page-init.with(header-center: (..) => [== Lösungen])
+      context ex.solutions.display-solutions-page(ex.get-exercises())
+    }
   }
-}
+)

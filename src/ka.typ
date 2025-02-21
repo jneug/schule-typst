@@ -19,7 +19,7 @@
   "2+": .85,
   "1-": .90,
   "1": .95,
-  "1+": .100,
+  "1+": 1.00,
 )
 
 #let ewh(exercises, grading-table: grading-table) = {
@@ -50,61 +50,62 @@
 }
 
 #let klassenarbeit(
-  ewh: ewh,
+  // ewh: ewh,
   ..args,
-  body,
-) = {
-  let (doc, page-init, tpl) = base-template(
-    type: "KA",
-    type-long: "Klassenarbeit",
-    _tpl: (
-      options: (
-        duration: t.integer(default: 180),
-        double-grading-page: t.boolean(default: false),
-        grading-table: t.dictionary((:), default: grading-table),
-        grading-page: t.function(default: ewh),
-        variant-icons: t.dictionary(
-          (:),
-          default: (
-            A: emoji.monkey.face,
-            B: emoji.bear,
-            D: emoji.cat.face,
-            C: emoji.dog.face,
+) = (
+  body => {
+    let (doc, page-init, tpl) = base-template(
+      type: "KA",
+      type-long: "Klassenarbeit",
+      _tpl: (
+        options: (
+          duration: t.integer(default: 180),
+          double-grading-page: t.boolean(default: false),
+          grading-table: t.dictionary((:), default: grading-table),
+          grading-page: t.function(default: ewh),
+          variant-icons: t.dictionary(
+            (:),
+            default: (
+              A: emoji.monkey.face,
+              B: emoji.bear,
+              D: emoji.cat.face,
+              C: emoji.dog.face,
+            ),
           ),
         ),
+        aliases: (
+          dauer: "duration",
+          doppelter-ewh: "double-grading-page",
+          bewertungstabelle: "grading-table",
+          ewh: "grading-page",
+        ),
       ),
-      aliases: (
-        dauer: "duration",
-        doppelter-ewh: "double-grading-page",
-        bewertungstabelle: "grading-table",
-        ewh: "grading-page",
-      ),
-    ),
-    font: ("Comic Neue", "Grundschrift", "Apple Color Emoji"),
-    ..args,
-    body,
-  )
+      font: ("Comic Neue", "Grundschrift", "Apple Color Emoji"),
+      ..args,
+      body,
+    )
 
-  {
-    show: page-init
-    tpl
-  }
+    {
+      show: page-init
+      tpl
+    }
 
-  if doc.solutions == "page" {
-    show: page-init.with(header-center: (..) => [== Lösungen])
-    context ex.solutions.display-solutions-page(ex.get-exercises())
-  }
+    if doc.solutions == "page" {
+      show: page-init.with(header-center: (..) => [== Lösungen])
+      context ex.solutions.display-solutions-page(ex.get-exercises())
+    }
 
-  show: page-init.with(
-    header-center: (..) => [== Erwartungshorizont],
-    footer: (..) => [],
-  )
-  context {
-    (doc.grading-page)(ex.get-exercises(), grading-table: doc.grading-table)
-
-    if doc.double-grading-page {
-      pagebreak(weak: true)
+    show: page-init.with(
+      header-center: (..) => [== Erwartungshorizont],
+      footer: (..) => [],
+    )
+    context {
       (doc.grading-page)(ex.get-exercises(), grading-table: doc.grading-table)
+
+      if doc.double-grading-page {
+        pagebreak(weak: true)
+        (doc.grading-page)(ex.get-exercises(), grading-table: doc.grading-table)
+      }
     }
   }
-}
+)

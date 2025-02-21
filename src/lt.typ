@@ -4,13 +4,13 @@
 
 #let lerntheke(
   ..args,
-  body,
-) = {
-  let (
-    doc,
-    page-init,
-    tpl,
-  ) = base-template(
+) = (
+  body => {
+    let (
+      doc,
+      page-init,
+      tpl,
+    ) = base-template(
     type: "LT",
     type-long: "Lerntheke",
 
@@ -30,15 +30,16 @@
     body,
   )
 
-  {
-    show: page-init.with(
-      header: (..) => [],
-      footer: (..) => [],
-    )
+    {
+      show: page-init.with(
+        header: (..) => [],
+        footer: (..) => [],
+      )
 
-    tpl
+      tpl
+    }
   }
-}
+)
 
 #let _counter-cards = counter("schule.cards")
 #let _counter-cards-help = counter("schule.aid-cards")
@@ -46,19 +47,21 @@
 #let card-header-height = 3em
 #let card-footer-height = 6mm
 
-#let _help-ref(kind: "card-help") = it => {
-  if it.element != none and it.element.kind == kind {
-    context link(
-      it.element.location(),
-      numbering(
-        it.element.numbering,
-        ..it.element.counter.at(it.element.location()),
-      ),
-    )
-  } else {
-    it
+#let _help-ref(kind: "card-help") = (
+  it => {
+    if it.element != none and it.element.kind == kind {
+      context link(
+        it.element.location(),
+        numbering(
+          it.element.numbering,
+          ..it.element.counter.at(it.element.location()),
+        ),
+      )
+    } else {
+      it
+    }
   }
-}
+)
 
 #let _card-header(
   title,
@@ -216,23 +219,26 @@
     top + right,
     dx: -1cm,
     dy: -2em,
-    labels.pos().map(target => {
-      show link: set text(util.get-text-color(theme.cards.help), weight: "bold")
-      show ref: it => context link(
-        it.element.location(),
-        box(
-          fill: theme.cards.help,
-          stroke: .6pt + rgb(33%, 33%, 33%, 33%),
-          inset: (x: .33em, y: .5em),
-          radius: 30%,
-          sym.arrow.t + numbering(
-            it.element.numbering,
-            ..it.element.counter.at(it.element.location()),
-          ),
-        ),
-      )
-      ref(target)
-    }).join(h(.2em)),
+    labels
+      .pos()
+      .map(target => {
+          show link: set text(util.get-text-color(theme.cards.help), weight: "bold")
+          show ref: it => context link(
+            it.element.location(),
+            box(
+              fill: theme.cards.help,
+              stroke: .6pt + rgb(33%, 33%, 33%, 33%),
+              inset: (x: .33em, y: .5em),
+              radius: 30%,
+              sym.arrow.t + numbering(
+                it.element.numbering,
+                ..it.element.counter.at(it.element.location()),
+              ),
+            ),
+          )
+          ref(target)
+        })
+      .join(h(.2em)),
   )
 }
 

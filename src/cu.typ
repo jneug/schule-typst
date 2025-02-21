@@ -1,43 +1,48 @@
 #import "_imports.typ": *
 
-#let checkmark-img = image.with("assets/checkmark.svg")
-
 #let checkup(
   ..args,
-  body,
-) = {
-  let (
-    doc,
-    page-init,
-    tpl,
-  ) = base-template(
-    type: "CU",
-    type-long: "Checkup",
+) = (
+  body => {
+    let (
+      doc,
+      page-init,
+      tpl,
+    ) = base-template(
+      type: "CU",
+      type-long: "Checkup",
 
-    //_tpl: (:),
-    title-block: (doc) => {
+      _tpl: (
+        options: (
+          checkmark-icon: t.content(default: icon("checklist", width: 2cm)),
+        ),
+      ),
+
+      title-block: doc => {
         heading(
           level: 1,
           outlined: false,
           bookmarked: false,
-        )[Checkup zur #doc.title: #text(fill:theme.secondary, doc.topic)]
-    },
+        )[#doc.title: #text(fill:theme.secondary, doc.topic)]
+      },
 
-    ..args,
+      ..args,
 
+      body,
+    )
+
+    {
+      show: page-init
+
+      // TODO: (ngb) this seems not ideal ...
       wrap-content(
         align: right,
-        checkmark-img(width: 2cm),
-        body
-      ),
-  )
-
-  {
-    show: page-init
-
-    tpl
+        doc.checkmark-icon,
+        tpl,
+      )
+    }
   }
-}
+)
 
 #let skala2-icons = (emoji.thumb.up, emoji.thumb.down)
 #let skala3-icons = (emoji.face.beam, emoji.face.neutral, emoji.face.weary)
@@ -108,3 +113,5 @@
     ..cells.pos().flatten()
   )
 }
+
+#let checkmark-img = document.use-value("checkmark-icon", v => [#v])

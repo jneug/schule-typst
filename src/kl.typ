@@ -130,61 +130,62 @@
 #let klausur(
   ewh: ewh,
   ..args,
-  body,
-) = {
-  let (doc, page-init, tpl) = base-template(
-    type: "KL",
-    type-long: "Klausur",
-    _tpl: (
-      options: (
-        duration: t.integer(default: 180),
-        split-expectations: t.boolean(default: false),
-        cover-sheet: t.either(
-          t.boolean(),
-          t.string(),
-          default: false,
+) = (
+  body => {
+    let (doc, page-init, tpl) = base-template(
+      type: "KL",
+      type-long: "Klausur",
+      _tpl: (
+        options: (
+          duration: t.integer(default: 180),
+          split-expectations: t.boolean(default: false),
+          cover-sheet: t.either(
+            t.boolean(),
+            t.string(),
+            default: false,
+          ),
+        ),
+        aliases: (
+          dauer: "duration",
+          erwartungen-einzeln: "split-expectations",
+          deckblatt: "cover-sheet",
         ),
       ),
-      aliases: (
-        dauer: "duration",
-        erwartungen-einzeln: "split-expectations",
-        deckblatt: "cover-sheet",
-      ),
-    ),
-    fontsize: 10pt,
-    title-block: kl-title,
-    ..args,
-    body,
-  )
+      fontsize: 10pt,
+      title-block: kl-title,
+      ..args,
+      body,
+    )
 
-  {
-    if doc.cover-sheet != false {
-      show: page-init.with(header: none, footer: none)
+    {
+      if doc.cover-sheet != false {
+        show: page-init.with(header: none, footer: none)
 
-      if type(doc.cover-sheet) == str {
-        cover-sheet(doc, message: doc.cover-sheet())
-      } else {
-        cover-sheet(doc)
+        if type(doc.cover-sheet) == str {
+          cover-sheet(doc, message: doc.cover-sheet())
+        } else {
+          cover-sheet(doc)
+        }
       }
+
+      show: page-init.with(header: base-header.with(rule: true))
+      tpl
     }
 
-    show: page-init.with(header: base-header.with(rule: true))
-    tpl
-  }
+    if doc.solutions == "page" {
+      show: page-init.with(header-center: (..) => [= Lösungen])
+      context ex.solutions.display-solutions-page(ex.get-exercises())
+    }
 
-  if doc.solutions == "page" {
-    show: page-init.with(header-center: (..) => [= Lösungen])
-    context ex.solutions.display-solutions-page(ex.get-exercises())
+    {
+      show: page-init.with(
+        header-center: (..) => [= Erwartungshorizont],
+        footer: (..) => [],
+      )
+      context ewh(ex.get-exercises())
+    }
   }
-
-  {
-    show: page-init.with(
-      header-center: (..) => [= Erwartungshorizont],
-      footer: (..) => [],
-    )
-    context ewh(ex.get-exercises())
-  }
-}
+)
 
 #let deckblatt = document.use(doc => cover-sheet(doc))
 
