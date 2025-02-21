@@ -24,22 +24,15 @@ src = "README.md"
 search = "(v{current_version})"
 
 # [[file]]
-# src = "docs/schule-manual.typ"
-# search = 'version:\s*"{current_version}",'
-# [[file]]
-# src = "docs/schule-manual.typ"
-# search = 'schule:{current_version}'
-
-# [[file]]
-# src = "examples/*.typ"
+# src = "docs/examples/*.typ"
 # search = 'schule:{current_version}'
 
 # [[before_commit]]
 # name = "compile examples (pdf)"
-# cmd = "for f in examples/*.typ; do typst compile --root . \"$f\"; done "
+# cmd = "for f in docs/examples/*.typ; do typst compile --root . \"$f\"; done"
 # [[before_commit]]
 # name = "compile examples (svg)"
-# cmd = "for f in examples/*.typ; do ff=${{f/.typ/}}\"-{{n}}.svg\"; typst compile --root . -f svg \"$f\" \"$ff\"; done"
+# cmd = "for f in docs/examples/*.typ; do ff=${{f/.typ/}}\"-{{n}}.svg\"; typst compile --root . -f svg \"$f\" \"$ff\"; done"
 # [[before_commit]]
 # name = "compile manual"
-# cmd = "typst compile --root . docs/schule-manual.typ"
+# cmd = "typst compile --root . docs/manual.typ"

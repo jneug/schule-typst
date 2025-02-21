@@ -1,7 +1,7 @@
 #import "../../src/schule.typ": ab
 #import ab: *
 
-#show: arbeitsblatt.with(
+#show: arbeitsblatt(
   /* @typstyle:off */
   titel:     "Arbeitsblatt",
   reihe:     "Entwicklung eines Typst-Pakets",
