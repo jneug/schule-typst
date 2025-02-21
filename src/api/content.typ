@@ -1,9 +1,6 @@
-
-#import "@preview/codelst:2.0.2"
-#import "@preview/showybox:2.0.3": showybox
+#import "../_deps.typ": codelst, showybox, octique, codly
 
 #import "../util/util.typ"
-#import "../util/typst.typ"
 #import "../util/args.typ"
 #import "../core/base.typ": appendix
 #import "../theme.typ"
@@ -23,6 +20,13 @@
 // - ..page-args: Alle Argumente werden an #cmd[page] weitergegeben, um das Seitenformat des Anhangs zu ändern.
 // -> content
 #let anhang = appendix
+
+/// Erzeugt eine Referenz zu einem Abschnitt im @@anhang.
+/// - label (label, str): Ziel der Referenz
+/// -> content
+#let anh(label, supplement: "Anhang") = {
+  ref(supplement: supplement, std.label(str(label)))
+}
 
 //	Auszeichnung von Operatoren:
 //
@@ -70,8 +74,9 @@
   outset: (y: .25em),
   radius: 2pt,
   // fill: gradient.linear(luma(100%), theme.bg.muted, angle:90deg),
-  fill: gradient.linear(luma(100%), luma(88%), angle:90deg),
-  text(.88em, font:theme.fonts.code, label))
+  fill: gradient.linear(luma(100%), luma(88%), angle: 90deg),
+  text(.88em, font: theme.fonts.code, label),
+)
 )
 
 // Formatierung von Tastenkürzeln.
@@ -91,14 +96,14 @@
 //
 // - name (string, content): Name der Datei.
 // -> content
-#let datei(name) = [#emoji.page#h(.1em)#raw(block: false, util.get-text(name))]
+#let datei(name) = [#octique.octique-inline("file")#h(.2em)#raw(block: false, util.get-text(name))]
 
 // Formatierung von Ordnernamen.
 // - #shortex(`#ordner("arbeitsblaetter")`)
 //
 // - name (string, content): Name des Ordners.
 // -> content
-#let ordner(name) = [#emoji.folder#h(.1em)#raw(block: false, util.get-text(name))]
+#let ordner(name) = [#octique.octique-inline("file-directory")#h(.2em)#raw(block: false, util.get-text(name))]
 
 /// Formatierung von Programmnamen.
 /// - #shortex(`#programm("VSCode")`)
@@ -108,19 +113,21 @@
 #let programm(name) = text(theme.primary, weight: 400, name)
 
 // Symbols
-#let icon = (
+#let icon = octique.octique-inline
+
+#let icons = (
   // Sozialformen
-  einzel: emoji.person.stand,
-  partner: emoji.handholding.woman.man,
-  gruppe: emoji.family,
+  einzel: icon("person"),
+  partner: icon("people"),
+  gruppe: icon("people") + icon("people"),
   // Geräte
-  stift: emoji.pencil,
-  heft: emoji.book.open,
-  mappe: emoji.book.spiral,
-  tablet: emoji.phone,
-  computer: emoji.laptop,
+  stift: icon("pencil"),
+  heft: icon("book"),
+  mappe: icon("repo"),
+  tablet: icon("device-mobile"),
+  computer: icon("device-desktop"),
   // Verschiedene
-  stern: emoji.star,
+  stern: icon("star"),
 )
 
 #let aufg-neu(prefix) = (
@@ -211,40 +218,10 @@
 )
 
 // ============================
-// Code
-// ============================
-/// === Quelltexte
-/// Zeigt Quelltext mit Zeilennummern und in einem #cmd[frame] an.
-/// Alias für #cmd("sourcecode", module:"codelst").
-/// #example[````
-/// #sourcecode[```python
-/// print("Hello, World!")
-/// ```]
-/// ````]
-///
-/// - ..args (any): Argument für #cmd-("sourcecode", module:"codelst").
-/// -> content
-#let sourcecode(..args) = codelst.sourcecode(frame: codelst.code-frame.with(fill: theme.bg.code), ..args)
-
-#let quelltext(..args) = codelst.sourcecode(frame: codelst.code-frame.with(fill: theme.bg.code), ..args)
-
-
-#let lineref = codelst.lineref.with(supplement: "Zeile")
-#let lineref- = codelst.lineref.with(supplement: "")
-#let linerange-(from, to, sep: [ -- ]) = [#lineref-(from)#sep#lineref-(to)]
-#let linerange(from, to, supplement: "Zeilen", sep: [ -- ]) = [#supplement #linerange-(from, to)]
-
-/// Inline-Code mit Syntax-Highlighting. Im Prinzip gleichwertig
-/// mit der Auszeichungsvariante mit drei Backticks:
-/// - #shortex(`#code(lang:"python", "print('Hallo, Welt')")`)
-/// - #shortex(raw("```python print('Hallo, Welt')```"))
-#let code(body, lang: none) = raw(block: false, lang: lang, util.get-text(body))
-
-// ============================
 // Frames and Boxes
 // ============================
 /// === Kästen und Rahmen
-/// Eine generische Box um Inhalte. Verwendet #package[Showybox].
+/// Eine generische Box um Inhalte. Verwendet #universe[Showybox].
 /// Im Allgemeinen werden die spezifischeren Boxen benutzt:
 /// - @@rahmen
 /// - @@kasten
@@ -269,18 +246,18 @@
   radius: 3pt,
   ..box-args,
   body,
-) = showybox(
+) = showybox.showybox(
   frame: (
-    border-color: typst.stroke(stroke).paint,
-    title-color: typst.stroke(stroke).paint,
+    border-color: std.stroke(stroke).paint,
+    title-color: std.stroke(stroke).paint,
     footer-color: fill,
     body-color: fill,
     radius: radius,
-    thickness: typst.stroke(stroke).thickness,
+    thickness: std.stroke(stroke).thickness,
   ),
   shadow: (
     offset: shadow,
-    color: args.if-auto(silver, typst.stroke(stroke).paint).darken(40%),
+    color: args.if-auto(silver, std.stroke(stroke).paint).darken(40%),
   ),
   ..box-args,
   body,
@@ -371,6 +348,45 @@
 }
 
 #let tipp(body) = hinweis(typ: "Tipp", icon: emoji.lightbulb, body)
+
+
+// ============================
+// Code
+// ============================
+
+#let code-frame = container.with(..theme.codly)
+
+/// Zeigt Quelltext mit Zeilennummern und in einem #cmd[frame] an.
+/// Alias für #cmd("sourcecode", module:"codelst").
+/// #example[````
+/// #sourcecode[```python
+/// print("Hello, World!")
+/// ```]
+/// ````]
+///
+/// - ..args (any): Argument für #cmd-("sourcecode", module:"codelst").
+/// -> content
+#let sourcecode(..args) = codelst.sourcecode(frame: code-frame, ..args)
+
+#let quelltext(..args) = codelst.sourcecode(frame: code-frame, ..args)
+
+#let snippet(..args, body) = codly.local(
+  number-format: none,
+  ..args,
+  body,
+)
+
+
+#let lineref = codelst.lineref.with(supplement: "Zeile")
+#let lineref- = codelst.lineref.with(supplement: "")
+#let linerange-(from, to, sep: [ -- ]) = [#lineref-(from)#sep#lineref-(to)]
+#let linerange(from, to, supplement: "Zeilen", sep: [ -- ]) = [#supplement #linerange-(from, to)]
+
+/// Inline-Code mit Syntax-Highlighting. Im Prinzip gleichwertig
+/// mit der Auszeichungsvariante mit drei Backticks:
+/// - #shortex(`#code(lang:"python", "print('Hallo, Welt')")`)
+/// - #shortex(raw("```python print('Hallo, Welt')```"))
+#let code(body, lang: none) = raw(block: false, lang: lang, util.get-text(body))
 
 // ============================
 // Lists and enums

@@ -1,5 +1,7 @@
 #import "../theme.typ"
 
+// TODO: Add bonuspoints!
+
 #let get-points(exercise) = if exercise != none and "grading" in exercise {
   exercise.grading.expectations.fold(
     0,
@@ -110,41 +112,44 @@
     ),
     ..for ex in exercises.values() {
       (
-        muted-cell[*#{ex.display-number}*],
-        muted-cell({
-          if ex.title != "" and ex.title != none [*#ex.title*\ ]
-          if ex.grading.expectations != () {
-            list(
-              marker: sym.dots.h,
-              body-indent: .2em,
-              ..ex.grading.expectations.map(exp => emph(exp.text)),
-            )
+        (
+          muted-cell[*#{ex.display-number}*],
+          muted-cell({
+            if ex.title != "" and ex.title != none [*#ex.title*\ ]
+            if ex.grading.expectations != () {
+              list(
+                marker: sym.dots.h,
+                body-indent: .2em,
+                ..ex.grading.expectations.map(exp => emph(exp.text)),
+              )
+            }
+          }),
+          muted-cell({
+            if ex.sub-exercises == () {
+              display-total(ex, singular: "", plural: "")
+            }
+          }),
+          muted-cell[ ],
+        )
+          + for sub-ex in ex.sub-exercises {
+            if sub-ex.grading.expectations != () {
+              (
+                numbering("a)", sub-ex.number),
+                {
+                  if sub-ex.grading.expectations != () {
+                    list(
+                      marker: sym.dots.h,
+                      body-indent: .2em,
+                      ..sub-ex.grading.expectations.map(exp => emph(exp.text)),
+                    )
+                  }
+                },
+                [#display-total(sub-ex, singular: "", plural: "")],
+                [ ],
+              )
+            }
           }
-        }),
-        muted-cell({
-          if ex.sub-exercises == () {
-            display-total(ex, singular: "", plural: "")
-          }
-        }),
-        muted-cell[ ],
-      ) + for sub-ex in ex.sub-exercises {
-        if sub-ex.grading.expectations != () {
-          (
-            numbering("a)", sub-ex.number),
-            {
-              if sub-ex.grading.expectations != () {
-                list(
-                  marker: sym.dots.h,
-                  body-indent: .2em,
-                  ..sub-ex.grading.expectations.map(exp => emph(exp.text)),
-                )
-              }
-            },
-            [#display-total(sub-ex, singular: "", plural: "")],
-            [ ],
-          )
-        }
-      }
+      )
     },
     header-cell(colspan: 2)[
       #set align(right)

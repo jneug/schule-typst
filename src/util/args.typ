@@ -81,3 +81,14 @@
 } else {
   (value,)
 }
+
+/// Inset type kind of like #type("stroke").
+/// Creates a #type("dict") with the keys `top`, `right`, `left` and `bottom`.
+#let inset(inset) = {
+  (
+    top: inset.at("top", default: inset.at("y", default: inset.at("rest", default: 0pt))),
+    right: inset.at("right", default: inset.at("x", default: inset.at("rest", default: 0pt))),
+    bottom: inset.at("bottom", default: inset.at("y", default: inset.at("rest", default: 0pt))),
+    left: inset.at("left", default: inset.at("x", default: inset.at("rest", default: 0pt))),
+  )
+}

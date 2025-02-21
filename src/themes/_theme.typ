@@ -1,5 +1,5 @@
 
-#import "../util/types.typ" as t
+#import "../util/typing.typ" as t
 
 #let _theme-schema = t.dictionary((
   primary: t.color(),
@@ -42,21 +42,18 @@
     primary: rgb(56, 86, 153),
     secondary: rgb(114, 5, 23),
     muted: luma(74%),
-
     bg: (
       primary: rgb(56, 86, 153).lighten(90%),
       secondary: rgb(114, 5, 23).lighten(90%),
-      muted: luma(92%)
+      muted: luma(92%),
     ),
-
     text: (
-      default:   black,
-      header:    luma(20%),
-      footer:    luma(70%),
-      title:     rgb(56, 86, 153),
-      subject:   luma(33%)
+      default: black,
+      header: luma(20%),
+      footer: luma(70%),
+      title: rgb(56, 86, 153),
+      subject: luma(33%),
     ),
-
     fonts: (
       default: (), //("Fira Sans", "Liberation Sans", "Avenir Next", "Avenir", "Helvetica Neue", "Helvetica"),
       headings: ("Charter", "Georgia"),
@@ -64,7 +61,6 @@
       serif: ("Charter", "Georgia"),
       sans: ("Fira Sans", "Liberation Sans", "Avenir Next", "Avenir", "Helvetica Neue", "Helvetica"),
     ),
-
     table: (
       header: rgb(56, 86, 153).lighten(90%),
       even: luma(96%),
@@ -80,29 +76,29 @@
   let _if-color(name, default) = colors.named().at(name, default: default)
 
   let theme = (
-    primary:     primary,
-    secondary:   _if-color("secondary", primary.rotate(180deg)),
-    muted:       _if-color("muted", luma(74%)),
+    primary: primary,
+    secondary: _if-color("secondary", primary.rotate(180deg)),
+    muted: _if-color("muted", luma(74%)),
     //
     bg: (
-      primary:   primary.lighten(90%),
+      primary: primary.lighten(90%),
       secondary: none,
-      muted:     none,
-      code:      none,
+      muted: none,
+      code: none,
     ),
     //
     text: (
-      default:   _if-color("text-default", themes.default.text.default),
-      header:    _if-color("text-header", themes.default.text.header),
-      footer:    _if-color("text-footer", themes.default.text.footer),
-      title:     _if-color("text-title", primary),
-      subject:   _if-color("text-subject", themes.default.text.subject),
+      default: _if-color("text-default", themes.default.text.default),
+      header: _if-color("text-header", themes.default.text.header),
+      footer: _if-color("text-footer", themes.default.text.footer),
+      title: _if-color("text-title", primary),
+      subject: _if-color("text-subject", themes.default.text.subject),
     ),
     //
     fonts: themes.default.fonts,
     //
     table: (
-      header:    _if-color("text.default", primary.lighten(90%)),
+      header: _if-color("text.default", primary.lighten(90%)),
       even: none,
       odd: white,
     ),

@@ -1,15 +1,19 @@
-#import "../util/types.typ" as t
+#import "../util/typing.typ" as t
 
 #let _author-schema = t.dictionary(
   (
     name: t.string(),
     email: t.string(optional: true), // t.email(optional: true),
     abbr: t.string(optional: true),
+    institution: t.string(optional: true),
   ),
   pre-transform: t.coerce.dictionary(it => (name: it)),
   aliases: (
     kuerzel: "abbr",
     abbreviation: "abbr",
+    institute: "institution",
+    einrichtung: "institution",
+    institut: "institution",
   ),
 )
 
@@ -144,6 +148,23 @@
       if abbr != () {
         suffix + abbr.map(a => a.at("abbr", default: none)).join(", ") + prefix
       }
+    },
+    author-formatted: (
+      sep: ",",
+      format: a => {
+        a.name
+        if a.institution != none {
+          [#footnote(a.institution)]
+        }
+        if a.abbr != none {
+          [ (#a.abbr)]
+        }
+        if a.email != none {
+          [ <#link("mailto:" + a.email, a.email)>]
+        }
+      },
+    ) => {
+      return doc.author.map(format).join(sep)
     },
   )
 

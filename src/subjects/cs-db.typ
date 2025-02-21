@@ -14,7 +14,7 @@
 //   text(weight: "bold", name); [(#attributes.pos().join(", "))]
 // }
 
-#let schema(..relations) = {
+#let schema(..relations) = block({
   if relations.pos().len() == 0 {
     return []
   }
@@ -28,13 +28,19 @@
     set align(left)
     list(
       marker: "",
-      ..relations.pos().map(((name, ..attris)) => text(weight: "bold", name + "(") + [#attris.join(", ")] + text(
-        weight: "bold",
-        ")",
-      )),
+      ..relations
+        .pos()
+        .map(((name, ..attris)) => (
+          text(weight: "bold", name + "(")
+            + [#attris.join(", ")]
+            + text(
+              weight: "bold",
+              ")",
+            )
+        )),
     )
   }
-}
+})
 
 #let example-data(name: none, headers: (), ..data) = {
   let h-len = headers.len()
@@ -44,11 +50,13 @@
   }
   table(
     columns: h-len,
-    fill: table-fill(headers: if name != none {
-      2
-    } else {
-      1
-    }),
+    fill: table-fill(
+      headers: if name != none {
+        2
+      } else {
+        1
+      },
+    ),
     table.header(..headers),
     ..data.pos(),
   )

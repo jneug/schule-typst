@@ -1,3 +1,4 @@
+
 // TODO: Refactorings
 // ================================
 // =   Typographic enhancements   =
@@ -5,7 +6,6 @@
 
 #import "@preview/unify:0.6.0"
 
-#import "../util/typst.typ"
 #import "../util/args.typ"
 #import "../util/util.typ"
 
@@ -60,7 +60,7 @@
   evade: true,
   body,
 ) = {
-  let thickness = args.if-auto(.0416em, stroke, do: s => typst.stroke(s).thickness)
+  let thickness = args.if-auto(.0416em, stroke, do: s => std.stroke(s).thickness)
   distance = args.if-auto(.15em, distance)
   underline(
     stroke: stroke,

@@ -2,7 +2,6 @@
 #import "grading.typ"
 
 #import "../util/marks.typ"
-#import "../util/typst.typ"
 #import "../util/util.typ"
 #import "../core/document.typ"
 #import "../theme.typ"
@@ -10,7 +9,7 @@
 // =================================
 //  Validation schema
 // =================================
-#import "../util/types.typ" as t
+#import "../util/typing.typ" as t
 
 #let _grading-schema = t.dictionary(
   (expectations: t.array()),
@@ -298,9 +297,11 @@
   }
 }
 
+// TODO: (jneug) add label option
 #let sub-exercise(
   use: true,
   points-format: points => none,
+  label: none,
   ..args,
   body,
 ) = {
@@ -327,6 +328,12 @@
       })
     }
 
+    label = if type(label) == str {
+      std.label(label)
+    } else {
+      label
+    }
+
     context _counter-exercises.display((ex-no, sub-ex-no, ..) => {
       enum(
         numbering: "a)",
@@ -335,11 +342,19 @@
         spacing: auto,
         {
           marks.place-reference(
-            label("ex" + str(ex-no) + "." + str(sub-ex-no)),
+            std.label("ex" + str(ex-no) + "." + str(sub-ex-no)),
             "sub-exercise",
             "Teilaufgabe",
             numbering: "1.a",
           )
+          if label != none {
+            marks.place-reference(
+              label,
+              "sub-exercise",
+              "Teilaufgabe",
+              numbering: "1.a",
+            )
+          }
           [#body<sub-exercise>]
         },
       )
@@ -386,6 +401,7 @@
 ) = {
   let items = body.children.filter(c => c.func() in (enum.item, list.item))
   if shuffle {
+    // TODO: (ngb) promote move suiji to top-level import!
     import "@preview/suiji:0.3.0" as rand
     let rng = rand.gen-rng(datetime.today().day())
     (_, items) = rand.shuffle(rng, items)
@@ -433,13 +449,14 @@
   )
 }
 
-#let expectation(text, points) = {
+#let expectation(text, points, bonus: false) = {
   context {
     if in-sub-exercise() {
       update-current-sub-exercise(sub-ex => {
         sub-ex.grading.expectations.push((
           text: text,
           points: points,
+          bonus: bonus,
         ))
         sub-ex
       })
@@ -448,6 +465,7 @@
         ex.grading.expectations.push((
           text: text,
           points: points,
+          bonus: bonus,
         ))
         ex
       })
@@ -455,7 +473,7 @@
   }
 }
 
-// TODO: store competencies in sub-exercises?
+// TODO: store competencies in sub-exerc ises?
 #let competency(key, text) = {
   let key = if type(key) == label {
     str(key)

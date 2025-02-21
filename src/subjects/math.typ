@@ -7,7 +7,8 @@
 #let vect(name) = $accent(name, arrow)$
 #let rem(r) = $med upright(sans("R"))#r$
 
-#let punkt(..coords) = $(#coords.pos().map(v => $#v$).join($thin|thin$))$
+#let koords(..coords) = $(#coords.pos().map(v => $#v$).join($thin|thin$))$
+#let punkt(name, ..coords) = $#name#koords(..coords)$
 #let vect(name) = $accent(name, arrow)$
 #let rest(r) = $med upright(sans("R"))#r$
 

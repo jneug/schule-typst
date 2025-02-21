@@ -1,4 +1,4 @@
-#import "@preview/fletcher:0.5.0"
+#import "@preview/fletcher:0.5.1"
 
 #let connect(from, to, c: none) = {
   (
@@ -63,15 +63,15 @@
 }
 
 #let erd(
-	width: auto, //100%,
-	height: auto,
-	padding: 5pt,
+  width: auto, //100%,
+  height: auto,
+  padding: 5pt,
   inset: 6mm,
   fill: white,
   stroke: 1.2pt + black,
   unit: 1cm,
   ..fletcher-args,
-	elements
+  elements,
 ) = {
   let nodes = (:)
   for elem in elements {

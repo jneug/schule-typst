@@ -6,27 +6,27 @@
 // General colors
 #let primary = rgb(40, 70, 167)
 #let secondary = rgb(204, 74, 71)
-#let muted = luma(174)
+#let muted = luma(33%)
 
 // General backgrounds
 #let bg = (
   primary: primary.lighten(90%),
   secondary: secondary.lighten(90%),
   muted: muted.lighten(90%),
-  code: muted.lighten(90%),
+  code: luma(98%),
   solution: muted.lighten(85%),
 )
 
 // Text colors
 #let text = (
-	default:   black,
-	light:     white,
-	header:    luma(20%), // primary
-	footer:    luma(70%),
-	title:     primary,
-	subject:   luma(33%),
-  primary:   white,
-  secondary:  white
+  default: black,
+  light: white,
+  header: luma(20%), // primary
+  footer: luma(50%),
+  title: primary,
+  subject: luma(33%),
+  primary: white,
+  secondary: white,
 )
 
 // Font settings
@@ -44,6 +44,12 @@
   code: ("Fira Code", "Liberation Mono", "Courier New"),
   serif: (/*"EB Garamond 12",*/ "Garamond", "Charter", "Georgia"),
   sans: ("Fira Sans", "Liberation Sans", "Avenir Next", "Avenir", "Helvetica Neue", "Helvetica"),
+)
+
+#let codly = (
+  fill: bg.code,
+  stroke: 1pt + muted,
+  inset: 3pt,
 )
 
 // Table colors and styles

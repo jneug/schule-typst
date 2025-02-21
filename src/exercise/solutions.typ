@@ -1,5 +1,4 @@
 
-#import "../util/typst.typ"
 #import "../util/util.typ"
 #import "../theme.typ"
 
@@ -77,7 +76,7 @@
 #let display-solutions-page(exercises, title: "Lösung", numbering: "(i)") = {
   pagebreak()
   for (ex-id, ex) in exercises {
-    heading(level: 3, [#title Aufgabe #typst.numbering("1", ex.display-number)])
+    heading(level: 3, [#title Aufgabe #std.numbering("1", ex.display-number)])
 
     util.auto-enum(
       numbering: numbering,

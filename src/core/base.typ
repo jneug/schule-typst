@@ -1,13 +1,12 @@
-// TODO: i18n verbessern
 
 #import "../util/args.typ"
-#import "../util/typst.typ"
 #import "../util/marks.typ"
 #import "../util/util.typ"
 #import "document.typ"
 #import "layout.typ"
 
 #import "../theme.typ"
+#import "../_deps.typ": codly
 
 // Basisvorlage für alle Dokumentvorlagen
 #let base-template(
@@ -36,6 +35,22 @@
     footer-left: (_, body) => body,
     footer-center: (_, body) => body,
     footer-right: (_, body) => body,
+    // custom page-settings function
+    settings: body => {
+      show: codly.codly-init
+      codly.codly(
+        zebra-fill: none,
+        display-name: false,
+        display-icon: false,
+        number-format: n => text(
+          size: .88em,
+          fill: theme.muted,
+          strong(str(n)),
+        ),
+        ..theme.codly,
+      )
+      body
+    },
     // additional page args
     ..page-args,
     //
@@ -117,20 +132,28 @@
     // Configure code blocks
     // show raw: set text(font: theme.fonts.code)
     // show raw.where(block: false): set text(fill: theme.primary)
-    // set raw(theme: "./BW.tmTheme")
+    // TODO: (jneug) add option to activate bw theme
+    // set raw(theme: "../assets/BW.tmTheme")
     show figure.caption: set text(.88em)
 
+    // TODO: (jneug) handle this in another way?
+    // decimal fix for now
     show: util.decimal-fix
 
+    // initialize theme
     show: theme.init
 
+    // apply custom settings
+    show: settings
+
+    // Show the actual document body
     body
   }
 
   // Set PDF metadata
   // TODO: currently does not work?
-  set typst.document(
-    title: "my title",// doc.title,
+  set std.document(
+    title: "my title", // doc.title,
     author: doc.author.map(a => a.name),
     date: doc.date,
   )
@@ -153,6 +176,20 @@
       document.save(doc)
       document.save-meta(doc)
 
+      marks.place-meta(<pre-pages-start>)
+      if "pre-pages" in _tpl {
+        marks.env-open("pre-pages")
+        for p in args.as-arr(_tpl.pre-pages) {
+          if type(p) == function {
+            p(doc, page-init)
+          } else {
+            p
+          }
+        }
+        marks.env-close("pre-pages")
+      }
+      marks.place-meta(<pre-pages-end>)
+
       marks.place-meta(<content-start>)
       marks.env-open("content")
       if title-block != none {
@@ -161,6 +198,20 @@
       body
       marks.env-close("content")
       marks.place-meta(<content-end>)
+
+      marks.place-meta(<post-pages-start>)
+      if "post-pages" in _tpl {
+        marks.env-open("post-pages")
+        for p in args.as-arr(_tpl.post-pages) {
+          if type(p) == function {
+            p(doc, page-init)
+          } else {
+            p
+          }
+        }
+        marks.env-close("post-pages")
+      }
+      marks.place-meta(<post-pages-end>)
     },
   )
 }
@@ -171,13 +222,15 @@
 
   marks.env-open("appendix")
   // state("schule.appendix").update(true)
-  set heading(numbering: (..n) => {
-    let n = n.pos()
-    let _ = n.remove(0)
-    if n.len() > 0 {
-      numbering("A.1", ..n)
-    }
-  })
+  set heading(
+    numbering: (..n) => {
+      let n = n.pos()
+      let _ = n.remove(0)
+      if n.len() > 0 {
+        numbering("A.1", ..n)
+      }
+    },
+  )
   heading(level: 1, title)
   body
   marks.env-close("appendix")

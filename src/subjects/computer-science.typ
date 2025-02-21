@@ -175,9 +175,7 @@
     cetz.draw.set-style(..named.styles)
     let _ = named.remove("styles")
   }
-  cetz
-    .tree
-    .tree(
+  cetz.tree.tree(
     nodes,
     spread: 1.6,
     grow: 1.25,
@@ -192,7 +190,7 @@
       tree-edge.with(draw-edge: draw-edge)
     },
     // ..pos,
-    ..named
+    ..named,
   )
 })
 
@@ -200,8 +198,7 @@
 // =================================
 //  Automaten
 // =================================
-// #import("@preview/finite:0.3.0"
-
+//
 /// Übersetzt eine Grammatik aus der FLACI.com Syntax
 /// in eine im Unterricht übliche Darstellung.
 #let grammar(body) = {
@@ -214,18 +211,6 @@
 
   let lines = body.text.split("\n")
 
-  // enum(
-  //   numbering: n => [p#sub([#n]):],
-  //   ..for line in lines {
-  //     (
-  //       line
-  //         .split("->")
-  //         .map(s => s.trim())
-  //         .map(part => part.split("|").map(s => s.trim()).join($#h(.2em)|#h(.2em)$))
-  //         .join([#h(.2em)#sym.arrow.r#h(.2em)]),
-  //     )
-  //   },
-  // )
   grid(
     columns: 4,
     row-gutter: 1em, column-gutter: .64em,
