@@ -28,11 +28,6 @@
     {
       show: page-init
       tpl
-
-      // if doc.solutions == "page" {
-      //   show: page-init.with(header-center: (..) => [= Lösungen])
-      //   context ex.solutions.display-solutions-page(ex.get-exercises())
-      // }
     }
   }
 )

@@ -150,6 +150,32 @@
           erwartungen-einzeln: "split-expectations",
           deckblatt: "cover-sheet",
         ),
+        pre-pages: (
+          (doc, page-init) => {
+            if doc.cover-sheet != false {
+              show: page-init.with(header: none, footer: none)
+
+              if type(doc.cover-sheet) == str {
+                cover-sheet(doc, message: doc.cover-sheet())
+              } else {
+                cover-sheet(doc)
+              }
+            }
+          }
+        ),
+        post-pages: (
+          (doc, page-init) => if doc.solutions == "page" {
+            show: page-init.with(header-center: (..) => [= Lösungen])
+            context ex.solutions.display-solutions-page(ex.get-exercises())
+          },
+          (doc, page-init) => {
+            show: page-init.with(
+              header-center: (..) => [= Erwartungshorizont],
+              footer: (..) => [],
+            )
+            context ewh(ex.get-exercises())
+          },
+        ),
       ),
       fontsize: 10pt,
       title-block: kl-title,
@@ -158,31 +184,8 @@
     )
 
     {
-      if doc.cover-sheet != false {
-        show: page-init.with(header: none, footer: none)
-
-        if type(doc.cover-sheet) == str {
-          cover-sheet(doc, message: doc.cover-sheet())
-        } else {
-          cover-sheet(doc)
-        }
-      }
-
       show: page-init.with(header: base-header.with(rule: true))
       tpl
-    }
-
-    if doc.solutions == "page" {
-      show: page-init.with(header-center: (..) => [= Lösungen])
-      context ex.solutions.display-solutions-page(ex.get-exercises())
-    }
-
-    {
-      show: page-init.with(
-        header-center: (..) => [= Erwartungshorizont],
-        footer: (..) => [],
-      )
-      context ewh(ex.get-exercises())
     }
   }
 )
