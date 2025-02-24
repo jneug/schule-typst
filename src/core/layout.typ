@@ -81,7 +81,8 @@
       here().page(),
       marks.get-page(<content-start>),
       marks.get-page(<content-end>),
-      counter(page).final().first(),
+      //counter(page).final().first(),
+      marks.get-page(<post-pages-end>),
     )
   }
 ]
