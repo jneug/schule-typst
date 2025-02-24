@@ -150,18 +150,17 @@
     body
   }
 
-  // Set PDF metadata
-  // TODO: currently does not work?
-  set std.document(
-    title: "my title", // doc.title,
-    author: doc.author.map(a => a.name),
-    date: doc.date,
-  )
-
   return (
     doc,
     page-init,
     {
+      // Set PDF metadata
+      set std.document(
+        title: util.get-text(doc.title),
+        author: doc.author.map(a => a.name),
+        date: doc.date,
+      )
+
       if doc._debug {
         page(paper: "a3", flipped: true, columns: 3)[
           == Document
