@@ -6,9 +6,9 @@
 // ================================
 
 #let get-text(element, sep: "") = {
-  if type(element) in ("array", "dictionary") {
+  if type(element) in (array, dictionary) {
     return ""
-  } else if type(element) == "content" {
+  } else if type(element) == content {
     if element.has("text") {
       element.text
     } else if element.has("children") {
@@ -17,10 +17,12 @@
       get-text(element.child)
     } else if element.has("body") {
       get-text(element.body)
+    } else if repr(element.func()) == "space" {
+      " "
     } else {
       ""
     }
-  } else if type(it) in (symbol, int, float, version, bytes, label, type, str) {
+  } else if type(element) in (symbol, int, float, version, bytes, label, type, str) {
     str(element)
   } else {
     repr(element)
@@ -209,13 +211,13 @@
 
   ranges
     .map(((from, to)) => if from == to [#from] else if to - from < max-items {
-        range(from, to + 1).map(str)
-      } else [#from#range-sep#to])
+      range(from, to + 1).map(str)
+    } else [#from#range-sep#to])
     .flatten()
     .join(
-    sep,
-    last: last,
-  )
+      sep,
+      last: last,
+    )
 }
 
 #let inset-at(direction, inset, default: 0pt) = {

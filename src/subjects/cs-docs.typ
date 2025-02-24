@@ -7,7 +7,7 @@
 #let get() = _state-docs.get()
 
 #let __content(string) = {
-  if type(string) == "string" {
+  if type(string) == str {
     return eval("[" + string + "]")
   } else {
     return string

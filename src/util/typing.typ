@@ -1,13 +1,8 @@
 /// Wrapper module for valkyrie to add some missing types and augment existing
 /// ones.
 
-#import "typst.typ"
-
-#import "@preview/valkyrie:0.2.1": *
-
-// Aliases for the original valkyrie types.
-#let _choice = choice
-#let _content = content
+#import "../_deps.typ": valkyrie
+#import valkyrie: *
 
 /// Augmented #cmd-[choice] function that adds an #arg[aliases] argument similar
 /// to the @cmd-[dictionary] type.
@@ -20,7 +15,7 @@
   if "pre-transform" in args.named() {
     pre-transform = (self, it) => args.named().pre-transform(self, pre-transform(self, it))
   }
-  _choice(..args, pre-transform: pre-transform)
+  valkyrie.choice(..args, pre-transform: pre-transform)
 }
 
 /// Schema for a field that always will be set to a constant value, no matter
@@ -36,8 +31,8 @@
 }
 
 /// Augments the content type to include #dtype("symbol") as allowed type.
-#let content = base-type.with(name: "content", types: (typst.content, str, symbol))
+#let content = valkyrie.base-type.with(name: "content", types: (std.content, str, symbol))
 
 /// Type for Typst build-in #dtype("auto").
-#let aut0 = base-type.with(name: "auto", types: (type(auto),))
+#let aut0 = valkyrie.base-type.with(name: "auto", types: (std.type(auto),))
 
