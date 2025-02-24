@@ -1,5 +1,3 @@
-#let _ab_highlight_doku = false
-
 #let _state-docs = state("schule.cs.docs", yaml("./cs-docs.yaml"))
 
 #let load(data) = {
@@ -37,20 +35,21 @@
 }
 
 #let methode(signature, body) = {
-  if type(signature) == "content" and signature.func() == raw {
-    signature = signature.text
+  if type(signature) == str {
+    signature = raw(block: false, lang: none, signature)
   }
 
-  block(
+  box(
     width: 100%,
     fill: luma(85%),
-    breakable: false,
+    // breakable: false,
     inset: 4pt,
-    below: 4pt,
+    // below: 4pt,
   )[
-    #set text(size: 0.85em)
-    #if not _ab_highlight_doku [#strong(signature)] else [#raw(signature, block: false, lang: "java")]
+    #set text(weight: "bold")
+    #signature
   ]
+  v(-.5em)
   body
 }
 // {deprecated}
@@ -64,7 +63,7 @@
 
   __d_methodheader(name, generic-type: generic-type, partial: partial)
   for m in methods {
-    if type(m) == "array" {
+    if type(m) == array {
       method(m.at(0))[
         #__content(m.at(1))
       ]
