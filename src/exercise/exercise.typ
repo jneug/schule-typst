@@ -297,7 +297,6 @@
   }
 }
 
-// TODO: (jneug) add label option
 #let sub-exercise(
   use: true,
   points-format: points => none,
@@ -355,7 +354,7 @@
               numbering: "1.a",
             )
           }
-          [#body<sub-exercise>]
+          block(width: 100%)[#body<sub-exercise>]
         },
       )
     })
