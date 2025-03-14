@@ -34,12 +34,7 @@
     {
       show: page-init
 
-      // TODO: (ngb) this seems not ideal ...
-      wrap-content(
-        align: right,
-        doc.checkmark-icon,
-        tpl,
-      )
+      tpl
     }
   }
 )
@@ -81,11 +76,13 @@
   )
   if rowspan > 0 {
     row += (
-      table.cell(rowspan: if rowspan == 0 {
-        1
-      } else {
-        rowspan
-      })[#aufgaben],
+      table.cell(
+        rowspan: if rowspan == 0 {
+          1
+        } else {
+          rowspan
+        },
+      )[#aufgaben],
     )
   }
   return row
