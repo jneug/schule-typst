@@ -42,12 +42,31 @@
   }
 })
 
-#let example-data(name: none, headers: (), ..data) = {
+#let example-data(name: none, headers: (), ids: none, ..data) = {
+  let gen-ids = false
+  if ids == auto {
+    ids = "id"
+  }
+  if type(ids) == str {
+    headers.insert(0, ids)
+    gen-ids = true
+  }
+
   let h-len = headers.len()
-  headers = headers.map(h => text(hyphenate: false, h))
+  headers = headers.map(h => text(hyphenate: false, weight: "bold", h))
+
   if name != none {
     headers.insert(0, table.cell(colspan: h-len, raw(block: false, name)))
   }
+
+  let data = data.pos()
+  if gen-ids {
+    data = for (id, row) in data.chunks(h-len - 1).enumerate() {
+      row.insert(0, [#id])
+      rowf
+    }
+  }
+
   table(
     columns: h-len,
     fill: table-fill(
@@ -58,6 +77,6 @@
       },
     ),
     table.header(..headers),
-    ..data.pos(),
+    ..data,
   )
 }
