@@ -153,17 +153,17 @@
         .info
         .author
         .map(author => {
-            author.name
-            if author.institution != none {
-              [#footnote(author.institution)]
-            }
-            if author.abbr != none {
-              [ (#author.abbr)]
-            }
-            if author.email != none {
-              [ <#link("mailto:" + author.email, author.email)>]
-            }
-          })
+          author.name
+          if author.institution != none {
+            [#footnote(author.institution)]
+          }
+          if author.abbr != none {
+            [ (#author.abbr)]
+          }
+          if author.email != none {
+            [ <#link("mailto:" + author.email, author.email)>]
+          }
+        })
         .join(linebreak())
     }
     #v(.25fr)
@@ -431,10 +431,12 @@
 ) = {
   // let (codes, _) = util.extract-element(raw, slide-args.pos(), all: true)
 
-  let codes = slide-args.pos().map(body => {
-    let (code, _) = util.extract-element(raw, body, all: true)
-    code
-  })
+  let codes = slide-args
+    .pos()
+    .map(body => {
+      let (code, _) = util.extract-element(raw, body, all: true)
+      code
+    })
 
   let bodies = codes.map(c => if frame {
     code-frame(c, light: light, code-theme: theme)
@@ -461,40 +463,38 @@
       page-init,
       tpl,
     ) = base-template(
-    type: "PT",
-    type-long: "Präsentation",
-    _tpl: (
-      options: (
-        show-progress: t.boolean(default: true),
-        progress-bar-height: t.length(default: 6pt),
-        show-section: t.boolean(default: false),
-        // Touying specific configuration
-        touying: t.array(
-          default: ()
-        )
-      )
-    ),
-    title-block: (doc) => title-slide(),
+      type: "PT",
+      type-long: "Präsentation",
+      _tpl: (
+        options: (
+          show-progress: t.boolean(default: true),
+          progress-bar-height: t.length(default: 6pt),
+          show-section: t.boolean(default: false),
+          // Touying specific configuration
+          touying: t.array(default: ()),
+        ),
+      ),
+      title-block: doc => title-slide(),
 
-    // Some defaults for slides
-    paper: "presentation-16-9",
-    fontsize: fontsize,
+      // Some defaults for slides
+      paper: "presentation-16-9",
+      fontsize: fontsize,
 
-    ..args,
-    body,
-  )
+      ..args,
+      body,
+    )
 
     {
       show: touying.touying-slides.with(
         touying.config-info(
-        title: doc.title,
-        subtitle: doc.topic,
-        // TODO: (ngb) pass author array to theme
-        // author: (doc.author-formatted)(),
-        author: doc.author,
-        date: doc.date,
-        // institution: doc.author.first().institute,
-      ),
+          title: doc.title,
+          subtitle: doc.topic,
+          // TODO: (ngb) pass author array to theme
+          // author: (doc.author-formatted)(),
+          author: doc.author,
+          date: doc.date,
+          // institution: doc.author.first().institute,
+        ),
         touying.config-page(
           header: self => {
             set text(size: fontsize, fill: self.colors.neutral)
