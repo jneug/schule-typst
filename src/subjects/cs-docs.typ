@@ -50,6 +50,7 @@
     #signature
   ]
   v(-.5em)
+  set align(left)
   body
 }
 // {deprecated}
