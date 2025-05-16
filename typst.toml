@@ -1,10 +1,16 @@
+# for a description of available keys, see https://github.com/typst/packages/?tab=readme-ov-file#package-format
+
 [package]
+authors = ["J. Neugebauer <https://github.com/jneug>"]
 name = "schule"
 version = "1.0.0"
 entrypoint = "src/schule.typ"
-authors = ["J. Neugebauer"]
 license = "MIT"
 description = "Vorlagen und Makros für die Schule."
+homepage = "https://github.com/jneug/schule-typst"
 repository = "https://github.com/jneug/schule-typst"
-exclude = ["docs/*", "test/*", "examples/*"]
-compiler = "0.11.0"
+keywords = []
+categories = []
+disciplines = ["computer-science", "education", "mathematics"]
+# compiler = "0.11.0"
+exclude = [".github", "docs", "scripts", "tests", ".typstignore", "Justfile"]
