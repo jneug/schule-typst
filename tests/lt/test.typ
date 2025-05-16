@@ -1,24 +1,24 @@
 #import "../../src/schule.typ": lt
 #import lt: *
 
-#import "@preview/cetz:0.3.1"
+#import "@preview/cetz:0.3.4"
 
 #show: lerntheke(
   /* @typstyle:off */
-  titel:     "Base template test",
-  reihe:     "TYPST-TEST",
-  datum:     "15.06.2024",
+  titel: "Base template test",
+  reihe: "TYPST-TEST",
+  datum: "15.06.2024",
 
-  nummer:    "1",
-  fach:      "Typst",
-  kurs:      "101",
+  nummer: "1",
+  fach: "Typst",
+  kurs: "101",
 
   autor: (
-    name:    "J. Neugebauer",
+    name: "J. Neugebauer",
     kuerzel: "Ngb",
   ),
 
-  version:   "2024-06-15",
+  version: "2024-06-15",
 )
 
 #hilfekarte(

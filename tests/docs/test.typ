@@ -1,5 +1,6 @@
-#import "../src/schule.typ": ab
+#import "../../src/schule.typ": ab, info
 #import ab: *
+#import info: docs
 
 #show: arbeitsblatt(
   /* @typstyle:off */
@@ -18,3 +19,9 @@
 
   version: "2024-06-15",
 )
+
+#page(flipped: true, columns: 2)[
+  // #set text(.88em)
+  #docs.display("databaseconnector")
+  #docs.display("queryresult")
+]
