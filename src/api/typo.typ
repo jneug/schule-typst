@@ -4,7 +4,7 @@
 // =   Typographic enhancements   =
 // ================================
 
-#import "@preview/unify:0.6.0"
+#import "../_deps.typ": unify
 
 #import "../util/args.typ"
 #import "../util/util.typ"

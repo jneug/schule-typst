@@ -161,7 +161,9 @@
 }
 
 #let display-expectations-table-expanded(exercises) = {
-  let total-points = exercises.values().map(get-total-points).sum()
+  let total-points = if exercises.len() > 0 {
+    exercises.values().map(get-total-points).sum()
+  } else { 0 }
 
   let muted-cell = table.cell.with(fill: theme.bg.muted)
   let header-cell = table.cell.with(fill: theme.table.header)
@@ -272,21 +274,23 @@
     .flatten()
     .dedup()
 
-  table(
-    columns: (auto, auto, 6cm),
-    fill: (_, r) => if r == 0 {
-      theme.table.header
-    } else {
-      (theme.table.even, theme.table.odd).at(calc.rem(r, 2))
-    },
-    align: (left + horizon, center + horizon, auto),
-    table.header(
-      strong(header),
-      strong[Aufg.],
-      symbols.join(h(1fr)),
-    ),
-    ..for (_, c) in comp {
-      (c.text, c.exercises.map(str).join(", "), [])
-    }
-  )
+  if comp != (:) {
+    table(
+      columns: (auto, auto, 6cm),
+      fill: (_, r) => if r == 0 {
+        theme.table.header
+      } else {
+        (theme.table.even, theme.table.odd).at(calc.rem(r, 2))
+      },
+      align: (left + horizon, center + horizon, auto),
+      table.header(
+        strong(header),
+        strong[Aufg.],
+        symbols.join(h(1fr)),
+      ),
+      ..for (_, c) in comp {
+        (c.text, c.exercises.map(str).join(", "), [])
+      }
+    )
+  }
 }

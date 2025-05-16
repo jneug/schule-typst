@@ -6,7 +6,7 @@
 #import "layout.typ"
 
 #import "../theme.typ"
-#import "../_deps.typ": codly
+#import "../_deps.typ": codly, et
 
 // Basisvorlage für alle Dokumentvorlagen
 #let base-template(
@@ -56,23 +56,31 @@
     //
     body,
   ) = {
+    show: et.easy-typography.with(
+      fonts: (
+        heading: theme.fonts.headings,
+        body: args.extract-args(document-args, font: theme.fonts.default).font,
+      ),
+      body-size: args
+        .extract-args(
+          document-args,
+          _prefix: "font",
+          size: 12pt,
+        )
+        .size,
+    )
     set text(
-      font: args.extract-args(document-args, font: theme.fonts.default).font,
       ..args.extract-args(
         document-args,
         _prefix: "font",
-        size: 12pt,
-        weight: 300,
+        // weight: 300,
         fallback: true,
         lang: "de",
         region: "DE",
         hyphenate: auto,
       ),
     )
-    show heading: set text(
-      font: theme.fonts.headings,
-      fill: theme.primary,
-    )
+    show heading: set text(fill: theme.primary)
     show link: set text(fill: theme.secondary)
 
     set table(stroke: theme.table.stroke)
@@ -120,7 +128,7 @@
     )
 
     set par(
-      leading: 1.2em,
+      // leading: 1.2em,
       ..args.extract-args(
         document-args,
         _prefix: "par",

@@ -17,4 +17,4 @@
 #import "subjects/math.typ" as mathe
 
 // Some community packages to improve things
-#import "_deps.typ": wrap-content, codly
+#import "_deps.typ" as deps: wrap-content, codly

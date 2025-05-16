@@ -1,5 +1,4 @@
-#import "@preview/cetz:0.3.1"
-#import "@preview/fletcher:0.5.0"
+#import "../_deps.typ": cetz, fletcher
 
 #let klasse(pos, name, attributes, methods) = {
   (

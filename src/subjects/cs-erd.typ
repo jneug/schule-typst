@@ -1,4 +1,4 @@
-#import "@preview/fletcher:0.5.1"
+#import "../_deps.typ": fletcher
 
 #let connect(from, to, c: none) = {
   (

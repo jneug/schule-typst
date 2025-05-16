@@ -71,4 +71,9 @@
   stroke: 1.5pt + theme.secondary,
   title-style: (boxed-style: (:)),
   title: text(fill: theme.text.secondary, weight: "bold", hyphenate: false, size: .88em, titel),
-)[#small(beschreibung)#container(fill: white, radius: 3pt, stroke: 1pt + theme.secondary, body)]
+)[#small(beschreibung)#container(
+    fill: white,
+    radius: 3pt,
+    stroke: 1pt + theme.secondary,
+    body,
+  )]

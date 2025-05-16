@@ -1,32 +1,15 @@
-// Helpers to parse tmTheme files
-#let find-tag(root, tag) = {
-  if not (type(root) == array or "children" in root) {
-    panic("xml error: root element has no children")
-  }
-  if not type(root) == array {
-    root = root.children
-  }
-  return root.find(e => (type(e) == dictionary and "tag" in e and e.tag == tag))
-}
+#import "../_deps.typ": plist
 
-#let find-dict-key(root, key) = {
-  if not "children" in root {
-    panic("xml error: root element has no children")
+#let extract-colors(tmtheme) = {
+  if type(tmtheme) == str {
+    tmtheme = bytes(tmtheme)
   }
-  let i = root.children.position(e => (
-    type(e) == dictionary and "tag" in e and e.tag == "key" and e.children.first() == key
-  ))
-  return root.children.slice(i + 2).find(e => type(e) == dictionary and "tag" in e and e.tag != "key")
-}
+  let tmtheme = plist(tmtheme)
 
-#let extract-colors(xml-theme) = {
-  let data = find-tag(xml-theme, "plist")
-  let main-dict = find-tag(data, "dict")
-  let settings = find-dict-key(main-dict, "settings")
-  settings = find-tag(settings, "dict")
-  settings = find-dict-key(settings, "settings")
-  let fg = find-dict-key(settings, "foreground").children.first()
-  let bg = find-dict-key(settings, "background").children.first()
+  let settings = tmtheme.at("settings", default: (:)).at(0, default: (:)).at("settings", default: (:))
+
+  let fg = settings.at("foreground", default: white)
+  let bg = settings.at("background", default: black)
 
   return (
     foreground: if fg.starts-with("#") {

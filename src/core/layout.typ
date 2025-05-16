@@ -1,4 +1,5 @@
-#import "@preview/ccicons:1.0.0": ccicon, cc-is-valid
+#import "../_deps.typ" as deps
+#import deps.ccicons: ccicon, cc-is-valid
 
 #import "../util/marks.typ"
 #import "../util/args.typ"
@@ -42,7 +43,7 @@
     if doc.date != none [
       Datum: #doc.date.display("[day].[month].[year]")
     ] else [
-      Datum: #box(move(dy:2pt, line(length: 3cm)))
+      Datum: #box(move(dy: 2pt, line(length: 3cm)))
     ]
   }
 )

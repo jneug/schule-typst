@@ -32,18 +32,30 @@
 // Font settings
 #let fonts = (
   default: (
-    "Fira Sans",
-    "Liberation Sans",
-    "Avenir Next",
-    "Avenir",
-    "Helvetica Neue",
-    "Helvetica",
-    "Apple Color Emoji",
+    "Noto Serif",
+    "Roboto Serif",
+    "TeX Gyre Schola",
+    "Liberation Serif",
   ),
-  headings: ("Charter", "Georgia", "Apple Color Emoji"),
+  headings: (
+    "Noto Sans",
+    "Roboto Sans",
+    "TeX Gyre Heros",
+    "Liberation Sans",
+  ),
   code: ("Fira Code", "Liberation Mono", "Courier New"),
-  serif: (/*"EB Garamond 12",*/ "Garamond", "Charter", "Georgia"),
-  sans: ("Fira Sans", "Liberation Sans", "Avenir Next", "Avenir", "Helvetica Neue", "Helvetica"),
+  serif: (
+    "Noto Serif",
+    "Roboto Serif",
+    "TeX Gyre Schola",
+    "Liberation Serif",
+  ),
+  sans: (
+    "Noto Sans",
+    "Roboto Sans",
+    "TeX Gyre Heros",
+    "Liberation Sans",
+  ),
 )
 
 #let codly = (

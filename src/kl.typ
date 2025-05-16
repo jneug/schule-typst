@@ -24,14 +24,14 @@
 
 #let ewh(exercises) = {
   v(8mm)
-  [Name: #box(stroke:(bottom:.6pt+black), width:6cm)]
+  [Name: #box(stroke: (bottom: .6pt + black), width: 6cm)]
 
   // TODO: Should the grading table be created here?
   ex.grading.display-expectations-table-expanded(exercises)
 
   v(4mm)
-  align(right, [*Note:* #box(stroke:(bottom:.6pt+black), width:4cm)])
-  align(right, [Datum, Unterschrift: #box(stroke:(bottom:.6pt+black), width:4cm)])
+  align(right, [*Note:* #box(stroke: (bottom: .6pt + black), width: 4cm)])
+  align(right, [Datum, Unterschrift: #box(stroke: (bottom: .6pt + black), width: 4cm)])
 
   v(1fr)
   align(
@@ -144,11 +144,13 @@
             t.string(),
             default: false,
           ),
+          sub-exercise-points: t.function(default: ex.points-format-join),
         ),
         aliases: (
           dauer: "duration",
           erwartungen-einzeln: "split-expectations",
           deckblatt: "cover-sheet",
+          punkte-in-unteraufgaben: "sub-exercise-points",
         ),
         pre-pages: (
           (doc, page-init) => {

@@ -1,4 +1,4 @@
-#import "../_deps.typ": codelst, showybox, octique, codly
+#import "../_deps.typ": codelst, showybox, heroic, codly, gentle-clues
 
 #import "../util/util.typ"
 #import "../util/args.typ"
@@ -25,7 +25,7 @@
 /// - label (label, str): Ziel der Referenz
 /// -> content
 #let anh(label, supplement: "Anhang") = {
-  ref(supplement: supplement, std.label(str(label)))
+  ref(supplement: supplement, std.label("anh:" + str(label)))
 }
 
 //	Auszeichnung von Operatoren:
@@ -113,19 +113,19 @@
 #let programm(name) = text(theme.primary, weight: 400, name)
 
 // Symbols
-#let icon = octique.octique-inline
+#let icon = heroic.hi
 
 #let icons = (
   // Sozialformen
-  einzel: icon("person"),
-  partner: icon("people"),
-  gruppe: icon("people") + icon("people"),
+  einzel: icon("user"),
+  partner: icon("users"),
+  gruppe: icon("user-group"),
   // Geräte
   stift: icon("pencil"),
   heft: icon("book"),
-  mappe: icon("repo"),
-  tablet: icon("device-mobile"),
-  computer: icon("device-desktop"),
+  mappe: icon("document-text"),
+  tablet: icon("device-tablet"),
+  computer: icon("computer-desktop"),
   // Verschiedene
   stern: icon("star"),
 )
@@ -199,7 +199,7 @@
 }
 
 #let linien(number-of-lines: 3, line-height: 1cm, stroke: 1pt + black) = block(
-  fill: pattern(
+  fill: tiling(
     size: (1cm, line-height),
     place(line(start: (0%, 100% - stroke.thickness), end: (100%, 100% - stroke.thickness), stroke: stroke)),
   ),
@@ -259,6 +259,8 @@
     offset: shadow,
     color: args.if-auto(silver, std.stroke(stroke).paint).darken(40%),
   ),
+  width: width,
+  inset: inset,
   ..box-args,
   body,
 )
@@ -339,15 +341,15 @@
 /// - icon (symbol): Ein Symbol für den Hinweis..
 /// - body (content): Inhalte des Hinweises.
 /// -> content
-#let hinweis(typ: "Hinweis", icon: emoji.info, body) = {
-  set text(size: .88em)
-  text(fill: theme.secondary)[#icon]
-  h(.2em)
-  text(fill: theme.secondary)[*#typ:* ]
-  emph(body)
-}
+#let hinweis(typ: "Hinweis", icon: icon("information-circle"), ..clue-args, body) = gentle-clues.clue(
+  title: typ,
+  accent-color: theme.secondary,
+  icon: text(theme.secondary, icon),
+  ..clue-args,
+  body,
+)
 
-#let tipp(body) = hinweis(typ: "Tipp", icon: emoji.lightbulb, body)
+#let tipp(body) = hinweis(typ: "Tipp", icon: icon("light-bulb"), body)
 
 
 // ============================

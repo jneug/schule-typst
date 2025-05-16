@@ -1,6 +1,7 @@
 
 #import "../util/args.typ"
 #import "../theme.typ"
+#import "../_deps.typ" as deps
 
 // Landau-Symbole
 
@@ -145,7 +146,7 @@
 // =================================
 //  Bäume
 // =================================
-#import "@preview/cetz:0.3.1"
+#import deps: cetz
 
 #let tree-node(
   node,
@@ -160,13 +161,21 @@
   }
 }
 
-#let tree-edge(from, to, tree, node, draw-edge: (from, to, ..) => cetz.draw.line(from, to), ..args) = {
-  if node.content != none {
+#let tree-edge(
+  from,
+  to,
+  tree,
+  node,
+  draw-empty: false,
+  draw-edge: (from, to, ..) => cetz.draw.line(from, to),
+  ..args,
+) = {
+  if draw-empty or node.content != none {
     draw-edge(from, to, tree, node, ..args)
   }
 }
 
-#let tree(nodes, draw-node: auto, draw-edge: auto, ..args) = cetz.canvas({
+#let tree(nodes, draw-node: auto, draw-empty: auto, draw-edge: auto, draw-empty-edges: false, ..args) = cetz.canvas({
   let (pos, named) = (args.pos(), args.named())
 
   cetz.draw.set-style(stroke: .6pt, padding: .33em)
@@ -175,19 +184,24 @@
     cetz.draw.set-style(..named.styles)
     let _ = named.remove("styles")
   }
+
+  let tree-node = tree-node
+  if draw-node != auto {
+    tree-node = tree-node.with(draw-node: draw-node)
+  }
+  if draw-empty != auto {
+    tree-node = tree-node.with(draw-empty: draw-empty)
+  }
+
   cetz.tree.tree(
     nodes,
     spread: 1.6,
     grow: 1.25,
-    draw-node: if draw-node == auto {
-      tree-node
-    } else {
-      tree-node.with(draw-node: draw-node)
-    },
+    draw-node: tree-node,
     draw-edge: if draw-edge == auto {
-      tree-edge
+      tree-edge.with(draw-empty: draw-empty-edges)
     } else {
-      tree-edge.with(draw-edge: draw-edge)
+      tree-edge.with(draw-edge: draw-edge, draw-empty: draw-empty-edges)
     },
     // ..pos,
     ..named,

@@ -1,6 +1,6 @@
 #import "_imports.typ": *
 
-#import "@preview/ccicons:1.0.0": ccicon, cc-is-valid
+#import deps.ccicons: ccicon, cc-is-valid
 
 #let lerntheke(
   ..args,
@@ -11,24 +11,24 @@
       page-init,
       tpl,
     ) = base-template(
-    type: "LT",
-    type-long: "Lerntheke",
+      type: "LT",
+      type-long: "Lerntheke",
 
-    // defaults
-    paper: "a5",
-    flipped: true,
-    margin: 1cm,
-    fontsize: 11pt,
+      // defaults
+      paper: "a5",
+      flipped: true,
+      margin: 1cm,
+      fontsize: 11pt,
 
-    // disable title
-    title-block: (..) => [],
+      // disable title
+      title-block: (..) => [],
 
-    // Template options
-    // _tpl: (:),
+      // Template options
+      // _tpl: (:),
 
-    ..args,
-    body,
-  )
+      ..args,
+      body,
+    )
 
     {
       show: page-init.with(
@@ -222,22 +222,23 @@
     labels
       .pos()
       .map(target => {
-          show link: set text(util.get-text-color(theme.cards.help), weight: "bold")
-          show ref: it => context link(
-            it.element.location(),
-            box(
-              fill: theme.cards.help,
-              stroke: .6pt + rgb(33%, 33%, 33%, 33%),
-              inset: (x: .33em, y: .5em),
-              radius: 30%,
-              sym.arrow.t + numbering(
+        show link: set text(util.get-text-color(theme.cards.help), weight: "bold")
+        show ref: it => context link(
+          it.element.location(),
+          box(
+            fill: theme.cards.help,
+            stroke: .6pt + rgb(33%, 33%, 33%, 33%),
+            inset: (x: .33em, y: .5em),
+            radius: 30%,
+            sym.arrow.t
+              + numbering(
                 it.element.numbering,
                 ..it.element.counter.at(it.element.location()),
               ),
-            ),
-          )
-          ref(target)
-        })
+          ),
+        )
+        ref(target)
+      })
       .join(h(.2em)),
   )
 }
@@ -291,7 +292,7 @@
     nr = (
       n,
       ..,
-    ) => [H#n#if label != auto {marks.place-reference(label, "card-help", "Hilfekarte", numbering: "H1")}]
+    ) => [H#n#if label != auto { marks.place-reference(label, "card-help", "Hilfekarte", numbering: "H1") }]
   }
 
   pagebreak(weak: true)

@@ -390,7 +390,7 @@
 /// - body (content): Inhalt mit einer Aufzählungsliste.
 /// -> content
 #let tasks(
-  cols: 3,
+  cols: auto,
   gutter: 4%,
   width: 1fr,
   numbering: "a)",
@@ -404,6 +404,12 @@
     import "@preview/suiji:0.3.0" as rand
     let rng = rand.gen-rng(datetime.today().day())
     (_, items) = rand.shuffle(rng, items)
+  }
+
+  let cols = if cols == auto {
+    calc.min(items.len(), 3)
+  } else {
+    cols
   }
 
   _counter-tasks.update(0)

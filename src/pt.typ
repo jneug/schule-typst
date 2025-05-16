@@ -1,9 +1,9 @@
-#import "@preview/touying:0.5.3"
-#import "@preview/codetastic:0.2.2"
-#import "@preview/shadowed:0.1.2": shadowed
-
 #import "_imports.typ": *
 #import "util/tmtheme.typ"
+
+#import deps: touying, codetastic
+#import touying: *
+#import deps.shadowed: shadowed
 
 #let no-headers(self, header: none, footer: none) = touying.utils.merge-dicts(
   self,
@@ -374,7 +374,7 @@
   } else {
     code-theme
   }
-  return tmtheme.extract-colors(xml(code-theme))
+  return tmtheme.extract-colors(read(code-theme, encoding: none))
 }
 
 #let code-frame(
