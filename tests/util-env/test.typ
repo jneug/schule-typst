@@ -1,4 +1,4 @@
-#import "@local/schule:1.0.0": ab
+#import "../../src/schule.typ": ab
 #import ab: *
 
 #let test-env(name) = context if marks.in-env(name) [
