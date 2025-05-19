@@ -38,6 +38,15 @@
   }
 }
 
+#let display-expectations-list(
+  exercise,
+  format: expectations => list(..expectations.map(exp => [#exp.text #box(width: 1fr, repeat(".")) (#exp.points)])),
+) = {
+  if exercise.grading.expectations != () {
+    format(exercise.grading.expectations)
+  }
+}
+
 #let display-grading-table(
   exercises,
   grading-table,
@@ -113,7 +122,7 @@
     ..for ex in exercises.values() {
       (
         (
-          muted-cell[*#{ex.display-number}*],
+          muted-cell[*#{ ex.display-number }*],
           muted-cell({
             if ex.title != "" and ex.title != none [*#ex.title*\ ]
             if ex.grading.expectations != () {

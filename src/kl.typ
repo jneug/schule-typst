@@ -77,7 +77,6 @@
   ],
 )
 
-// TODO: Rework this. Maybe add "pre-pages" and "post-pages" as conecpt in base-template / document?
 #let cover-sheet(doc, message: [Klausuren und Informationen für die Aufsicht]) = [
   #v(.5fr)
   #align(center)[
@@ -89,7 +88,7 @@
       #sym.tilde #doc.at("class") #sym.tilde
     ]
 
-    #v(4em)
+    #v(2em)
 
     #text(3em, font: theme.fonts.sans, weight: "bold")[
       #{
@@ -97,8 +96,7 @@
       },
       #doc.date.display("[day].[month].[year]")
     ]
-
-    #v(2em)
+    #v(4em)
 
     #text(2em, weight: 400, message)
 
