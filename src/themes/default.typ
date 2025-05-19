@@ -32,18 +32,19 @@
   let serif = (
     "Noto Serif",
     "TeX Gyre Schola",
-    "Liberation Serif",
+    "Libertinus Serif",
   )
   let sans = (
     "Noto Sans",
     "TeX Gyre Heros",
-    "Liberation Sans",
+    "Libertinus Sans",
+    "New Computer Modern",
   )
 
   (
     default: serif,
     headings: sans,
-    code: ("Fira Code", "Liberation Mono", "Courier New"),
+    code: ("Fira Code", "Liberation Mono", "Courier New", "DejaVu Sans Mono"),
     serif: serif,
     sans: sans,
   )
