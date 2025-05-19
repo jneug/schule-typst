@@ -1,8 +1,6 @@
 // TODO: Improve theme support
 // TODO: Add more theme style keys
 
-#let typst-text = text
-
 // General colors
 #let primary = rgb(40, 70, 167)
 #let secondary = rgb(204, 74, 71)
@@ -30,35 +28,28 @@
 )
 
 // Font settings
-#let fonts = (
-  default: (
+#let fonts = {
+  let serif = (
     "Noto Serif",
-    "Roboto Serif",
     "TeX Gyre Schola",
     "Liberation Serif",
-  ),
-  headings: (
+  )
+  let sans = (
     "Noto Sans",
-    "Roboto Sans",
     "TeX Gyre Heros",
     "Liberation Sans",
-  ),
-  code: ("Fira Code", "Liberation Mono", "Courier New"),
-  serif: (
-    "Noto Serif",
-    "Roboto Serif",
-    "TeX Gyre Schola",
-    "Liberation Serif",
-  ),
-  sans: (
-    "Noto Sans",
-    "Roboto Sans",
-    "TeX Gyre Heros",
-    "Liberation Sans",
-  ),
-)
+  )
 
-#let codly = (
+  (
+    default: serif,
+    headings: sans,
+    code: ("Fira Code", "Liberation Mono", "Courier New"),
+    serif: serif,
+    sans: sans,
+  )
+}
+
+#let raw = (
   fill: bg.code,
   stroke: 1pt + muted,
   inset: 3pt,

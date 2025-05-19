@@ -24,8 +24,6 @@
     aliases: args.if-has(_tpl, "aliases", () => (:)),
   )
 
-  // TODO: allow users to change headers / footers?
-  // TODO: Move some of page-init to theme?
   let page-init(
     header: layout.base-header,
     header-left: (_, body) => body,
@@ -36,55 +34,13 @@
     footer-center: (_, body) => body,
     footer-right: (_, body) => body,
     // custom page-settings function
-    settings: body => {
-      show: codly.codly-init
-      codly.codly(
-        zebra-fill: none,
-        display-name: false,
-        display-icon: false,
-        number-format: n => text(
-          size: .88em,
-          fill: theme.muted,
-          strong(str(n)),
-        ),
-        ..theme.codly,
-      )
-      body
-    },
+    settings: body => body,
     // additional page args
     ..page-args,
     //
     body,
   ) = {
-    show: et.easy-typography.with(
-      fonts: (
-        heading: theme.fonts.headings,
-        body: args.extract-args(document-args, font: theme.fonts.default).font,
-      ),
-      body-size: args
-        .extract-args(
-          document-args,
-          _prefix: "font",
-          size: 12pt,
-        )
-        .size,
-    )
-    set text(
-      ..args.extract-args(
-        document-args,
-        _prefix: "font",
-        // weight: 300,
-        fallback: true,
-        lang: "de",
-        region: "DE",
-        hyphenate: auto,
-      ),
-    )
-    show heading: set text(fill: theme.primary)
-    show link: set text(fill: theme.secondary)
-
-    set table(stroke: theme.table.stroke)
-
+    // Create empty header / footer if non provided
     if header == none {
       header = (..) => []
     }
@@ -92,6 +48,7 @@
       footer = (..) => []
     }
 
+    // Initialize page
     set page(
       ..args.extract-args(
         document-args,
@@ -107,11 +64,10 @@
           },
         ),
       ),
+      // Additional page arguments for overwrites
       ..page-args.named(),
+      // Header
       header: {
-        // TODO: add conditional stepping?
-        // TODO: Remove counters from doc
-        // doc._counters.content-pages.step()
         header(
           doc,
           header-left(doc, layout.header-left(doc)),
@@ -119,6 +75,7 @@
           header-right(doc, layout.header-right(doc)),
         )
       },
+      // Footer
       footer: footer(
         doc,
         footer-left(doc, layout.footer-left(doc)),
@@ -127,21 +84,61 @@
       ),
     )
 
+    // Paragraphs
+    let line-spacing = document-args.named().at("line-spacing", default: 150%)
+    let paragraph-spacing = document-args.named().at("paragraph-spacing", default: line-spacing * line-spacing)
     set par(
-      // leading: 1.2em,
       ..args.extract-args(
         document-args,
         _prefix: "par",
+        leading: line-spacing * 0.5em,
+        spacing: paragraph-spacing * 0.5em,
         justify: true,
       ),
+      linebreaks: "optimized",
     )
-    // Lists
+
+    // Basic body text properties
+    set text(
+      ..args.extract-args(
+        document-args,
+        _prefix: "font",
+        size: 12pt,
+        weight: "light",
+        lang: "de",
+        region: "DE",
+        hyphenate: auto,
+        style: "normal",
+        number-width: "proportional",
+      ),
+    )
+
+    // Configure headings
+    show heading: it => {
+      block(
+        breakable: false,
+        sticky: true,
+        above: layout.heading-size(1.25em, 0.8em, it.level),
+        below: layout.heading-size(0.64em, 0.55em, it.level),
+        text(
+          font: theme.fonts.headings,
+          fill: theme.primary,
+          size: layout.heading-size(1.1em, 1.0em, it.level),
+          weight: layout.heading-weight(it.level),
+          it,
+        ),
+      )
+    }
+    // Link color
+    show link: set text(fill: theme.secondary)
+    // Table defaults
+    show table: it => {
+      set table(stroke: theme.table.stroke)
+      set text(number-width: "tabular")
+    }
+    // Lists defaults
     set enum(numbering: "1)")
-    // Configure code blocks
-    // show raw: set text(font: theme.fonts.code)
-    // show raw.where(block: false): set text(fill: theme.primary)
-    // TODO: (jneug) add option to activate bw theme
-    // set raw(theme: "../assets/BW.tmTheme")
+    // Figures
     show figure.caption: set text(.88em)
 
     // Raw code blocks
@@ -164,11 +161,9 @@
     // initialize theme
     show: theme.init
 
-    // apply custom settings
-    show: settings
-
     // Show the actual document body
-    body
+    // with custom settings applied
+    settings(body)
   }
 
   return (

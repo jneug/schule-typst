@@ -5,6 +5,29 @@
 #import "../util/args.typ"
 #import "../theme.typ"
 
+#let heading-size(max, min, level) = {
+  if level <= 1 {
+    max
+  } else if level >= 5 {
+    min
+  } else {
+    let t = (level - 1) / 4
+    max - (max - min) * calc.sqrt(t)
+  }
+}
+
+#let heading-weight(level) = {
+  if level <= 1 {
+    "bold"
+  } else if level == 2 {
+    "semibold"
+  } else if level == 3 {
+    "medium"
+  } else {
+    "regular"
+  }
+}
+
 #let format-pagenumber(
   current,
   body-start,
@@ -91,7 +114,7 @@
 #let base-header(doc, body-left, body-center, body-right, rule: false) = {
   set text(.88em)
   grid(
-    columns: (25%, 50%, 25%),
+    columns: (1fr, 2fr, 1fr),
     inset: 2mm,
     align: (left, center, right),
     body-left,
@@ -109,7 +132,7 @@
 #let base-footer(doc, body-left, body-center, body-right, rule: false) = {
   set text(.88em, theme.muted)
   grid(
-    columns: (25%, 50%, 25%),
+    columns: (1fr, 4fr, 1fr),
     inset: 2mm,
     align: (left, center, right),
     ..if rule {

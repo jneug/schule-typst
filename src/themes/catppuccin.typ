@@ -1,31 +1,45 @@
-// TODO: Improve theme support
-// TODO: Add more theme style keys
+#import "@preview/catppuccin:1.0.0": latte
 
-#let typst-text = text
+#let make-flavor(palette) = (
+  palette
+    .colors
+    .pairs()
+    .fold(
+      (:),
+      (dict, (name, clr)) => {
+        dict.insert(name, clr.rgb)
+        dict
+      },
+    )
+)
+
+#let flavor = make-flavor(latte)
+
 
 // General colors
-#let primary = rgb("#dc8a78")
-#let secondary = rgb("#04a5e5")
-#let muted = rgb("#dce0e8")
+#let primary = flavor.maroon
+#let secondary = flavor.lavender
+#let muted = flavor.rosewater
 
 // General backgrounds
 #let bg = (
   primary: primary.lighten(90%),
   secondary: secondary.lighten(90%),
-  muted: rgb("#eff1f5"),
-  code: rgb("#e6e9ef"),
-  solution: rgb("#e6e9ef"),
+  muted: flavor.base,
+  code: flavor.mantle,
+  solution: flavor.surface0,
 )
 
 // Text colors
 #let text = (
-	default:   rgb("#4c4f69"),
-	header:    rgb("#5c5f77"), // primary
-	footer:    rgb("#ccd0da"),
-	title:     primary,
-	subject:   rgb("#4c4f69"),
-  primary:   white,
-  secondary:  white
+  default: flavor.text,
+  light: white,
+  header: flavor.text,
+  footer: flavor.overlay1,
+  title: primary,
+  subject: flavor.subtext0,
+  primary: flavor.text,
+  secondary: flavor.text,
 )
 
 // Font settings
@@ -41,6 +55,12 @@
   code: ("Fira Code", "Liberation Mono", "Courier New"),
   serif: ("EB Garamond 12", "Garamond", "Charter", "Georgia"),
   sans: ("Fira Sans", "Liberation Sans", "Avenir Next", "Avenir", "Helvetica Neue", "Helvetica"),
+)
+
+#let raw = (
+  fill: bg.code,
+  stroke: 1pt + muted,
+  inset: 3pt,
 )
 
 // Table colors and styles
