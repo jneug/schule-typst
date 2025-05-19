@@ -1,5 +1,5 @@
 root := justfile_directory()
-package-fork := x'$TYPST_PKG_FORK'
+package-fork := x'${TYPST_PKG_FORK:-}'
 
 export TYPST_ROOT := root
 
@@ -45,7 +45,7 @@ bump VERSION:
   tbump {{VERSION}}
 
 [private]
-[working-directory(x'$TYPST_PKG_FORK')]
+[working-directory(x'${TYPST_PKG_FORK:-.}')]
 prepare-fork:
     echo "preparing package for relase in $TYPST_PKG_FORK"
     git checkout main
