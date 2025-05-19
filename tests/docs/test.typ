@@ -18,6 +18,7 @@
   ),
 
   version: "2024-06-15",
+  fontsize: 12.8pt,
 )
 
 #page(flipped: true, columns: 2)[

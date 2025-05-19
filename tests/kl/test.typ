@@ -1,7 +1,7 @@
-#import "@local/schule:1.0.0": kl
+#import "../../src/schule.typ": kl
 #import kl: *
 
-#import "@preview/finite:0.3.0": automaton, layout, transition-table, cetz, draw, powerset
+#import "@preview/finite:0.5.0": automaton, layout, transition-table, cetz, draw, powerset
 
 #show: klausur(
   autor: "J. Neugebauer",

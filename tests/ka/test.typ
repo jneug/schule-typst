@@ -1,4 +1,4 @@
-#import "@local/schule:1.0.0": ka
+#import "../../src/schule.typ": ka
 #import ka: *
 #import mathe: *
 
@@ -115,9 +115,9 @@
           &quad 5 / 8 dot 3,5 : 1,4 + (-1,25) dot 3 / 20 \
           &= 5 / 8 dot 7 / 2 : 7 / 5 + (-5 / 4) dot 3 / 20\
           &= 5 / 8 dot 7 / 2 dot 5 / 7 + (-(5 dot 3) / (4 dot 20))\
-          &= (5 dot cancelup(7,1) dot 5) / (8 dot 2 dot canceldown(7,1)) + (-(5 dot 3) / (4 dot 20))\
-          &= 25 / 16 + (-cancelup(15, 3) / canceldown(80,16)) \
-          &= cancelup(28,7) / canceldown(16,4) = 1,75
+          &= (5 dot cancelup(7, 1) dot 5) / (8 dot 2 dot canceldown(7, 1)) + (-(5 dot 3) / (4 dot 20))\
+          &= 25 / 16 + (-cancelup(15, 3) / canceldown(80, 16)) \
+          &= cancelup(28, 7) / canceldown(16, 4) = 1,75
         $][$
           &quad 0,25 dot 3 / 25 + (-2 / 5) dot 0,75 : 2,5\
           &= 1 / 4 dot 3 / 25 + (-2 / 5) dot 3 / 4 : 5 / 2\
@@ -395,10 +395,11 @@
             [2],
             [*1,75*],
             [1],
-          )][antiproportional#table(columns: (1cm,)*7, rows: 1cm, align: center+horizon, fill:(c,r) => if c == 0 {luma(244)},
-        [*x*], [0,25], [2], [4], [8], [*7*], [*14*],
-        [*y*], [56], [*7*], [3,5], [*1,75*], [2], [1]
-      )]
+          )][antiproportional#table(
+            columns: (1cm,) * 7, rows: 1cm, align: center + horizon, fill: (c, r) => if c == 0 { luma(244) },
+            [*x*], [0,25], [2], [4], [8], [*7*], [*14*],
+            [*y*], [56], [*7*], [3,5], [*1,75*], [2], [1]
+          )]
       - #vari[#table(
             columns: (1.3cm,) * 7,
             rows: 1cm,
@@ -417,7 +418,7 @@
             [*7*],
             [14],
             [$56 / 3$],
-            [*30 $1/3$*],
+            [*30 $1 / 3$*],
             [35],
             [70],
           )][#table(
@@ -436,15 +437,16 @@
             [*21*],
             [*y*],
             [25],
-            [*33 $1/3$*],
+            [*33 $1 / 3$*],
             [75],
-            [*108 $1/3$*],
+            [*108 $1 / 3$*],
             [$400 / 3$],
             [175],
-          )][proportional#table(columns: (1.3cm,)*7, rows: 1cm, align: center+horizon, fill:(c,r) => if c == 0 {luma(244)},
-        [*x*], [3], [4], [*9*], [13], [16], [*21*],
-        [*y*], [25], [*33$1/3$*], [75], [*108$1/3$*], [133$1/3$], [175]
-      )]
+          )][proportional#table(
+            columns: (1.3cm,) * 7, rows: 1cm, align: center + horizon, fill: (c, r) => if c == 0 { luma(244) },
+            [*x*], [3], [4], [*9*], [13], [16], [*21*],
+            [*y*], [25], [*33$1 / 3$*], [75], [*108$1 / 3$*], [133$1 / 3$], [175]
+          )]
     ]
   ]
 ]
@@ -470,7 +472,7 @@
   ]
 
   #erwartung([berechnet die Lösung (#vari[9,6 Liter][2,24 €][9,6 Liter]) mit dem Dreisatz.], 3)
-  #erwartung([berechnet die Lösung (#vari[21,2 Minuten][62 $1/3$ km][0,675 Stunden]) mit dem Dreisatz.], 3)
+  #erwartung([berechnet die Lösung (#vari[21,2 Minuten][62 $1 / 3$ km][0,675 Stunden]) mit dem Dreisatz.], 3)
   #erwartung([erkennt, dass sich die zweite Größe nicht ändert.], 1)
 
   #loesung[
