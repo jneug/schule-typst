@@ -39,17 +39,18 @@
     signature = raw(block: false, lang: none, signature)
   }
 
-  box(
+  block(
     width: 100%,
     fill: luma(85%),
     // breakable: false,
-    inset: 4pt,
+    inset: 6pt,
     // below: 4pt,
+    sticky: true,
   )[
     #set text(weight: "bold")
     #signature
   ]
-  v(-.5em)
+  // v(-.5em)
   set align(left)
   body
 }

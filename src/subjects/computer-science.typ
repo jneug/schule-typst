@@ -146,12 +146,10 @@
 // =================================
 //  Bäume
 // =================================
-#import deps: cetz
-
 #let tree-node(
   node,
-  draw-node: (node, ..args) => cetz.draw.content((), node.content, frame: "circle"),
-  draw-empty: (node, ..) => cetz.draw.content((), h(1em)),
+  draw-node: (node, ..args) => deps.cetz.draw.content((), node.content, frame: "circle"),
+  draw-empty: (node, ..) => deps.cetz.draw.content((), h(1em)),
   ..args,
 ) = {
   if node.content != none {
@@ -167,7 +165,7 @@
   tree,
   node,
   draw-empty: false,
-  draw-edge: (from, to, ..) => cetz.draw.line(from, to),
+  draw-edge: (from, to, ..) => deps.cetz.draw.line(from, to),
   ..args,
 ) = {
   if draw-empty or node.content != none {
@@ -175,38 +173,41 @@
   }
 }
 
-#let tree(nodes, draw-node: auto, draw-empty: auto, draw-edge: auto, draw-empty-edges: false, ..args) = cetz.canvas({
-  let (pos, named) = (args.pos(), args.named())
+#let tree(nodes, draw-node: auto, draw-empty: auto, draw-edge: auto, draw-empty-edges: false, ..args) = {
+  set text(font: theme.fonts.sans)
+  deps.cetz.canvas({
+    let (pos, named) = (args.pos(), args.named())
 
-  cetz.draw.set-style(stroke: .6pt, padding: .33em)
+    deps.cetz.draw.set-style(stroke: .6pt, padding: .33em)
 
-  if "styles" in named {
-    cetz.draw.set-style(..named.styles)
-    let _ = named.remove("styles")
-  }
+    if "styles" in named {
+      deps.cetz.draw.set-style(..named.styles)
+      let _ = named.remove("styles")
+    }
 
-  let tree-node = tree-node
-  if draw-node != auto {
-    tree-node = tree-node.with(draw-node: draw-node)
-  }
-  if draw-empty != auto {
-    tree-node = tree-node.with(draw-empty: draw-empty)
-  }
+    let tree-node = tree-node
+    if draw-node != auto {
+      tree-node = tree-node.with(draw-node: draw-node)
+    }
+    if draw-empty != auto {
+      tree-node = tree-node.with(draw-empty: draw-empty)
+    }
 
-  cetz.tree.tree(
-    nodes,
-    spread: 1.6,
-    grow: 1.25,
-    draw-node: tree-node,
-    draw-edge: if draw-edge == auto {
-      tree-edge.with(draw-empty: draw-empty-edges)
-    } else {
-      tree-edge.with(draw-edge: draw-edge, draw-empty: draw-empty-edges)
-    },
-    // ..pos,
-    ..named,
-  )
-})
+    deps.cetz.tree.tree(
+      nodes,
+      spread: 1.6,
+      grow: 1.25,
+      draw-node: tree-node,
+      draw-edge: if draw-edge == auto {
+        tree-edge.with(draw-empty: draw-empty-edges)
+      } else {
+        tree-edge.with(draw-edge: draw-edge, draw-empty: draw-empty-edges)
+      },
+      // ..pos,
+      ..named,
+    )
+  })
+}
 
 
 // =================================
