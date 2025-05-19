@@ -1,4 +1,4 @@
-#import "../_deps.typ": codelst, showybox, heroic, codly, gentle-clues
+#import "../_deps.typ": showybox, heroic, zebraw, gentle-clues
 
 #import "../util/util.typ"
 #import "../util/args.typ"
@@ -241,7 +241,7 @@
   width: 100%,
   stroke: 2pt + black,
   fill: white,
-  inset: 8pt,
+  inset: .64em,
   shadow: 0pt,
   radius: 3pt,
   ..box-args,
@@ -356,7 +356,7 @@
 // Code
 // ============================
 
-#let code-frame = container.with(..theme.codly)
+#let code-frame = container.with(..theme.raw)
 
 /// Zeigt Quelltext mit Zeilennummern und in einem #cmd[frame] an.
 /// Alias für #cmd("sourcecode", module:"codelst").
@@ -368,19 +368,19 @@
 ///
 /// - ..args (any): Argument für #cmd-("sourcecode", module:"codelst").
 /// -> content
-#let sourcecode(..args) = codelst.sourcecode(frame: code-frame, ..args)
+#let sourcecode(..args) = code-frame(zebraw.zebraw(..args))
 
-#let quelltext(..args) = codelst.sourcecode(frame: code-frame, ..args)
+#let quelltext(..args) = sourcecode(frame: code-frame, ..args)
 
-#let snippet(..args, body) = codly.local(
+#let snippet(..args, body) = zebraw.zebraw(
   number-format: none,
   ..args,
   body,
 )
 
 
-#let lineref = codelst.lineref.with(supplement: "Zeile")
-#let lineref- = codelst.lineref.with(supplement: "")
+// #let lineref = codelst.lineref.with(supplement: "Zeile")
+// #let lineref- = codelst.lineref.with(supplement: "")
 #let linerange-(from, to, sep: [ -- ]) = [#lineref-(from)#sep#lineref-(to)]
 #let linerange(from, to, supplement: "Zeilen", sep: [ -- ]) = [#supplement #linerange-(from, to)]
 

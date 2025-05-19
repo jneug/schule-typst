@@ -16,8 +16,7 @@
 #import "@preview/heroic:0.1.0"
 #import "@preview/ccicons:1.0.0"
 
-#import "@preview/codelst:2.0.2"
-#import "@preview/codly:1.3.0"
+#import "@preview/zebraw:0.5.4"
 
 // presentations
 #import "@preview/touying:0.5.3"

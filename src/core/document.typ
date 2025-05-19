@@ -92,6 +92,7 @@
       ),
     ),
     preferred-theme: t.string(default: "default"),
+    colors: t.boolean(default: true),
     nup: t.integer(default: 1),
   ),
   aliases: (
@@ -117,6 +118,8 @@
     "solution": "solutions",
     "loesungen": "solutions",
     "theme": "preferred-theme",
+    "farbig": "colors",
+    "farben": "colors",
   ),
 )
 

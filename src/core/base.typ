@@ -6,7 +6,7 @@
 #import "layout.typ"
 
 #import "../theme.typ"
-#import "../_deps.typ": codly, et
+#import "../_deps.typ": zebraw, et
 
 // Basisvorlage für alle Dokumentvorlagen
 #let base-template(
@@ -144,7 +144,20 @@
     // set raw(theme: "../assets/BW.tmTheme")
     show figure.caption: set text(.88em)
 
-    // TODO: (jneug) handle this in another way?
+    // Raw code blocks
+    show raw: set text(font: theme.fonts.code)
+    // show raw.where(block: false): set text(fill: theme.primary)
+    set raw(
+      theme: if not doc.colors { "../assets/BW.tmTheme" } else {
+        page-args.named().at("code-theme", default: "../assets/Eiffel.tmTheme")
+      },
+    )
+    show: zebraw.zebraw.with(
+      lang: false,
+      numbering-separator: true,
+      hanging-indent: true,
+    )
+
     // decimal fix for now
     show: util.decimal-fix
 
