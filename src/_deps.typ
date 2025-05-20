@@ -14,7 +14,7 @@
 #import "@preview/showybox:2.0.4"
 #import "@preview/gentle-clues:1.2.0"
 #import "@preview/heroic:0.1.0"
-#import "@preview/ccicons:1.0.0"
+#import "@preview/ccicons:1.0.1"
 
 #import "@preview/zebraw:0.5.4"
 
