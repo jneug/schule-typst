@@ -135,6 +135,7 @@
     show table: it => {
       set table(stroke: theme.table.stroke)
       set text(number-width: "tabular")
+      it
     }
     // Lists defaults
     set enum(numbering: "1)")
