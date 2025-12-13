@@ -1,5 +1,5 @@
 #import "../_deps.typ" as deps
-#import deps.ccicons: ccicon, cc-is-valid
+#import deps.ccicons: cc-is-valid, ccicon
 
 #import "../util/marks.typ"
 #import "../util/args.typ"
@@ -90,13 +90,13 @@
 ]
 #let footer-center(doc) = [
   #args.if-none(
-    doc.license,
-    () => [],
-    do: v => if cc-is-valid(v) {
-      ccicon(v)
-    } else {
-      v
-    },
+    if "copyright" in doc { doc.copyright } else { none },
+    () => args.if-none(
+      doc.license,
+      () => [],
+      do: v => if cc-is-valid(v) { ccicon(v) } else { v },
+    ),
+    do: v => v,
   )
 ]
 #let footer-right(doc) = [
