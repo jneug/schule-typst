@@ -1,55 +1,76 @@
-#import "../_deps.typ": showybox, heroic, zebraw, gentle-clues
+#import "../_deps.typ": gentle-clues, heroic, showybox, zebraw
 
 #import "../util/util.typ"
 #import "../util/args.typ"
 #import "../core/base.typ": appendix
 #import "../theme.typ"
 
-// Setzt den Inhalt als Anhang für das Dokument.
-// Die Kopfzeile und die Nummerierung der Überschriften wird angepasst.
-//
-// Der Anhang wird als neuer Seitenabschnitt erstellt und kann daher im Format vo Hauptteil abweichen. Die Argumente werden direkt an #cmd-[page] weitergegeben.
-//
-// Beispielsweise lässt sich der Anhang so im Querformat in zwei Spalten setzen:
-// ```typst
-// #anhang(flipped: true, columns: 2)[
-//   #lorem(500)
-// ]
-// ```
-//
-// - ..page-args: Alle Argumente werden an #cmd[page] weitergegeben, um das Seitenformat des Anhangs zu ändern.
-// -> content
-#let anhang = appendix
-
-/// Erzeugt eine Referenz zu einem Abschnitt im @@anhang.
-/// - label (label, str): Ziel der Referenz
+/// Setzt den Inhalt als Anhang für das Dokument.
+/// Die Kopfzeile und die Nummerierung der Überschriften wird angepasst.
+///
+/// Der Anhang wird als neuer Seitenabschnitt erstellt und kann daher im Format vom Hauptteil abweichen. Die Argumente werden direkt an #typ.page weitergegeben.
+///
+/// Beispielsweise lässt sich der Anhang so im Querformat in zwei Spalten setzen:
+/// ```typst
+/// #anhang(flipped: true, columns: 2)[
+///  #lorem(500)
+/// ]
+/// ```
 /// -> content
-#let anh(label, supplement: "Anhang") = {
-  ref(supplement: supplement, std.label("anh:" + str(label)))
+#let anhang(
+  /// Alle Argumente werden an #cmd[page] weitergegeben, um das Seitenformat des Anhangs zu ändern.
+  /// -> any
+  ..page-args,
+) = appendix(..page-args)
+
+/// Erzeugt eine Referenz zu einem Abschnitt im Anhang.
+/// ```example
+/// #anh("doku")
+/// ```
+/// -> content
+#let anh(
+  /// Ziel der Referenz.
+  /// -> label | str
+  label,
+  /// Ergänzendes Etikett.
+  /// -> str
+  supplement: "Anhang",
+  /// Prefix für Anhang-Labels.
+  /// -> str
+  prefix: "anh:",
+) = {
+  ref(supplement: supplement, std.label(prefix + str(label)))
 }
 
-//	Auszeichnung von Operatoren:
-//
-//	#example[```
-//	#operator[Entwirf] einen Algorithmus und #operator[stelle] ihn in geeigneter Form #operator[dar].
-//
-//	#operator[Implementiere] den Algorithmus nach deinem Entwurf.
-//	```]
-//
-// - body (string, content): Operator zum hervorheben.
-// -> content
-#let operator(body) = smallcaps(body)
+///	Auszeichnung von Operatoren:
+///
+///	#example[```
+///	#operator[Entwirf] einen Algorithmus und #operator[stelle] ihn in geeigneter Form #operator[dar].
+///
+///	#operator[Implementiere] den Algorithmus nach deinem Entwurf.
+///	```]
+/// -> content
+#let operator(
+  /// Operator zum hervorheben.
+  /// -> string | content
+  body,
+) = smallcaps(body)
 
-// Darstellung eines Namens:
-// - #shortex(`#name[Jonas Neugebauer]`)
-// - #shortex(`#name[John William Mauchly]`)
-// - #shortex(`#name[Adriaan van Wijngaarden]`)
-// - #shortex(`#name("Adriaan", last:"van Wijngaarden")`)
-//
-// - name (string, content): Name, der dargestellt werden soll.
-// - last (string): Optionaler Nachname, falls dieser aus mehreren Teilen besteht.
-// -> content
-#let name(name, last: none) = {
+/// Darstellung eines Namens:
+/// - #ex(`#name[Jonas Neugebauer]`)
+/// - #ex(`#name[John William Mauchly]`)
+/// - #ex(`#name[Adriaan van Wijngaarden]`)
+/// - #ex(`#name("Adriaan", last:"van Wijngaarden")`)
+/// - #ex(`#name(last:2)[Adriaan van Wijngaarden]`)
+/// -> content
+#let name(
+  /// Name, der dargestellt werden soll.
+  /// -> str | content
+  name,
+  /// Optionaler Nachname, falls dieser aus mehreren Teilen besteht. Falls dies ein #typ.t.int ist, werden die letzten #arg[last] Namensteile von #arg[name] als Nachname verwendet.
+  /// -> str | int
+  last: none,
+) = {
   if type(name) == content {
     name = name.text
   }
@@ -57,16 +78,22 @@
     let parts = name.split()
     last = parts.pop()
     name = parts.join(" ")
+  } else if type(last) == int {
+    let parts = name.split()
+    let i = last
+    last = parts.slice(-1 * i).join(" ")
+    name = parts.slice(0, i - 1).join(" ")
   }
   [#name #smallcaps(last)]
 }
 
-// Formatierung von Tasten.
-// - #shortex(`#taste("Enter")`)
-//
-// - label (string, content): Aufschrift der Taste.
-// -> content
+/// Formatierung von Tasten.
+/// - #ex(`#taste("Enter")`)
+/// - #ex(`#taste(sym.arrow.l.hook)`)
+/// -> content
 #let taste(
+  /// Aufschrift der Taste.
+  /// -> string | content
   label,
 ) = box(
   stroke: .5pt + gray,
@@ -77,42 +104,51 @@
   fill: gradient.linear(luma(100%), luma(88%), angle: 90deg),
   text(.88em, font: theme.fonts.code, label),
 )
-)
 
-// Formatierung von Tastenkürzeln.
-// - #shortex(`#tastenkuerzel("Strg","C")`)
-// - #shortex(`#tastenkuerzel("Strg","Cmd")`, sep:"/")
-// - #shortex(`#tastenkuerzel("Strg","Shift","C", sep:"")`)
-//
-// - ..labels (string, content): Aufschriften der Tasten.
-// - sep (string): Separator zwischen Tasten.
-// -> content
-#let tastenkuerzel(..labels, sep: box(inset: (x: .1em), "+")) = {
+/// Formatierung von Tastenkürzeln.
+/// - #ex(`#tastenkuerzel("Strg","C")`)
+/// - #ex(`#tastenkuerzel("Strg","Cmd")`, sep:"/")
+/// - #ex(`#tastenkuerzel("Strg","Shift","C", sep:sym.plus.o)`)
+/// -> content
+#let tastenkuerzel(
+  /// Aufschriften der Tasten.
+  /// -> str | content
+  ..labels,
+  /// Trennzeichen zwischen Tasten.
+  /// -> str | content
+  sep: box(inset: (x: .1em), "+"),
+) = {
   labels.pos().map(taste).join(sep)
 }
 
-// Formatierung von Dateinamen.
-// - #shortex(`#datei("beispiel.typ")`)
-//
-// - name (string, content): Name der Datei.
-// -> content
-#let datei(name) = [#octique.octique-inline("file")#h(.2em)#raw(block: false, util.get-text(name))]
+/// Formatierung von Dateinamen.
+/// - #ex(`#datei("beispiel.typ")`)
+/// -> content
+#let datei(
+  /// Name der Datei.
+  /// -> str | content
+  name,
+) = [#heroic.hi("document", solid: false)#h(.2em)#raw(block: false, util.get-text(name))]
 
-// Formatierung von Ordnernamen.
-// - #shortex(`#ordner("arbeitsblaetter")`)
-//
-// - name (string, content): Name des Ordners.
-// -> content
-#let ordner(name) = [#octique.octique-inline("file-directory")#h(.2em)#raw(block: false, util.get-text(name))]
+/// Formatierung von Ordnernamen.
+/// - #ex(`#ordner("arbeitsblaetter")`)
+/// -> content
+#let ordner(
+  /// Name des Ordners.
+  /// -> str | content
+  name,
+) = [#heroic.hi("folder", solid: false)#h(.2em)#raw(block: false, util.get-text(name))]
 
 /// Formatierung von Programmnamen.
-/// - #shortex(`#programm("VSCode")`)
-///
-/// - name (string, content): Name des Programms.
+/// - #ex(`#programm("VSCode")`)
 /// -> content
-#let programm(name) = text(theme.primary, weight: 400, name)
+#let programm(
+  /// Name des Programms.
+  /// -> str | content
+  name,
+) = text(theme.primary, weight: 400, name)
 
-// Symbols
+/// Symbols
 #let icon = heroic.hi
 
 #let icons = (
@@ -130,21 +166,68 @@
   stern: icon("star"),
 )
 
-#let aufg-neu(prefix) = (
-  (..aufg-args) => [#prefix
-    #util.combine-ranges(aufg-args.pos(), last: " und ")]
+/// Erstellt ein neues Format zur Auflistung von Aufgabennummern.
+/// Die erstelle Funktion fasst ihre Argumente automatisch zu
+/// Bereichen zusammen und gibt sie möglichst kompakt aus.
+/// ```example
+/// #let nr = aufg-neu("Nr.")
+///
+/// - #nr(1,)
+/// - #nr(1,3)
+/// - #nr(1,2,3)
+/// - #nr(1,2,3,6,7,8)
+/// - #nr(1,2,3,6,7,8,12)
+/// ```
+/// -> function
+#let aufg-neu(
+  /// Prefix für die Angabe.
+  /// -> str | content
+  prefix,
+  /// Trennzeichen für Prefix und Nummernbereiche.
+  /// -> str | content
+  sep: h(0.166667em),
+  /// Trennzeichen zwischen Nummernbereichen.
+  /// -> str | content
+  range-sep: ", ",
+) = (
+  (..aufg-args) => [#prefix#sep#util.combine-ranges(aufg-args.pos(), sep: range-sep, last: " und ")]
 )
 
+/// Seitennummern
+/// - #ex(`#seiten(1,2,3,6,7,8,12)`)
+/// -> content
 #let seiten = aufg-neu("S.")
+
+/// Aufgabennummern
+/// - #ex(`#aufg(1,2,3,6,7,8,12)`)
+/// -> content
 #let aufg = aufg-neu("Aufg.")
 
+/// Erstellt eine neue Funktion für Quellenangaben, die sich aus Seiten- und optionalen Aufgabennummern zusammensetzen.
+/// ```example
+/// #let pp = quelle-neu(
+///   "Präsentation",
+///   seiten-format: aufg-neu("Folie", sep: " "),
+///   sep: ", "
+/// )
+///
+/// - #pp(4,3,2)
+/// - #pp(79, (1,2,3))
+/// - #pp((101,102), 16)
+/// - #pp((101,102),       range(16, 19))
+/// - #pp((101,102), 13,   range(16, 19))
+/// - #pp((101,102), 13, ..range(16, 19))
+/// - #pp( 101,102 , 13, ..range(16, 19))
+/// - #pp( 101,102 , 13,   range(16, 19))
+/// ```
+/// Die erstellte Funktion
+/// -> function
 #let quelle-neu(
   name,
   seiten-format: seiten,
   aufgaben-format: aufg,
   sep: ": ",
 ) = {
-  // Maybe strip unnecessary whitespace
   name = if name.len() > 0 {
     name + " "
   } else {
@@ -154,13 +237,29 @@
   (..q-args) => {
     let pages = ()
     let tasks = ()
-    if type(q-args.pos().first()) == array {
-      pages = q-args.pos().first()
-      if q-args.pos().len() > 1 {
-        tasks = q-args.pos().at(1)
+    let collect-pages = true
+
+    for arg in q-args.pos() {
+      if collect-pages {
+        if type(arg) == array {
+          collect-pages = false
+          if pages.len() == 0 {
+            pages = arg
+          } else {
+            tasks = arg
+            break
+          }
+        } else {
+          pages.push(arg)
+        }
+      } else {
+        if type(arg) == array {
+          tasks += arg
+          break
+        } else {
+          tasks.push(arg)
+        }
       }
-    } else {
-      pages = q-args.pos()
     }
 
     if tasks.len() > 0 [
@@ -179,11 +278,11 @@
 // ============================
 // Misc
 // ============================
-/// === Verschiedenes
+
 /// Textlücken.
-/// - #shortex(`#luecke()`)
-/// - #shortex(`#luecke(width: 2cm, offset: 5pt)`)
-/// - #shortex(`#luecke(text: "Hallo Welt!", stroke: .5pt+red)`)
+/// - #ex(`#luecke()`)
+/// - #ex(`#luecke(width: 2cm, offset: 5pt)`)
+/// - #ex(`#luecke(text: "Hallo Welt!", stroke: .5pt+red)`)
 ///
 /// - width (length): Breite der Textlücke, wenn #arg[text] nicht gegeben ist.
 /// - text (length): Text, anhand dessen die Breite der Textlücke bestimmt werden soll. Falls angegeben, wird #arg[width] ignoriert.
@@ -220,14 +319,14 @@
 // ============================
 // Frames and Boxes
 // ============================
-/// === Kästen und Rahmen
-/// Eine generische Box um Inhalte. Verwendet #universe[Showybox].
+
+/// Eine generische Box um Inhalte. Verwendet #universe("Showybox").
 /// Im Allgemeinen werden die spezifischeren Boxen benutzt:
-/// - @@rahmen
-/// - @@kasten
-/// - @@schattenbox
-/// - @@infobox
-/// - @@warnungbox
+/// - @cmd:rahmen
+/// - @cmd:kasten
+/// - @cmd:schattenbox
+/// - @cmd:infobox
+/// - @cmd:warnungbox
 ///
 /// - width (length): Breite der Box.
 /// - stroke (stroke): Rahmenlinie um die Box.
@@ -235,7 +334,7 @@
 /// - inset (length, dictionary): Innenabstände der Box.
 /// - shadow (length): Schattenabstand.
 /// - radius (length): Radius der abgrundeten Ecken.
-/// - ..args (any): Weitere Argumente, die an #package[Showybox] weitergereicht werden.
+/// - ..box-args (any): Weitere Argumente, die an #package[Showybox] weitergereicht werden.
 /// -> content
 #let container(
   width: 100%,
@@ -270,7 +369,7 @@
 /// #rahmen[#lorem(10)]
 /// ```]
 ///
-/// - ..args (any): Argumente für @@container.
+/// - ..args (any): Argumente für @cmd:container.
 /// -> content
 #let rahmen = container.with(stroke: 2pt + theme.secondary)
 
@@ -279,7 +378,7 @@
 /// #kasten[#lorem(10)]
 /// ```]
 ///
-/// - ..args (any): Argumente für @@container.
+/// - ..args (any): Argumente für @cmd:container.
 /// -> content
 #let kasten(..args) = container.with(fill: theme.bg.muted, stroke: 2pt + theme.secondary)(..args)
 
@@ -288,7 +387,7 @@
 /// #schattenbox[#lorem(10)]
 /// ```]
 ///
-/// - ..args (any): Argumente für @@container.
+/// - ..args (any): Argumente für @cmd:container.
 /// -> content
 #let schattenbox(..args) = container.with(shadow: 3pt)(..args)
 
@@ -297,7 +396,7 @@
 /// #infobox[#lorem(10)]
 /// ```]
 ///
-/// - ..args (any): Argumente für @@container.
+/// - ..args (any): Argumente für @cmd:container.
 /// -> content
 #let infobox(..args, body) = container.with(
   radius: 4pt,
@@ -314,7 +413,7 @@
 /// #warnungbox[#lorem(10)]
 /// ```]
 ///
-/// - ..args (any): Argumente für @@container.
+/// - ..args (any): Argumente für @cmd:container.
 /// -> content
 #let warnungbox(..args, body) = container.with(
   radius: 4pt,
@@ -329,7 +428,7 @@
 // ============================
 // Hints
 // ============================
-/// === Hinweise
+
 /// Zeigt einen hervorgehobenen Hinweis an.
 /// #example[```
 /// #pad(left:10pt, hinweis[#lorem(8)])
@@ -342,11 +441,17 @@
 /// - body (content): Inhalte des Hinweises.
 /// -> content
 #let hinweis(typ: "Hinweis", icon: icon("information-circle"), ..clue-args, body) = gentle-clues.clue(
-  title: typ,
+  // title: typ,
   accent-color: theme.secondary,
-  icon: text(theme.secondary, icon),
+  // icon: text(theme.secondary, icon),
   ..clue-args,
-  body,
+  [
+    #if icon != none {
+      text(theme.secondary, weight: "bold")[#icon]
+    }#if typ != none {
+      text(theme.secondary, weight: "bold")[#typ:]
+    } #body
+  ],
 )
 
 #let tipp(body) = hinweis(typ: "Tipp", icon: icon("light-bulb"), body)
@@ -381,19 +486,21 @@
 
 // #let lineref = codelst.lineref.with(supplement: "Zeile")
 // #let lineref- = codelst.lineref.with(supplement: "")
+
 #let linerange-(from, to, sep: [ -- ]) = [#lineref-(from)#sep#lineref-(to)]
 #let linerange(from, to, supplement: "Zeilen", sep: [ -- ]) = [#supplement #linerange-(from, to)]
 
 /// Inline-Code mit Syntax-Highlighting. Im Prinzip gleichwertig
 /// mit der Auszeichungsvariante mit drei Backticks:
-/// - #shortex(`#code(lang:"python", "print('Hallo, Welt')")`)
-/// - #shortex(raw("```python print('Hallo, Welt')```"))
+/// - #ex(`#code(lang:"python", "print('Hallo, Welt')")`)
+/// - #ex(raw("```python print('Hallo, Welt')```"))
+/// -> content
 #let code(body, lang: none) = raw(block: false, lang: lang, util.get-text(body))
 
 // ============================
 // Lists and enums
 // ============================
-/// === Listen und Aufzählungen
+
 /// Setzt das Nummernformat für Aufzählungen im #arg[body] auf `a)`.
 /// #example[```
 /// #enuma[
@@ -406,7 +513,7 @@
 /// - body (content): Inhalte mit Aufzählungen.
 /// -> content
 #let enuma(body) = {
-  set enum(numbering: "a)")
+  set enum(numbering: "ai)")
   body
 }
 
@@ -422,7 +529,7 @@
 /// - body (content): Inhalte mit Aufzählungen.
 /// -> content
 #let enumn(body) = {
-  set enum(numbering: "1)", tight: false, spacing: 1.5em)
+  set enum(numbering: "1i)", tight: false, spacing: 1.5em)
   body
 }
 
@@ -438,7 +545,7 @@
 /// - body (content): Inhalte mit Aufzählungen.
 /// -> content
 #let enumnn(body) = {
-  set enum(numbering: "(1)")
+  set enum(numbering: "(1i)")
   body
 }
 

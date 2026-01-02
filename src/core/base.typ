@@ -6,7 +6,7 @@
 #import "layout.typ"
 
 #import "../theme.typ"
-#import "../_deps.typ": zebraw, et
+#import "../_deps.typ": et, zebraw
 
 // Basisvorlage für alle Dokumentvorlagen
 #let base-template(

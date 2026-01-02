@@ -1,5 +1,5 @@
 #import "../_deps.typ" as deps
-#import deps.ccicons: ccicon, cc-is-valid
+#import deps.ccicons: cc-is-valid, ccicon
 
 #import "../util/marks.typ"
 #import "../util/args.typ"
