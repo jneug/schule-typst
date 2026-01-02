@@ -2,7 +2,7 @@
 <h4 align="center"><a href="https://typst.app">Typst</a> Vorlagen für den Einsatz in der Schule.</h4>
 
 <div align="center">
-<img src="docs/examples/ab.png" width="50%">
+<img src="docs/examples/examples.png" width="100%">
 </div>
 
 **Schule** ist eine Sammlung von Vorlagen und Modulen zur Erstellung von Arbeitsmaterialien für die Schule. Das Paket ist als Port des LaTeX Pakets [arbeitsblatt](https://github.com/jneug/arbeitsblatt) entstanden.
