@@ -1,11 +1,12 @@
 #import "../theme.typ"
 
+
+
 /// Hilfesfunktion für die Formatierung von Füllfarben für Tabellen.
-/// Die Funktion wird mit der
-/// #example[```
+/// ```example
 /// #table(
 ///   columns: 4,
-///   fill: tablefill(
+///   fill: table-fill(
 ///     footerfill: gradient.linear(..color.map.vlag, angle:90deg),
 ///     oddfill: color.map.vlag.first(),
 ///     headers: 2,
@@ -15,11 +16,19 @@
 ///   ),
 ///   ..range(36).map(str)
 /// )
-/// ```]
+/// ```
 #let table-fill(
+  /// Default fill color for cells.
+  /// -> color | gradient | tiling
   fill: white,
+  /// Fill color for header rows.
+  /// -> color | gradient | tiling
   headerfill: theme.table.header,
+  /// Fill color for footer rows.
+  /// -> color | gradient | tiling
   footerfill: theme.table.header,
+  /// Fill color for footer rows.
+  /// -> color | gradient | tiling
   oddfill: theme.bg.muted,
   striped: true,
   headers: 1,
