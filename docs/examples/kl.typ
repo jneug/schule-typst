@@ -1,7 +1,7 @@
-#import "../../src/schule.typ": ab
-#import ab: *
+#import "../../src/schule.typ": kl
+#import kl: *
 
-#show: arbeitsblatt(
+#show: klausur(
   /* @typstyle:off */
   titel: "Arbeitsblatt",
   reihe: "Entwicklung eines Typst-Pakets",
@@ -18,11 +18,6 @@
 
   version: "2024-06-25",
 )
-
-#infobox[
-  = Was ist Typst
-  #lorem(100)
-]
 
 #aufgabe(titel: "Grundgerüst erstellen", icon: (icons.partner, icons.computer))[
   #lorem(50)
