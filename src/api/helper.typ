@@ -56,12 +56,49 @@
   }
 }
 
-#let eval-math(term) = {
-  // eval(term.text, mode: "math")
-  // " = "
-  let _eval_term = term.text.replace(":", "/").replace("dot", "*")
-  [#eval(_eval_term, mode: "code")]
+// move to _deps
+#let eval-math(calculation, sep: $=$, format: sol => sol, precision: 8) = {
+  import "@preview/eqalc:0.1.4": math-to-str
+
+  let solveable = math-to-str(calculation).replace(":", "/")
+  let result = eval(solveable, mode: "code")
+
+  if precision != none and precision > -1 {
+    result = calc.round(result, digits: precision)
+  }
+
+  $#calculation #sep #format(result)$
 }
+
+
+#let lanes(
+  columns: auto,
+  gutter: .64em,
+  align: auto,
+  ..body,
+) = grid(
+  columns: if columns == auto { (1fr,) * body.pos().len() } else if columns == "flex" { body.pos().len() } else {
+    columns
+  },
+  align: align,
+  column-gutter: gutter,
+  ..body.pos()
+)
+
+#let sideimg(
+  align: right,
+  img,
+  body,
+  ..args,
+) = lanes(
+  columns: "flex",
+  align: if align == left { (center + horizon, top + left) } else { (top + left, center + horizon) },
+  ..args,
+  if align == left { img } else { body },
+  if align == left { body } else { img },
+)
+
+
 
 #let repeat(n, sep: pagebreak, body) = {
   for i in range(n) {

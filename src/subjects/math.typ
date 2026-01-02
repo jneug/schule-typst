@@ -14,9 +14,6 @@
 
 #let round(n, decimal) = calc.round(n / decimal) * decimal
 
-#let solve(calculation, sep: $=$) = {
-  let solveable = calculation.text.replace(":", "/").replace("dot", "*")
-  $#eval(calculation.text, mode: "math") #sep #eval(solveable, mode: "code")$
+#import "math-fractions.typ" as frac
 }
 
-#import "math-fractions.typ" as frac
