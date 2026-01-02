@@ -1,6 +1,8 @@
 #import "./cs-erd.typ" as erd
 #import "../api/helper.typ": table-fill
 
+#import "../theme.typ"
+
 #let primary-key(name) = underline(stroke: .1em, offset: 2pt, name)
 #let foreign-key(name) = box()[#sym.arrow.t.filled#name]
 
@@ -18,6 +20,8 @@
   if relations.pos().len() == 0 {
     return []
   }
+
+  set text(font: theme.fonts.sans)
 
   if type(relations.pos().first()) == str {
     let (name, ..attris) = (..relations.pos(),)
