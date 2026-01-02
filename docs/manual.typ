@@ -1,8 +1,9 @@
-#import "@local/mantys:1.0.0": *
+// #import "@preview/mantys:1.0.2": *
+#import "@local/mantys:1.0.2": *
 
 #import "../src/schule.typ"
 
-#import "@preview/swank-tex:0.1.0": TeX, LaTeX
+#import "@preview/swank-tex:0.1.0": LaTeX, TeX
 
 #show: mantys(
   ..toml("../typst.toml"),
@@ -17,27 +18,46 @@
     SCHULE ist eine Sammlung von Typst Vorlagen zur Gestaltung von Arbeitsmaterialien (Arbeitsblätter, Klausuren, Wochenpläne ...) für die Schule. Das Paket ist eine Adaption meines #link("https://github.com/jneug/arbeitsblatt", [#LaTeX Pakets]) für Typst.
   ],
 
-  examples-scope: (
-    schule: schule,
-  ),
+  // examples-scope: (
+  //   scope: (schule: schule),
+  //   imports: ("schule": "*"),
+  // ),
 
   theme: themes.cnltx,
 )
 
-#let show-module(name, scope: (:)) = tidy-module(
-  read("../src/" + name + ".typ"),
-  name: name,
-  include-examples-scope: true,
-  scope: scope,
-)
+#let import-module(src) = {
+  import src as mod
+  return dictionary(mod)
+}
+
+#let show-module(name, scope: (:), legacy-parser: false) = {
+  let src = "../src/" + name + ".typ"
+
+  let mod = import-module(src)
+
+  let ex = ex.with(scope: mod + scope)
+
+  tidy-module(
+    name,
+    read("../src/" + name + ".typ"),
+    scope: mod
+      + scope
+      + (
+        ex: ex,
+      ),
+    legacy-parser: legacy-parser,
+    sort-functions: none,
+  )
+}
 
 #let exampleout(name, cap: none) = {
   figure(
     mty.frame(width: 50%, image("examples/" + name + ".svg", width: 100%)),
     caption: if cap != none [#cap (#mty.rawc(theme.colors.secondary, "examples/" + name + ".pdf"))] else [#mty.rawc(
-        theme.colors.secondary,
-        "examples/" + name + ".pdf",
-      )],
+      theme.colors.secondary,
+      "examples/" + name + ".pdf",
+    )],
     kind: image,
   )
 }
@@ -84,4 +104,16 @@ Das Kernstück des Pakets sind die verschiedenen Vorlagen für verschiedene Arte
 
 Ein zentrales Modul des Pakets sind #module[aufgaben].
 
+#show-module("api/aufgaben", legacy-parser: true)
+
 === Layout- und Text-Elemente
+#show-module("api/content")
+#show-module("api/typo")
+
+
+=== Helfer
+#show-module("api/helper")
+
+#schule.anhang[
+  == Dokumentation <anh:doku>
+]
