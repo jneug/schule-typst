@@ -24,16 +24,16 @@
 
 #let ewh(exercises, grading-table: grading-table) = {
   v(8mm)
-  [Name: #box(stroke:(bottom:.6pt+black), width:6cm)]
+  [Name: #box(stroke: (bottom: .6pt + black), width: 6cm)]
 
   ex.grading.display-expectations-table(exercises)
 
   v(4mm)
-  align(right, [*Note:* #box(stroke:(bottom:.6pt+black), width:5cm)])
+  align(right, [*Note:* #box(stroke: (bottom: .6pt + black), width: 5cm)])
   v(4mm)
-  align(right, [Datum, Unterschrift: #box(stroke:(bottom:.6pt+black), width:5cm)])
+  align(right, [Datum, Unterschrift: #box(stroke: (bottom: .6pt + black), width: 5cm)])
   v(4mm)
-  align(right, [zur Kenntnis genommen (Eltern): #box(stroke:(bottom:.6pt+black), width:5cm)])
+  align(right, [zur Kenntnis genommen (Eltern): #box(stroke: (bottom: .6pt + black), width: 5cm)])
 
   v(1fr)
   align(
@@ -95,16 +95,21 @@
       context ex.solutions.display-solutions-page(ex.get-exercises())
     }
 
-    show: page-init.with(
-      header-center: (..) => [== Erwartungshorizont],
-      footer: (..) => [],
-    )
     context {
-      (doc.grading-page)(ex.get-exercises(), grading-table: doc.grading-table)
+      let grading-page-content = (doc.grading-page)(ex.get-exercises(), grading-table: doc.grading-table)
 
-      if doc.double-grading-page {
-        pagebreak(weak: true)
-        (doc.grading-page)(ex.get-exercises(), grading-table: doc.grading-table)
+      if grading-page-content != none and grading-page-content != [] {
+        show: page-init.with(
+          header-center: (..) => [== Erwartungshorizont],
+          footer: (..) => [],
+        )
+
+        grading-page-content
+
+        if doc.double-grading-page {
+          pagebreak(weak: true)
+          grading-page-content
+        }
       }
     }
   }

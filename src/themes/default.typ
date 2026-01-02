@@ -44,7 +44,12 @@
   (
     default: serif,
     headings: sans,
-    code: ("Fira Code", "Liberation Mono", "Courier New", "DejaVu Sans Mono"),
+    code: (
+      //"Fira Code",
+      "Liberation Mono",
+      "Courier New",
+      "DejaVu Sans Mono",
+    ),
     serif: serif,
     sans: sans,
   )

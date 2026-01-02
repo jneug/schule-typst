@@ -85,6 +85,14 @@
 /// mode from a dot to a comma.
 /// - body (content): Body of the document.
 /// -> content
+#let decimal-fixer(num) = {
+  return str(num).replace(".", ",")
+}
+
+/// Use in a #cmd-[show] rule to fix the decimal separator in math
+/// mode from a dot to a comma.
+/// - body (content): Body of the document.
+/// -> content
 #let decimal-fix(body) = {
   show math.equation: it => {
     show regex("\d+\.\d+"): it => {
@@ -190,7 +198,7 @@
   numbers,
   sep: ", ",
   last: " and ",
-  range-sep: [#h(.2em)--#h(.2em)],
+  range-sep: [#h(0.166667em)--#h(0.166667em)],
   max-items: 2,
 ) = {
   let numbers = numbers.dedup().sorted()

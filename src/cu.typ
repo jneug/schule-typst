@@ -14,7 +14,7 @@
 
       _tpl: (
         options: (
-          checkmark-icon: t.content(default: icon("checklist", width: 2cm)),
+          checkmark-icon: t.content(default: icon("document-check", height: 2cm, solid: false)),
         ),
       ),
 
@@ -23,7 +23,7 @@
           level: 1,
           outlined: false,
           bookmarked: false,
-        )[#doc.title: #text(fill:theme.secondary, doc.topic)]
+        )[#doc.title: #text(fill: theme.secondary, doc.topic)]
       },
 
       ..args,
@@ -105,9 +105,11 @@
     columns: (1fr, auto, auto),
     fill: table-fill(fills: fills),
     align: (c, r) => (left + horizon, center + horizon, left + horizon).at(c),
-    [*Ich kann #sym.dots*], [], [*Informationen &
-  Aufgaben*],
-    ..cells.pos().flatten()
+    [*Ich kann #sym.dots*],
+    [],
+    [*Informationen &
+    Aufgaben*],
+    ..cells.pos().flatten(),
   )
 }
 
