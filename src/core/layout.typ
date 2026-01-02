@@ -151,7 +151,7 @@
 #let base-title(
   doc,
   rule: true,
-) = block(
+) = place(top, scope: "parent", float: true, block(
   below: 0.65em,
   width: 100%,
   {
@@ -177,4 +177,4 @@
       v(.65em)
     }
   },
-)
+))
