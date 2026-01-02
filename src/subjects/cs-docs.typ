@@ -44,7 +44,7 @@
     fill: luma(85%),
     // breakable: false,
     inset: 6pt,
-    // below: 4pt,
+    below: .64em,
     sticky: true,
   )[
     #set text(weight: "bold")
