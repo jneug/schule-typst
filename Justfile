@@ -1,24 +1,37 @@
 root := justfile_directory()
 package-fork := x'${TYPST_PKG_FORK:-}'
-
 export TYPST_ROOT := root
 
 [private]
 default:
     @just --list --unsorted
 
+compile FILE:
+  typst compile --root . "{{ FILE }}" --diagnostic-format short
+
+debug FILE:
+  typst compile --root . "{{ FILE }}" --diagnostic-format human
+
+watch FILE:
+  typst watch --root . "{{ FILE }}" --diagnostic-format short
+
 # generate assets
 assets:
-    typst compile docs/thumbnail.typ thumbnail-light.svg
-    typst compile --input theme=dark docs/thumbnail.typ thumbnail-dark.svg
+    typst compile --root . docs/examples/kl.typ docs/examples/kl-{n}.png
+    typst compile --root . docs/examples/ab.typ docs/examples/ab.png
+    typst compile --root . docs/examples/examples.typ docs/examples/examples.png
 
 # generate manual
-doc: assets
-    typst compile docs/manual.typ docs/manual.pdf
+docs:
+    shiroa build --root . docs/book
+    typst compile --root . docs/manual.typ --diagnostic-format short
+
+serve:
+    shiroa serve --root . docs/book
 
 # run test suite
 test *args:
-    tt run {{ args }}
+    tt run --warning ignore {{ args }}
 
 # update test cases
 update *args:
@@ -42,7 +55,7 @@ link-preview: (link "@preview")
 
 # bump version number
 bump VERSION:
-  tbump {{VERSION}}
+    tbump {{ VERSION }}
 
 [private]
 [working-directory(x'${TYPST_PKG_FORK:-.}')]
@@ -55,7 +68,7 @@ prepare-fork:
 # prepare: (package package-fork)
 prepare: prepare-fork (package package-fork)
 
-deploy: test doc prepare
+deploy: test docs prepare
 
 [private]
 remove target:
@@ -74,4 +87,4 @@ unlink: (remove "@local")
 unlink-preview: (remove "@preview")
 
 # run ci suite
-ci: test doc
+ci: test docs
