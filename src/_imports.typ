@@ -1,4 +1,4 @@
-#import "core/base.typ": base-template, appendix, document, layout
+#import "core/base.typ": appendix, base-template, document, layout
 
 #import "util/marks.typ"
 #import "util/args.typ"
@@ -17,4 +17,12 @@
 #import "subjects/math.typ" as mathe
 
 // Some community packages to improve things
-#import "_deps.typ" as deps: wrap-content, zebraw, cetz
+#import "_deps.typ" as deps: cetz, meander, shadowed.shadowed, zebraw
+
+#let wrap(fixed, to-wrap, align: top + left, ..args) = meander.reflow({
+  meander.placed(align, fixed)
+  meander.container()
+  meander.content(to-wrap)
+})
+
+#let wrap-content = wrap
