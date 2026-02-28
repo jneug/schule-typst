@@ -79,6 +79,7 @@
   }
 }
 
+/// Retrieves the page number of the page the given mark is located on.
 #let get-page(target) = {
   let loc = query(target)
   if loc != () {
