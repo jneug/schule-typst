@@ -20,7 +20,7 @@
             t.function(),
             t.boolean(),
             default: false,
-            pre-transform: (_, it) => {
+            post-transform: (_, it) => {
               if it == false {
                 it = none
               }
