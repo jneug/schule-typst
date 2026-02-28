@@ -1,4 +1,4 @@
-#import "../_deps.typ": gentle-clues, heroic, showybox, zebraw
+#import "../_deps.typ": gentle-clues, heroic, shadowed, showybox, zebraw
 
 #import "../util/util.typ"
 #import "../util/args.typ"
@@ -37,7 +37,7 @@
   supplement: "Anhang",
   /// Prefix für Anhang-Labels.
   /// -> str
-  prefix: "anh:",
+  prefix: "anh-",
 ) = {
   ref(supplement: supplement, std.label(prefix + str(label)))
 }
@@ -158,7 +158,7 @@
   gruppe: icon("user-group"),
   // Geräte
   stift: icon("pencil"),
-  heft: icon("book"),
+  heft: icon("book-open"),
   mappe: icon("document-text"),
   tablet: icon("device-tablet"),
   computer: icon("computer-desktop"),
@@ -443,7 +443,9 @@
 #let hinweis(typ: "Hinweis", icon: icon("information-circle"), ..clue-args, body) = gentle-clues.clue(
   // title: typ,
   accent-color: theme.secondary,
+  body-color: theme.bg.secondary.transparentize(50%),
   // icon: text(theme.secondary, icon),
+  content-inset: .5em,
   ..clue-args,
   [
     #if icon != none {
@@ -566,3 +568,20 @@
   context _counter-numbering.display("I")
 }
 
+
+// ============================
+// Images
+// ============================
+#let img-rounded(img, radius: 4pt) = box(
+  radius: radius,
+  clip: true,
+  img,
+)
+#let img-shadow(img, ..shadow-args) = shadowed.shadowed(
+  dx: 1pt,
+  dy: 2pt,
+  shadow: 4pt,
+  ..shadow-args,
+  img,
+)
+#let img-rounded-shadow(img, radius: 4pt, ..shadow-args) = img-shadow(radius: radius, clip: true, ..shadow-args, img)

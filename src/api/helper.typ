@@ -1,4 +1,5 @@
 #import "../theme.typ"
+#import "../_deps.typ" as deps
 
 
 
@@ -56,18 +57,32 @@
   }
 }
 
-// move to _deps
-#let eval-math(calculation, sep: $=$, format: sol => sol, precision: 8) = {
-  import "@preview/eqalc:0.1.4": math-to-str
+#let math-to-str = deps.eqalc.math-to-str
 
-  let solveable = math-to-str(calculation).replace(":", "/")
+#let eval-math(
+  calculation,
+  sep: $=$,
+  format: sol => sol,
+  precision: 8,
+  replacements: ((":", "/"),),
+  result-only: false,
+) = {
+  if type(calculation) == str {
+    calculation = eval(calculation, mode: "math")
+  }
+  let solveable = math-to-str(calculation)
+  solveable = replacements.fold(solveable, (s, r) => s.replace(..r))
   let result = eval(solveable, mode: "code")
 
   if precision != none and precision > -1 {
     result = calc.round(result, digits: precision)
   }
 
-  $#calculation #sep #format(result)$
+  if result-only {
+    return result
+  } else {
+    $#calculation #sep #format(result)$
+  }
 }
 
 
