@@ -56,7 +56,7 @@
     ),
     inset: -2pt,
   )[
-    #rect(width: 100%, stroke: 2pt + black, fill: white, inset: 0.25em)[
+    #rect(width: 100%, stroke: 2pt + black, fill: white, inset: 0.48em)[
       #set align(center)
       #set text(fill: theme.text.title)
       #heading(
@@ -91,9 +91,7 @@
     #v(2em)
 
     #text(3em, font: theme.fonts.sans, weight: "bold")[
-      #{
-        ("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag").at(doc.date.weekday())
-      },
+      #{ ("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag").at(doc.date.weekday()) },
       #doc.date.display("[day].[month].[year]")
     ]
     #v(4em)
@@ -140,6 +138,7 @@
           cover-sheet: t.either(
             t.boolean(),
             t.string(),
+            t.content(),
             default: false,
           ),
           sub-exercise-points: t.function(default: ex.points-format-join),
@@ -184,7 +183,15 @@
     )
 
     {
-      show: page-init.with(header: base-header.with(rule: true))
+      show: page-init.with(
+        header: base-header.with(rule: true, columns: (1fr, 1fr, 1fr)),
+        header-left: (doc, body) => [
+          #body | #layout.header-right(doc)
+        ],
+        header-right: (doc, body) => [
+          #align(left)[Name:]
+        ],
+      )
       tpl
     }
   }
