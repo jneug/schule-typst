@@ -101,20 +101,28 @@
 ]
 #let footer-right(doc) = [
   #context {
+    // Fix for missaligned page numbers if appendix has
+    // a different page setup.
+    let content-end = marks.get-page(<content-end>)
+    let appendix-end = marks.get-page(<appendix-end>)
+    if content-end > appendix-end {
+      content-end = appendix-end
+    }
+
     format-pagenumber(
       here().page(),
       marks.get-page(<content-start>),
-      marks.get-page(<content-end>),
+      content-end,
       //counter(page).final().first(),
-      marks.get-page(<post-pages-end>),
+      marks.get-page(<document-end>),
     )
   }
 ]
 
-#let base-header(doc, body-left, body-center, body-right, rule: false) = {
+#let base-header(doc, body-left, body-center, body-right, rule: false, columns: (1fr, 2fr, 1fr)) = {
   set text(.88em)
   grid(
-    columns: (1fr, 2fr, 1fr),
+    columns: columns,
     inset: 2mm,
     align: (left, center, right),
     body-left,
@@ -129,10 +137,10 @@
     },
   )
 }
-#let base-footer(doc, body-left, body-center, body-right, rule: false) = {
+#let base-footer(doc, body-left, body-center, body-right, rule: false, columns: (1fr, 4fr, 1fr)) = {
   set text(.88em, theme.muted)
   grid(
-    columns: (1fr, 4fr, 1fr),
+    columns: columns,
     inset: 2mm,
     align: (left, center, right),
     ..if rule {
