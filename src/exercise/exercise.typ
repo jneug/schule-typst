@@ -401,7 +401,22 @@
   shuffle: false,
   body,
 ) = {
-  let items = body.children.filter(c => c.func() in (enum.item, list.item))
+  // Recursively find all items in the body
+  let _find_items(elem) = {
+    let items = ()
+    if body.has("children") {
+      for item in elem.children {
+        if item.func() in (enum.item, list.item) {
+          items.push(item)
+        } else if item.has("children") {
+          items += _find_items(item)
+        }
+      }
+    }
+    return items
+  }
+  let items = _find_items(body)
+
   if shuffle {
     // TODO: (ngb) promote move suiji to top-level import!
     import "@preview/suiji:0.3.0" as rand
