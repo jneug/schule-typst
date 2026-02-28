@@ -1,6 +1,6 @@
 #import "_imports.typ": *
 
-#import deps.ccicons: ccicon, cc-is-valid
+#import deps.ccicons: cc-is-valid, ccicon
 
 #let lerntheke(
   ..args,
@@ -18,7 +18,7 @@
       paper: "a5",
       flipped: true,
       margin: 1cm,
-      fontsize: 11pt,
+      fontsize: 14pt,
 
       // disable title
       title-block: (..) => [],
@@ -44,7 +44,7 @@
 #let _counter-cards = counter("schule.cards")
 #let _counter-cards-help = counter("schule.aid-cards")
 
-#let card-header-height = 3em
+#let card-header-height = 12mm
 #let card-footer-height = 6mm
 
 #let _help-ref(kind: "card-help") = (
@@ -71,7 +71,7 @@
   fill: theme.bg.muted,
   label: none,
 ) = {
-  let fake-heading = text.with(font: theme.fonts.sans, size: 1.2em, weight: "bold")
+  let fake-heading = text.with(font: theme.fonts.sans, size: 1em, weight: "bold")
   let content-block = block.with(
     width: 100%,
     height: 100%,
@@ -89,6 +89,7 @@
         }
       }
 
+      state("@schule-lt-last-title").update(title)
       block(
         width: 100%,
         height: card-header-height,
@@ -103,9 +104,9 @@
             {
               if counter != none and no != none {
                 fake-heading(if no == auto {
-                  counter.display()
+                  context counter.display()
                 } else if type(no) == function {
-                  counter.display(no)
+                  context counter.display(no)
                 } else {
                   str(no)
                 })
@@ -120,7 +121,7 @@
           ),
           content-block(
             fill: theme.bg.muted,
-            fake-heading(size: 1.8em, icon),
+            fake-heading(size: 1.6em, icon),
           ),
         ),
       )
@@ -132,7 +133,7 @@
   title,
   fill: theme.bg.muted,
 ) = {
-  let fake-heading = text.with(font: theme.fonts.sans, size: 1.2em, weight: "bold")
+  let fake-heading = text.with(font: theme.fonts.sans, size: 1em, weight: "bold")
 
   place(
     top + center,
@@ -174,16 +175,15 @@
     stroke: (top: .6pt + theme.muted),
     {
       set align(center + horizon)
-      set text(9pt, theme.muted)
+      set text(8pt, theme.muted, font: theme.fonts.sans)
       grid(
-        columns: (auto, 1fr, auto),
-        column-gutter: 1em,
+        columns: (2fr, 1fr, 2fr),
+        align: (left, center, right),
+        column-gutter: 0pt,
         {
           document.use-value(
             "class",
-            class => [#{
-                class
-              }.],
+            class => if class != none [#{ class }.],
           )
           document.use-value("number", v => [#v])
           " "
@@ -191,16 +191,13 @@
           ", "
           document.use-value("version", ver => [v#ver])
         },
-        align(
-          center,
-          document.use-value(
-            "license",
-            l => if cc-is-valid(l) {
-              ccicon(l)
-            },
-          ),
+        document.use-value(
+          "license",
+          l => if cc-is-valid(l) {
+            ccicon(l)
+          },
         ),
-        align(right, infotext),
+        infotext,
       )
     },
   ),
@@ -211,30 +208,25 @@
   stroke: .6pt + rgb(33%, 33%, 33%, 33%),
   inset: (x: .33em, y: .5em),
   radius: 30%,
-  text(util.get-text-color(theme.cards.help), weight: "bold", sym.arrow.t + label),
+  text(util.get-text-color(theme.cards.help), weight: "bold", label),
 )
 
 #let hilfe-marker(..labels) = {
   place(
     top + right,
-    dx: -1cm,
+    dx: -2cm,
     dy: -2em,
     labels
       .pos()
       .map(target => {
-        show link: set text(util.get-text-color(theme.cards.help), weight: "bold")
+        show link: set text(util.get-text-color(theme.cards.help), weight: "bold", font: theme.fonts.sans, size: .88em)
         show ref: it => context link(
           it.element.location(),
-          box(
-            fill: theme.cards.help,
-            stroke: .6pt + rgb(33%, 33%, 33%, 33%),
-            inset: (x: .33em, y: .5em),
-            radius: 30%,
-            sym.arrow.t
-              + numbering(
-                it.element.numbering,
-                ..it.element.counter.at(it.element.location()),
-              ),
+          _help-token(
+            numbering(
+              it.element.numbering,
+              ..it.element.counter.at(it.element.location()),
+            ),
           ),
         )
         ref(target)
@@ -243,9 +235,13 @@
   )
 }
 
+
+#let infotext-loesung(sol) = text(theme.muted, rotate(180deg, sol))
+
 #let karte(
   titel: auto,
   infotext: none,
+  loesung: none,
   nr: auto,
   icon: none,
   fill: theme.bg.muted,
@@ -265,9 +261,9 @@
     if hilfen != none {
       hilfe-marker(..hilfen)
     }
-    body
+    aufgabe(display-header: false, body)
   })
-  _card-footer(infotext: infotext)
+  _card-footer(infotext: if loesung != none { infotext-loesung(loesung) } else { infotext })
 }
 
 #let karte1 = karte.with(fill: theme.cards.type1)
@@ -321,6 +317,7 @@
 
 #let leer() = {
   pagebreak(weak: false)
+  v(1fr)
 }
 
 // #let loesung = rueckseite.with(titel: "Lösung")
@@ -331,12 +328,15 @@
       args.pos().first()
     }
 
-    #context ex.solutions.display-solutions(ex.get-current-exercise(), title: none)
+    #context {
+      let exercise = ex.get-current-exercise()
+      if exercise != none and exercise.solutions != () {
+        ex.solutions.display-solutions(ex.get-current-exercise(), title: none)
+      }
+    }
 
     #if args.pos().len() > 1 {
       args.pos().last()
     }
   ]
 }
-
-#let infotext-loesung(sol) = rotate(180deg, sol)
