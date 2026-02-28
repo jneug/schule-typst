@@ -77,11 +77,18 @@
     rgb("#b955b6"),
   )
 
+  // (
+  //   type1: gradient.linear(type1.lighten(15%), type1.darken(33%), angle: 90deg),
+  //   type2: gradient.linear(type2.lighten(15%), type2.darken(33%), angle: 90deg),
+  //   type3: gradient.linear(type3.lighten(15%), type3.darken(33%), angle: 90deg),
+  //   help: gradient.linear(help.lighten(15%), help.darken(33%), angle: 90deg),
+  //   back: rgb("#ffffb2"),
+  // )
   (
-    type1: gradient.linear(type1.lighten(15%), type1.darken(33%), angle: 90deg),
-    type2: gradient.linear(type2.lighten(15%), type2.darken(33%), angle: 90deg),
-    type3: gradient.linear(type3.lighten(15%), type3.darken(33%), angle: 90deg),
-    help: gradient.linear(help.lighten(15%), help.darken(33%), angle: 90deg),
+    type1: type1,
+    type2: type2,
+    type3: type3,
+    help: help,
     back: rgb("#ffffb2"),
   )
 }

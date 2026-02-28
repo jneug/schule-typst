@@ -21,21 +21,21 @@
 
 // Text colors
 #let text = (
-	default:   black,
-	light:     white,
-	header:    luma(20%), // primary
-	footer:    luma(70%),
-	title:     primary,
-	subject:   luma(33%),
-  primary:   white,
-  secondary:  white
+  default: black,
+  light: white,
+  header: luma(20%), // primary
+  footer: luma(70%),
+  title: primary,
+  subject: luma(33%),
+  primary: white,
+  secondary: white,
 )
 
 // Font settings
 #let fonts = (
   default: ("Liberation Serif",),
   headings: ("Liberation Sans",),
-  code: (),
+  code: ("Liberation Mono",),
   serif: "Liberation Sans",
   sans: ("Liberation Sans",),
 )
