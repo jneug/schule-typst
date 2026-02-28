@@ -192,8 +192,10 @@
       document.save(doc)
       document.save-meta(doc)
 
-      marks.place-meta(<pre-pages-start>)
+      marks.place-meta(<document-start>)
+
       if "pre-pages" in _tpl {
+        marks.place-meta(<pre-pages-start>)
         marks.env-open("pre-pages")
         for p in args.as-arr(_tpl.pre-pages) {
           if type(p) == function {
@@ -203,8 +205,8 @@
           }
         }
         marks.env-close("pre-pages")
+        marks.place-meta(<pre-pages-end>)
       }
-      marks.place-meta(<pre-pages-end>)
 
       marks.place-meta(<content-start>)
       marks.env-open("content")
@@ -215,8 +217,8 @@
       marks.env-close("content")
       marks.place-meta(<content-end>)
 
-      marks.place-meta(<post-pages-start>)
       if "post-pages" in _tpl {
+        marks.place-meta(<post-pages-start>)
         marks.env-open("post-pages")
         for p in args.as-arr(_tpl.post-pages) {
           if type(p) == function {
@@ -226,16 +228,16 @@
           }
         }
         marks.env-close("post-pages")
+        marks.place-meta(<post-pages-end>)
       }
-      marks.place-meta(<post-pages-end>)
+
+      marks.place-meta(<document-end>)
     },
   )
 }
 
-#let appendix(body, title: [Anhang], ..page-args) = {
-  set page(..page-args.named())
-  pagebreak(weak: true)
-
+#let appendix(body, title: [Anhang], ..page-args) = page(..page-args.named(), {
+  marks.place-meta(<appendix-start>)
   marks.env-open("appendix")
   // state("schule.appendix").update(true)
   set heading(
@@ -250,4 +252,7 @@
   heading(level: 1, title)
   body
   marks.env-close("appendix")
-}
+  marks.place-meta(<appendix-end>)
+})
+
+
