@@ -30,7 +30,7 @@
     id: t.string(optional: true),
     number: t.integer(),
     display-number: t.integer(optional: true),
-    title: t.string(optional: true),
+    title: t.content(optional: true),
     icons: t.array(t.content(), default: (), pre-transform: t.coerce.array),
     use: t.boolean(default: true),
     header: t.boolean(default: true),
@@ -208,6 +208,7 @@
 // TODO: use points format function ?
 #let exercise(
   ..args,
+  display-header: true,
   body,
 ) = {
   _counter-exercises.step()
@@ -247,26 +248,28 @@
         pagebreak()
       }
 
-      heading(level: 2)[
-        // Icons
-        #ic
-        // Numbering
-        Aufgabe #numbering("1", ex-data.display-number)
-        // Title
-        #if ex-data.title != none [
-          #h(1.28em)
-          #text(theme.text.default, ex-data.title)
+      if display-header {
+        heading(level: 2)[
+          // Icons
+          #ic
+          // Numbering
+          Aufgabe #numbering("1", ex-data.display-number)
+          // Title
+          #if ex-data.title != none [
+            #h(1.28em)
+            #text(theme.text.default, ex-data.title)
+          ]
+          // Points
+          #h(1fr)
+          #text(
+            theme.secondary,
+            .88em,
+            context {
+              grading.display-total(get-exercise(ex-data.id))
+            },
+          )
         ]
-        // Points
-        #h(1fr)
-        #text(
-          theme.secondary,
-          .88em,
-          context {
-            grading.display-total(get-exercise(ex-data.id))
-          },
-        )
-      ]
+      }
       if ex-data.label != auto {
         marks.place-reference(
           ex-data.label,
