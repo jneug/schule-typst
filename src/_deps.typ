@@ -1,8 +1,10 @@
 #import "@preview/valkyrie:0.2.2"
+#import "@preview/elembic:1.1.1" as e
 
 // Basic utilities
 #import "@preview/unify:0.7.1"
 // #import "@preview/zero:0.5.0"
+#import "@preview/eqalc:0.1.4"
 
 #import "@preview/cetz:0.4.2"
 #import "@preview/fletcher:0.5.8"
@@ -11,7 +13,7 @@
 #import "@preview/easy-typography:0.1.0" as et
 #import "@preview/meander:0.3.0"
 // {deprecated}
-#import "@preview/wrap-it:0.1.1": wrap-content
+// #import "@preview/wrap-it:0.1.1": wrap-content
 
 // Layout elements
 #import "@preview/showybox:2.0.4"
