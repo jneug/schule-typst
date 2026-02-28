@@ -1,7 +1,7 @@
 #import "_imports.typ": *
 #import "util/tmtheme.typ"
 
-#import deps: touying, codetastic
+#import deps: codetastic, touying
 #import touying: *
 #import deps.shadowed: shadowed
 
@@ -149,22 +149,21 @@
     #if self.info.author != none {
       set text(.66em)
       v(1em)
-      self
-        .info
-        .author
-        .map(author => {
-          author.name
-          if author.institution != none {
-            [#footnote(author.institution)]
-          }
-          if author.abbr != none {
-            [ (#author.abbr)]
-          }
-          if author.email != none {
-            [ <#link("mailto:" + author.email, author.email)>]
-          }
-        })
-        .join(linebreak())
+      self.info.author
+      // TODO: Handle multiple authors
+      // .map(author => {
+      //   author.name
+      //   if author.institution != none {
+      //     [#footnote(author.institution)]
+      //   }
+      //   if author.abbr != none {
+      //     [ (#author.abbr)]
+      //   }
+      //   if author.email != none {
+      //     [ <#link("mailto:" + author.email, author.email)>]
+      //   }
+      // })
+      // .join(linebreak())
     }
     #v(.25fr)
   ]
@@ -491,7 +490,7 @@
           subtitle: doc.topic,
           // TODO: (ngb) pass author array to theme
           // author: (doc.author-formatted)(),
-          author: doc.author,
+          author: doc.author.at(0).name,
           date: doc.date,
           // institution: doc.author.first().institute,
         ),
